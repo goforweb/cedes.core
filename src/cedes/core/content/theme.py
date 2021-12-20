@@ -1,0 +1,156 @@
+from AccessControl import ClassSecurityInfo
+from cedes.core.config import CEDES_RESSOURCE_TYPES
+from plone import api
+from plone.app.z3cform.widget import RelatedItemsFieldWidget
+from plone.autoform import directives
+from plone.dexterity.content import Container
+from plone.dexterity.schema import DexteritySchemaPolicy
+from plone.supermodel import model
+from z3c.relationfield.schema import RelationChoice
+from z3c.relationfield.schema import RelationList
+from zope import schema
+from zope.interface import implements
+
+
+class ITheme(model.Schema):
+    """ """
+
+    title = schema.TextLine(
+        title=('Titre'),
+        required=False,
+    )
+
+    directives.widget(
+        'cc_related',
+        RelatedItemsFieldWidget,
+        pattern_options={
+            'selectableTypes': ['theme'],
+        }, )
+    cc_related = RelationList(
+        title='Voir aussi',
+        value_type=RelationChoice(
+            vocabulary='plone.app.vocabularies.Catalog',
+        ),
+        required=False, )
+
+
+class Theme(Container):
+    """ """
+
+    implements(ITheme)
+
+    security = ClassSecurityInfo()
+
+    security.declarePublic('isRoot')
+
+    def is_root(self):
+        """
+          returns True if this object is the root of the classification scheme
+        """
+        return self.aq_inner.aq_parent.portal_type != 'theme'
+
+    security.declarePublic('get_root_theme')
+
+    def get_root_theme(self):
+        """
+          Returns the root Theme of this theme (recursive)
+        """
+        parent = self.aq_inner.aq_parent
+        if parent.is_root():
+            return parent
+        return parent.get_root_theme()
+
+
+    security.declarePublic('get_associated_resources')
+
+    def get_associated_resources(self, sorted=True, summary=False):
+        """
+          List of ressources classified under this theme
+          @param sorted if True, return ressources sorted by order of importance
+          @param summary if True, only return resource type details as dictionary (sorted must be True)
+          @return List of ressources classified under this theme
+        """
+        catalog = api.portal.get_tool('portal_catalog')
+        targetUids = [self.UID()]
+        res = catalog(portal_type=CEDES_RESSOURCE_TYPES, targetUID=targetUids)
+
+        if not sorted:
+            return res
+        sorting_dic = {'ArticlePayant': 0,
+                       'ArticleGratuit': 0,
+                       'SiteInternet': 0,
+                       'SequenceApprentissage': 0,
+                       'Statistiques': 0,
+                       'Audio': 0,
+                       'Video': 0,
+                       'Cederom': 0,
+                       'Bibliographie': 0}
+        res_list = []
+        for item in res:
+            if not item:
+                continue
+            sorting_dic[item.portal_type] = sorting_dic[item.portal_type] + 1
+            res_list.append(item)
+        if summary:
+            return sorting_dic
+        res_list.sort(lambda x, y: cmp((sorting_dic[x.portal_type], x.portal_type),
+                      (sorting_dic[y.portal_type], y.portal_type)))
+        return res_list
+
+    security.declarePublic('get_nb_associated_resources')
+
+    def get_nb_associated_resources(self):
+        """
+          returns The number of associated ressources
+        """
+        res = self.get_associated_resources(sorted=False)
+        return len(res)
+
+    def get_themes_path(self, include_root=True, include_self=True):
+        """
+          Recursivly builds a sequence of Theme objects along the path to this theme
+          returns list of Themes composing the path to this one
+        """
+        try:
+            up_to_here = self.aq_parent.get_themes_path(include_root)
+            if include_self:
+                return up_to_here + [self]
+            else:
+                return up_to_here
+        except AttributeError:
+            if include_self:
+                return [self]
+            else:
+                return []
+
+    security.declarePublic('get_short_title')
+
+    def get_short_title(self, short_length=20):
+        """
+          returns short title of this subdivision (used for nice display of javacript tree)
+          param short_length number of caracters to keep, truncate the rest
+        """
+        title = self.Title().strip()
+        # get unicode to get a correct length and cut
+        if not isinstance(title, unicode):
+            title = unicode(title, 'UTF-8')
+        if len(title) > short_length:
+            title = title[:short_length] + '...'
+        return title.encode('UTF-8')
+
+    def reindex_associated_resources(self):
+        """
+          Reindex the keywords of the associated ressources in SearchableText
+        """
+        associated = self.get_associated_resources(sorted=False)
+        for item in associated:
+            item = item.getObject()
+            item.setCached_searchable()
+            item.reindexObject(idxs=['SearchableText'])
+
+
+class ThemeSchemaPolicy(DexteritySchemaPolicy):
+    """Schema Policy for Theme"""
+
+    def bases(self, schema_name, tree):
+        return (ITheme, )

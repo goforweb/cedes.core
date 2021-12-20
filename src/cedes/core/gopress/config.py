@@ -2,6 +2,7 @@
 
 import os
 
+
 # go4web '5a3cb62a37d3d669dba2e655de'
 # cedes '5a3cb62a37d3d669dba2e655de'
 GOPRESS_APIKEY = '5a3cb62a37d3d669dba2e655de'
@@ -10,7 +11,7 @@ GOPRESS_APIKEY = '5a3cb62a37d3d669dba2e655de'
 GOPRESS_EMAIL = 'support@go4web.be'
 GOPRESS_URL = 'https://ws.gopress.be'
 
-DATA_PATH = os.environ['BUILDOUT_DIRECTORY']
+DATA_PATH = os.environ['BUILDOUT_DIR']
 GOPRESS_PATH = os.path.join(DATA_PATH, 'var/gopress')
 GOPRESS_XML_FILE_PATH = os.path.join(GOPRESS_PATH, "metadatas.xml")
 

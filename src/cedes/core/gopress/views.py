@@ -1,40 +1,39 @@
 # -*- coding: utf-8 -*-
+from cedes.core.gopress.config import ARTICLE_TO_PRINT
+from cedes.core.gopress.config import create_xml_file
+from cedes.core.gopress.config import FOLDER_TO_PRINT
+from cedes.core.gopress.config import GOPRESS_APIKEY
+from cedes.core.gopress.config import GOPRESS_BACKUP_PATH
+from cedes.core.gopress.config import GOPRESS_DO_BACKUP
+from cedes.core.gopress.config import GOPRESS_EMAIL
+from cedes.core.gopress.config import GOPRESS_PATH
+from cedes.core.gopress.config import GOPRESS_URL
+from cedes.core.gopress.config import GOPRESS_XML_FILE_PATH
+from cedes.core.gopress.config import PRINT_GOPRESS_REQUEST
+from DateTime import DateTime
+from io import StringIO
+from Products.CMFPlone.utils import safe_unicode
+from Products.Five import BrowserView
+from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfFileWriter
+from PyPDF2 import utils
+from xml.etree import ElementTree
+
 import codecs
 import httplib2 as http
 import json
+import logging
 import lxml.html
 import os
 import shutil
 import subprocess
 
-from DateTime import DateTime
-from elementtree import ElementTree
-from Products.Five import BrowserView
-from PyPDF2 import PdfFileReader
-from PyPDF2 import PdfFileWriter
-from PyPDF2 import utils
-from StringIO import StringIO
-
-from Products.CMFPlone.utils import safe_unicode
-
-from Products.cedes.gopress.config import GOPRESS_APIKEY
-from Products.cedes.gopress.config import GOPRESS_BACKUP_PATH
-from Products.cedes.gopress.config import GOPRESS_DO_BACKUP
-from Products.cedes.gopress.config import GOPRESS_EMAIL
-from Products.cedes.gopress.config import GOPRESS_PATH
-from Products.cedes.gopress.config import GOPRESS_URL
-from Products.cedes.gopress.config import GOPRESS_XML_FILE_PATH
-from Products.cedes.gopress.config import PRINT_GOPRESS_REQUEST
-from Products.cedes.gopress.config import FOLDER_TO_PRINT
-from Products.cedes.gopress.config import ARTICLE_TO_PRINT
-from Products.cedes.gopress.config import create_xml_file
 
 try:
     from urlparse import urlparse
 except ImportError:
     from urllib.parse import urlparse
 
-import logging
 logger = logging.getLogger('CeDES Gopress')
 
 GS_COMMAND = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dDownsampleColorImages=true " \
@@ -154,7 +153,7 @@ class GoPressView(BrowserView):
 
     def _get_versions_for(self, folder_id):
         """ """
-        path = '/versions/{0}'.format(folder_id)
+        path = '/versions/{}'.format(folder_id)
         json_versions = self._send_json_request(path=path)
         version_infos = json_versions['RESPONSE']['RESULTS']['GP:BUNDLE']
         # if only one element, we receive a dict, if several we receive a list of dict
@@ -169,9 +168,9 @@ class GoPressView(BrowserView):
         if check_for_new:
             # first do a JSON request without 'article_data' to speed up things
             # if we find new articles, then use 'article_data=true'
-            path = '/articles/{0}/{1}'.format(folder_id, version_id)
+            path = '/articles/{}/{}'.format(folder_id, version_id)
         else:
-            path = '/articles/{0}/{1}?articles_data=true'.format(folder_id, version_id)
+            path = '/articles/{}/{}?articles_data=true'.format(folder_id, version_id)
         json_articles = self._send_json_request(path=path)
         # we receive many things, 'bundle, 'master-bundle', ...
         # what we need is the 'bundle-articles'
@@ -319,7 +318,7 @@ class GoPressView(BrowserView):
             try:
                 if articleXMLBody and articleXMLBody[-1].strip() == last_person:
                     author = last_person
-            except Exception, exc:
+            except Exception:
                 self._verbose('Error finding author for %s (%s)' % (external_id, str(exc)))
         return author
 
@@ -372,9 +371,9 @@ class GoPressView(BrowserView):
             PdfFileReader(temp)
             temp.close()
             return ''
-        except utils.PdfReadError, msg:
+        except utils.PdfReadError:
             return "pdfreadererror %s" % msg
-        except Exception, msg:
+        except Exception:
             return "other %s" % msg
 
     def _fix_eof_pdf(self, pdfFile):
@@ -398,7 +397,7 @@ class GoPressView(BrowserView):
                 fileOpen.write('%%EOF')
             fileOpen.close()
             return ''
-        except Exception, e:
+        except Exception:
             return 'Unable to open file: %s with error: %s' % (pdfFile, str(e))
 
     def _treat_html_pdf(self, folder_id, article_id, articleHTML, pdf_path, force=0):
@@ -447,7 +446,7 @@ class GoPressView(BrowserView):
                         orig = article_largepdf_path.replace(".pdf", ".orig.pdf")
                         if not os.path.exists(orig):
                             shutil.copyfile(article_largepdf_path, orig)
-                    except Exception, msg:
+                    except Exception:
                         logger.error("Cannot copy '%s' to '%s': '%s'" % (article_largepdf_path, orig, msg))
                     err2 = self._fix_eof_pdf(article_largepdf_path)
                     if not err2:
@@ -459,7 +458,7 @@ class GoPressView(BrowserView):
                             try:
                                 shutil.copyfile(orig, article_largepdf_path)
                                 os.remove(orig)
-                            except Exception, msg:
+                            except Exception:
                                 logger.error("Cannot copy '%s' to '%s': '%s'" % (orig, article_largepdf_path, msg))
                     else:
                         logger.error(err2)
@@ -496,7 +495,7 @@ class GoPressView(BrowserView):
         dest = os.path.join(path, filename)
         try:
             shutil.copyfile(filepath, dest)
-        except Exception, msg:
+        except Exception:
             logger.error("Cannot copy '%s' to '%s': '%s'" % (filepath, dest, msg))
 
 

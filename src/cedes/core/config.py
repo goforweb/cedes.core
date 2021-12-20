@@ -2,6 +2,8 @@
 
 from Products.CMFCore.permissions import setDefaultRoles
 
+import os
+
 
 PROJECTNAME = "cedes"
 DEFAULT_ADD_CONTENT_PERMISSION = "Add CedesResources"
@@ -23,7 +25,7 @@ ARTICLE_TO_PRINT = ''
 PRINT_LIMIT = 10000
 
 PB_MAX_ART_BY_FOLDER = 150
-PB_PATH = os.path.join(Globals.INSTANCE_HOME, 'var', 'pressbanking')
+PB_PATH = os.path.join(os.environ['INSTANCE_HOME'], 'var', 'pressbanking')
 XML_FILE_PATH = os.path.join(PB_PATH, "metadatas.xml")
 BACKUP_PB_PATH = os.path.join(PB_PATH, 'backups')
 DO_PB_BACKUP = True

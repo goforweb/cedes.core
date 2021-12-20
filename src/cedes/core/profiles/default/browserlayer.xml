@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<layers>
+  <layer name="cedes.core"
+         interface="cedes.core.interfaces.ICedesCoreLayer" />
+</layers>

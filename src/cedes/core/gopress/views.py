@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+#
+# Copyright (c) 2022 by GoForWeb.be
+#
+# GNU General Public License (GPL)
+#
+
 from cedes.core.gopress.config import ARTICLE_TO_PRINT
 from cedes.core.gopress.config import create_xml_file
 from cedes.core.gopress.config import FOLDER_TO_PRINT

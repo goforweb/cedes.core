@@ -8,4 +8,21 @@
 
     <browser:jbot directory="jbot" />
 
+    <!-- faceted view -->
+    <faceted:view
+      name="faceted-theme-view"
+      class="cedes.core.browser.faceted.FacetedThemeView"
+      template="templates/faceted-theme-view.pt"
+      title="Faceted CeDES Theme view"
+      permission="zope2.View" />
+
+    <configure package="eea.facetednavigation">
+      <browser:page
+        for="cedes.core.interfaces.IThemeFacetedNavigable"
+        name="faceted_query"
+        class="cedes.core.browser.faceted.ThemeFacetedQueryHandler"
+        template="browser/template/query.pt"
+        permission="zope2.View" />
+    </configure>
+
 </configure>

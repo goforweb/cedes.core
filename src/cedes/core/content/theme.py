@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2022 by GoForWeb.be
+#
+# GNU General Public License (GPL)
+#
+
 from AccessControl import ClassSecurityInfo
 from cedes.core.config import CEDES_RESSOURCE_TYPES
 from plone import api
@@ -9,7 +16,7 @@ from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
-from zope.interface import implements
+from zope.interface import implementer
 
 
 class ITheme(model.Schema):
@@ -33,15 +40,13 @@ class ITheme(model.Schema):
         ),
         required=False, )
 
-
+@implementer(ITheme)
 class Theme(Container):
     """ """
 
-    implements(ITheme)
-
     security = ClassSecurityInfo()
 
-    security.declarePublic('isRoot')
+    security.declarePublic('is_root')
 
     def is_root(self):
         """
@@ -59,7 +64,6 @@ class Theme(Container):
         if parent.is_root():
             return parent
         return parent.get_root_theme()
-
 
     security.declarePublic('get_associated_resources')
 

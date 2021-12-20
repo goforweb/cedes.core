@@ -1,0 +1,11 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:faceted="http://namespaces.zope.org/faceted"
+           xmlns:five="http://namespaces.zope.org/five"
+           xmlns:plone="http://namespaces.plone.org/plone">
+
+    <include package="z3c.jbot" file="meta.zcml" />
+
+    <browser:jbot directory="jbot" />
+
+</configure>

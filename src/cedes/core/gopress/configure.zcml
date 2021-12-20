@@ -1,0 +1,30 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:five="http://namespaces.zope.org/five"
+           xmlns:plone="http://namespaces.plone.org/plone">
+
+    <browser:view
+        for="*"
+        name="gopress"
+        class=".views.GoPressView"
+        permission="zope.Public"
+        allowed_attributes="synchronize" />
+
+    <browser:view
+        for="*"
+        name="xml-to-plone"
+        class=".views.XmlToPloneView"
+        permission="zope.Public"
+        allowed_attributes="getFoldersInformation
+                            getArticlesInformation
+                            uploadArticle
+                            mergeAndUploadArticles
+                            downloadArticlePDF" />
+
+    <browser:view
+        for="*"
+        name="download-article-pdf"
+        class=".views.DownloadArticlePDFView"
+        permission="zope.Public" />
+
+</configure>

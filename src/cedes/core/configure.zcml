@@ -12,4 +12,8 @@
 
     <i18n:registerTranslations directory="locales" />
 
+    <adapter for="cedes.core.interfaces.IThemeFacetedNavigable"
+             provides="eea.facetednavigation.interfaces.ICriteria"
+             factory="cedes.core.adapters.ThemeCriteria" />
+
 </configure>

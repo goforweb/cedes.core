@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<object name="plan" meta_type="Theme">
+ <criteria>
+  <criterion name="c7">
+   <property name="widget">daterange</property>
+   <property name="title">Encodé le</property>
+   <property name="index">getCr_first_classification_date</property>
+   <property name="position">top</property>
+   <property name="section">advanced</property>
+   <property name="hidden">False</property>
+   <property name="calYearRange">c-10:c+10</property>
+   <property name="usePloneDateFormat">False</property>
+  </criterion>
+  <criterion name="c8">
+   <property name="widget">daterange</property>
+   <property name="title">Créé le</property>
+   <property name="index">created</property>
+   <property name="position">top</property>
+   <property name="section">advanced</property>
+   <property name="hidden">False</property>
+   <property name="calYearRange">c-10:c+10</property>
+   <property name="usePloneDateFormat">False</property>
+  </criterion>
+  <criterion name="c9">
+   <property name="widget">daterange</property>
+   <property name="title">Modifié le</property>
+   <property name="index">modified</property>
+   <property name="position">top</property>
+   <property name="section">advanced</property>
+   <property name="hidden">False</property>
+   <property name="calYearRange">c-10:c+10</property>
+   <property name="usePloneDateFormat">False</property>
+  </criterion>
+  <criterion name="c10">
+   <property name="widget">boolean</property>
+   <property name="title">Lié à un dossier structuré?</property>
+   <property name="default">False</property>
+   <property name="index">has_cr_points</property>
+   <property name="position">top</property>
+   <property name="section">advanced</property>
+   <property name="hidden">False</property>
+   <property name="count">False</property>
+  </criterion>
+  <criterion name="c1">
+   <property name="widget">checkbox</property>
+   <property name="title">Type de ressource</property>
+   <property name="index">portal_type</property>
+   <property name="operator">or</property>
+   <property name="operator_visible">False</property>
+   <property
+      name="vocabulary">Products.cedes.vocabularies.searchabletypesvocabulary</property>
+   <property name="catalog"></property>
+   <property name="position">center</property>
+   <property name="section">default</property>
+   <property name="hidden">False</property>
+   <property name="count">True</property>
+   <property name="sortcountable">False</property>
+   <property name="hidezerocount">False</property>
+   <property name="maxitems">10</property>
+   <property name="sortreversed">False</property>
+  </criterion>
+  <criterion name="c2">
+   <property name="widget">sorting</property>
+   <property name="title">Tri</property>
+   <property
+      name="vocabulary">Products.cedes.vocabularies.facetedsortingvocabulary</property>
+   <property name="default">(reverse)</property>
+   <property name="position">center</property>
+   <property name="section">default</property>
+   <property name="hidden">False</property>
+  </criterion>
+  <criterion name="c11">
+   <property name="widget">checkbox</property>
+   <property name="title">J'aime</property>
+   <property name="index">user_ratings</property>
+   <property name="operator">or</property>
+   <property name="operator_visible">False</property>
+   <property name="vocabulary">eea.faceted.vocabularies.CurrentUser</property>
+   <property name="position">center</property>
+   <property name="section">default</property>
+   <property name="hidden">False</property>
+   <property name="count">False</property>
+   <property name="sortcountable">False</property>
+   <property name="hidezerocount">False</property>
+   <property name="maxitems">0</property>
+   <property name="sortreversed">False</property>
+  </criterion>
+  <criterion name="c3">
+   <property name="widget">text</property>
+   <property name="title">Rechercher</property>
+   <property name="index">SearchableText</property>
+   <property name="onlyallelements">True</property>
+   <property name="wildcard">True</property>
+   <property name="position">center</property>
+   <property name="section">default</property>
+   <property name="hidden">False</property>
+  </criterion>
+  <criterion name="c6">
+   <property name="widget">daterange</property>
+   <property name="title">Période (Du/Au)</property>
+   <property name="index">created</property>
+   <property name="position">center</property>
+   <property name="section">default</property>
+   <property name="hidden">False</property>
+   <property name="calYearRange">c-10:c+10</property>
+   <property name="usePloneDateFormat">False</property>
+  </criterion>
+  <criterion name="c0">
+   <property name="widget">resultsperpage</property>
+   <property name="title">Results per page</property>
+   <property name="default">30</property>
+   <property name="position">center</property>
+   <property name="section">default</property>
+   <property name="hidden">True</property>
+   <property name="start">0</property>
+   <property name="end">50</property>
+   <property name="step">10</property>
+  </criterion>
+  <criterion name="c4">
+   <property name="widget">tal</property>
+   <property name="title">Thème associé</property>
+   <property name="index">getAllAssociatedThemesUID</property>
+   <property name="default">context/UID</property>
+   <property name="position">right</property>
+   <property name="section">default</property>
+   <property name="hidden">True</property>
+  </criterion>
+  <criterion name="c5">
+   <property name="widget">debug</property>
+   <property name="title">Debug</property>
+   <property name="user">admin</property>
+   <property name="position">right</property>
+   <property name="section">default</property>
+   <property name="hidden">True</property>
+  </criterion>
+ </criteria>
+</object>

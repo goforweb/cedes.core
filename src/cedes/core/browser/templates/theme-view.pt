@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+  metal:use-macro="here/main_template/macros/master">
+<head>
+  <metal:block metal:fill-slot="head_slot">
+
+    <link rel="alternate" title="RSS 1.0" type="application/rss+xml"
+          tal:define="here_url context/@@plone_context_state/object_url;"
+          tal:condition="request/SearchableText|nothing"
+          tal:attributes="href string:$here_url/search_rss?${request/QUERY_STRING}"/>
+    <link rel="home" title="Home" tal:attributes="content context/absolute_url" />
+
+  </metal:block>
+
+</head>
+
+  <body>
+  <metal:content-core fill-slot="content-core">
+    <metal:block define-macro="content-core">987
+      <tal:comment replace='nothing'>Entoure la page avec l'id 'search-placeholder' car le resultat d'une recherche s'affiche
+                                     alors a la place du theme affiche en cours.</tal:comment>
+      <div id="search-placeholder" tal:define="portal_url context/@@plone_portal_state/portal_url">
+
+        <tal:notRoot condition="python: not context.is_root()">
+        <tal:defines define="results python: context.restrictedTraverse('@@common-result-listing').searchForThemeView();
+                             sons python:here.objectValues('Theme');">
+        <div tal:repeat="son sons"
+             tal:attributes="style string:background:url($portal_url/arrowRight.png) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
+
+          <a tal:attributes="href son/absolute_url"><span tal:replace="son/pretty_title_or_id"/> </a>
+
+        </div>
+        <div tal:define="related_items python: here.cc_related"
+             tal:condition="python:related_items or sons">
+          <br/>
+          <h3>
+            Voir aussi :
+          </h3>
+          <ul>
+            <li tal:repeat="rel related_items" class="voiraussi">
+               <a tal:attributes="href rel/absolute_url;
+                                  title rel/getTitlePath"
+                  tal:content="rel/pretty_title_or_id"></a>
+            </li>
+          </ul>
+          <ul class="voiraussi" tal:condition="sons">
+            <li>
+              <a href="plan_classement">La structure du plan de classement dans le thème en cours</a>
+            </li>
+          </ul>
+        </div>
+
+        <br/>
+        <tal:block define="common_result_listing context/@@common-result-listing/index;">
+            <tal:content replace="structure common_result_listing" />
+        </tal:block>
+
+        <div class="visualClear"><!-- --></div>
+        </tal:defines>
+        </tal:notRoot>
+
+        <tal:root condition="python: context.is_root()" define="provokeUnauthorizedIfNotLoggedIn context/Title;">
+            <div class="documentDescription" tal:content="structure here/pages/arborescence-explications/getText" tal:on-error="string:'arborescence-explications' manquant" />
+            <tal:explanation tal:replace="structure here/pages/arborescence/getText" tal:on-error="string:'arborescence' manquant" />
+        </tal:root>
+      </div>
+    </metal:block>
+  </metal:content-core>
+  </body>
+</html>

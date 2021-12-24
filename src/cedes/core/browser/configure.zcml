@@ -25,4 +25,30 @@
         permission="zope2.View" />
     </configure>
 
+    <browser:page
+        for="cedes.core.content.theme.ITheme"
+        name="view"
+        class="cedes.core.browser.theme.ThemeDefaultView"
+        template="templates/theme-view.pt"
+        permission="zope2.View" />
+
+    <!-- The view rendering common-result-listing -->
+    <browser:page
+        for="*"
+        class="cedes.core.browser.views.CommonResultListingView"
+        name="common-result-listing"
+        template="templates/common-result-listing.pt"
+        permission="zope2.View"
+        allowed_attributes="searchForThemeView" />
+
+    <!-- The view rendering the content displayed in common-result-listing,
+         aka common-result-listing-content -->
+    <browser:page
+        for="*"
+        class="cedes.core.browser.views.CommonResultListingView"
+        name="common-result-listing-content"
+        template="templates/common-result-listing-content.pt"
+        permission="zope2.View" />
+
+
 </configure>

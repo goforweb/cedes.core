@@ -1,0 +1,177 @@
+<div tal:define="batch python: request.get('folderContents') or view.performSearch(b_size=int(request.get('b_size', 30)), b_start=int(request.get('b_start', 0)));">
+
+<div id="common-result-listing">
+
+  <div id="common-result-content"
+       tal:define="searchterm request/SearchableText|nothing;
+                   use_view_action context/portal_properties/site_properties/typesUseViewActionInListings|python:();
+                   ploneview nocall:context/@@plone;
+                   normalizeString nocall:ploneview/normalizeString;
+                   portal_state context/@@plone_portal_state;
+                   member portal_state/member;
+                   isManager python: member.has_role('Manager');
+                   isAnon portal_state/anonymous;
+                   askConnection python: isAnon and context.doProvokeUnauthorized() or '';
+                   global isLinkInDossier python: False;
+                   portal portal_state/portal;
+                   portal_url portal_state/portal_url;">
+
+    <h3 tal:condition="python: not request.get('folderContents') and context.portal_type in ('Theme', 'PlanClassement') and not '@@updated_search' in context.REQUEST['URL']">
+      <span tal:replace="python:(batch.sequence_length>1) and 'Ressources class&eacute;es' or 'Ressource class&eacute;e'"/> : <span tal:replace="python:batch.sequence_length"/>
+    </h3>
+
+    <!-- Search results -->
+    <div metal:use-macro="here/batch_macros/macros/navigation" />
+    <table>
+      <tal:loop repeat="item batch">
+      <tr tal:define="item_type item/portal_type|item/PortalType;
+                      item_type_title python: portal.portal_types.getTypeInfo(item_type).title"
+          tal:attributes="class python: (item_type == 'Link') and 'linkindossierstructure' or ''">
+        <span tal:omit-tag="" tal:define="desc      item/Description;
+                                          item_state item/review_state|nothing;
+                                          item_state python: item_state or context.portal_workflow.getInfoFor(item, 'review_state');
+                                          item_big_icon python:portal_url + '/big-' + normalizeString(item_type) + '.gif';
+                                          item_absolute_url item/getURL | item/absolute_url;
+                                          item_url python:(item_type in use_view_action) and item_absolute_url+'/view' or item_absolute_url;
+                                          bc python: request.get('bc', '') or (here.portal_type == 'Theme' and here.UID()) or '';
+                                          item_url python: bc and item_url + '?bc=' +bc or item_url;
+                                          global isLinkInDossier python: (isLinkInDossier or item_type == 'Link') and True or False;
+                                          onclick_action string:document.getElementById('ap${repeat/item/number}').style.display='block';;return false;;">
+          <td valign="top" style="width: 32px; padding-right: 0.5em; padding-top: 0.8em; padding-left: 0.5em;">
+            <a style="border-color: white;"
+               tal:attributes="href  item_url;
+                               title desc;
+                               onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and member.isCedesFree())) and onclick_action or '';">
+              <img tal:attributes="src item_big_icon; title item_type_title" i18n:domain="plone" i18n:attributes="title" style="padding-top:3px;" />
+            </a>
+          </td>
+          <td valign="top" style="padding-top: 0.8em;">
+            <dl style="display:none; margin-top: 0.4em;" class="portalMessage warning" tal:attributes="id string:ap${repeat/item/number}; class python: viewable and 'portalMessage info' or 'portalMessage warning';" tal:define="item_uid item/UID; viewable python: member.checkViewable(item_uid)" tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
+              <dt tal:condition="not: viewable">Avertissement</dt>
+              <dt tal:condition="viewable">Info</dt>
+              <dd tal:condition="python: viewable">Votre compte a déjà été débité pour cet article, vous pouvez donc y accéder librement. Cliquez sur 'Continuer' pour confirmer.
+                    <a href=""
+                      tal:attributes="href  item_url;
+                                       title desc;">
+                      Continuer...
+                    </a>
+              </dd>
+              <dd tal:condition="python:member.checkBalance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
+                <a href=""
+                  tal:attributes="href  item_url;
+                                   title item/Description;">
+                  Continuer...
+                </a>
+              </dd>
+              <dd tal:condition="member/isCedesFree"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
+              <dd tal:condition="python:not(member.isCedesFree()) and not(member.checkBalance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
+            </dl>
+
+            <a href="" class=""
+              tal:define="onclick_action string:document.getElementById('ap${repeat/item/number}').style.display='block';;return false;;"
+              tal:attributes="href python: item_type == 'Link' and item.getRemoteUrl() or item_url;
+                              title python: not item_type == 'DossierStructure' and desc or '';
+                              class string:visualIconPadding state-${item_state};
+                              onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and member.isCedesFree())) and onclick_action or ''">
+              <span tal:content="item/Title">Ressource title</span>
+              <span class="ds-kw-epc"
+                    tal:condition="python: 'ds-kw-epc' in item.Subject">EPC</span>
+            </a>
+
+            <tal:comment replace="nothing">twothumbs</tal:comment>
+            <form tal:condition="item/positive_ratings" class="thumbs-up-readonly" onclick="event.preventDefault();">
+              <span tal:define="myVote python:item.user_ratings and member.id in item.user_ratings" tal:attributes="class python:'readonly thumbs-up' + (myVote==1 and ' selected' or '')">
+                <input type="submit" name="form.lovinit" value="J'aime"
+                    class="allowMultiSubmit like-button" title="Accédez à la ressource pour gérer le &laquo;J'aime&raquo;" />
+                <span class="total-thumbs-up">
+                    <span class="tally-total" tal:content="item/positive_ratings" />
+                </span>
+              </span>
+            </form>
+
+            <div class="highlight" tal:condition="isManager">
+            <span tal:content="python: context.toLocalizedTime(item.getCr_first_classification_date)" />            
+            <div class="actions">
+              <tal:actions replace="structure python: item.getObject().restrictedTraverse(
+                '@@actions_panel')(showTransitions=False, showActions=False)" />
+            </div>
+            </div>
+
+            <div class="documentByLine" style="margin: 0;" tal:condition="python:item_type in use_view_action or item_type in ['Bibliographie', 'SequenceApprentissage', ]">
+              <span tal:replace="structure item/getColophonWithAuthor"/>
+            </div>
+
+            <div class="documentDescription" style="margin: 0;" tal:condition="python: desc and not item_type in ['Link', 'DossierStructure',]"
+              tal:content="structure desc">
+            Description
+            </div>
+
+
+            <tal:know_more condition="python: desc and item_type in ['DossierStructure',]">
+              <div id="collapsible-more" class="collapsible-content">
+                <div class="collapsible-inner-content">
+                <div class="documentDescription" tal:content="structure python:item.Description.replace('\n', '<br/>')">Description</div>
+                <span id="marker_ds_price_UID#"
+                      tal:define="UID item/UID;"
+                      tal:attributes="id string:marker_ds_price_$UID;">
+                  <img onload="#"
+                       tal:attributes="onload string:showRealPrice('$UID','$portal_url');
+                                       src string:portal_url/spinner.gif"
+                       width="24" height="24" /><b>Coût du dossier en cours de calcul...</b></span>
+   
+                 </div>
+              </div>
+            </tal:know_more>
+
+            <tal:folder condition="python: view.full and item_type in ['Folder',]">
+              <tal:block define="folder item/getObject; dummy python: request.set('b_start', 0);dummy python: request.set('b_size', 99);">
+                <tal:content tal:define="common_result_listing folder/@@common-result-listing/index;"
+                             replace="structure common_result_listing" />
+              </tal:block>
+            </tal:folder>
+
+            <tal:aLink condition="python: desc and item_type == 'Link'">
+             <div class="documentDescription" style="margin: 0;" tal:content="structure python: desc.split('\n')[0]" class="discreet">Premi&egrave;re partie de la description</div>
+             <p class="discreet" tal:condition="python: len(desc.split('\n')) > 1"><a href="" tal:attributes="href item_url">[...]</a></p>
+            </tal:aLink>
+
+            <tal:notALink condition="python: not item_type == 'Link'">
+             <div tal:condition="item/cr_difficulty">
+               <b>Difficult&eacute;:</b> <span tal:repeat="diff item/cr_difficulty" tal:omit-tag=""><span tal:replace="diff"/><span tal:condition="not:repeat/diff/end" tal:replace="string:, "/></span>
+             </div>
+
+             <div tal:condition="item/cr_comment">
+             <b>Commentaire:</b>  <span tal:replace="structure item/cr_comment"/>
+             </div>
+             <div>
+               <div tal:repeat="classification item/getAssociatedThemesTitleAndPath|item/indexAssociatedThemesTitleAndPath"
+                 tal:attributes="style string:background:url($portal_url/arrownav-black.gif) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
+                 <a href="#"
+                    tal:define="title python:classification[0];
+                                hoverTitle python:classification[1];
+                                relativeUrl python:classification[2];"
+                    style="cursor: help; border-bottom:1px dashed #8cacbb; color: black;"
+                    tal:content="structure title"
+                    tal:attributes="title hoverTitle;
+                                    href string: ${portal_url}/${relativeUrl};"></a>
+                 <span tal:condition="not:repeat/classification/end" tal:replace="structure string:<br/> "/>
+               </div>
+             </div>
+            </tal:notALink>
+            <!--tal:aLink condition="python: item.getPortalTypeName() == 'Link'">
+             <div style="padding-bottom:5px;padding-left:22px;margin:0px;">
+               <b>Lien:</b> <a href="#" tal:attributes="href item/getRemoteUrl"><span tal:content="item/Title" /></a>
+             </div>
+            </tal:aLink-->
+          </td>
+        </span>
+      </tr>
+      </tal:loop>
+      <tr tal:condition="isLinkInDossier"><td colspan=2>&nbsp;</td></tr>
+      <tr tal:condition="isLinkInDossier"><td colspan=2 class="discreet">Le <span class="linkindossierstructure">fond bleuté</span> identifie les ressources qui sont classées uniquement sous la rubrique "Outils pour faire la classe" dans la colonne verticale à gauche de l'écran</td></tr>
+    </table>
+    <div metal:use-macro="here/batch_macros/macros/navigation" />
+  </div>
+
+</div>
+</div>

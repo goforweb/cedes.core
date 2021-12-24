@@ -97,8 +97,8 @@ class Theme(Container):
             res_list.append(item)
         if summary:
             return sorting_dic
-        res_list.sort(lambda x, y: cmp((sorting_dic[x.portal_type], x.portal_type),
-                      (sorting_dic[y.portal_type], y.portal_type)))
+
+        res_list.sort()
         return res_list
 
     security.declarePublic('get_nb_associated_resources')

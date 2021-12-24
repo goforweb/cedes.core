@@ -10,11 +10,37 @@
     <metal:block define-macro="content-core">
       <div style="clear: both">&nbsp;</div>
       <tal:defines define="layout nocall:context/@@faceted-theme-view;
-                           is_search layout/is_search">
+                           is_search layout/is_search;
+                           portal_url python: layout.portal_url">
 
         <tal:faceted_search condition="python: is_search">
-          <div tal:condition="layout/may_search" tal:define="dummy python: request.set('folderContents', folderContents);">
-            <div metal:use-macro="here/search_macros/macros/search_header_macro" />
+          <div tal:condition="layout/may_search"
+               tal:define="batch python: folderContents;
+                           batch_length python: batch.sequence_length;">
+
+                <dl tal:condition="python: batch_length <= 5"
+                    class="portalMessage info">
+                  <dt>Info</dt>
+                  <dd>Votre recherche n'affiche aucun ou trop peu de résultats?
+                      <a href="#"
+                         tal:attributes="href string:$portal_url/pages/aide#S9">Cliquez ici</a>
+                      pour savoir comment en améliorer la pertinence.</dd>
+                </dl>
+
+                <dl tal:condition="python: batch_length >= 50"
+                    class="portalMessage info">
+                <dt>Info</dt>
+                <dd>Votre recherche affiche trop de résultats? <a href="#" tal:attributes="href string:$portal_url/pages/aide#S8">Cliquez ici</a> pour savoir comment en améliorer la pertinence.</dd>
+                </dl>
+
+                <a class="reinit_faceted_search" href="#" onclick="event.preventDefault();resetFaceted();">Réintialiser la recherche</a>
+
+                <div tal:condition="batch_length">
+                    <h2 class="search-results-number">
+                        <span tal:omit-tag="" tal:content="batch_length">234</span> <span tal:replace="python:batch_length>1 and 'éléments correspondent à vos critères de recherche' or 'élément correspond à vos critères de recherche'"/>
+                    </h2>
+                </div>
+
             <tal:results condition="folderContents">
               <tal:block define="common_result_listing_content context/@@common-result-listing-content/index;">
                 <tal:content replace="structure common_result_listing_content" />
@@ -32,14 +58,15 @@
 
         <tal:no_faceted_search condition="not: is_search">
           <tal:defines define="is_root python: context.is_root()">
-            <tal:theme condition="python: not context.is_root()">
-              <theme_view metal:use-macro="context/theme_view/macros/content-core" />
+            <tal:theme condition="python: not is_root">
+              <theme_view metal:use-macro="context/@@view/macros/content-core" />
             </tal:theme>
-            <tal:pc condition="">
+            <tal:pc condition="python: is_root">
               <pc_view tal:replace="structure context/@@planclassement_view" />
             </tal:pc>
           </tal:defines>
         </tal:no_faceted_search>
+
       </tal:defines>
     </metal:block>
   </metal:content-core>

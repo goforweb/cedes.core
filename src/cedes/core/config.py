@@ -8,8 +8,15 @@ import os
 PROJECTNAME = "cedes"
 DEFAULT_ADD_CONTENT_PERMISSION = "Add CedesResources"
 
-CEDES_RESSOURCE_TYPES = ('ArticleGratuit', 'ArticlePayant', 'SiteInternet', 'Statistiques',
-                         'Audio', 'Video', 'Cederom', 'Bibliographie', 'SequenceApprentissage')
+CEDES_RESSOURCE_TYPES = ('ArticleGratuit',
+                         'ArticlePayant',
+                         'SiteInternet',
+                         'Statistiques',
+                         'Audio',
+                         'Video',
+                         'Cederom',
+                         'Bibliographie',
+                         'SequenceApprentissage')
 
 CEDES_DS_KW_PREFIX = "ds-kw-"
 

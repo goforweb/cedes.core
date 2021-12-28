@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<object name="portal_actions" meta_type="Plone Actions Tool"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+ <action-provider name="portal_actions" />
+
+ <object name="site_actions" meta_type="CMF Action Category">
+  <object name="sitemap" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+ </object>
+ <!-- Hide every user actions -->
+ <object name="user" meta_type="CMF Action Category">
+  <object name="sitemap" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+  <object name="dashboard" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+  <object name="preferences" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+  <object name="plone_setup" meta_type="CMF Action">
+   <property name="visible">True</property>
+   <property name="icon_expr">string:$portal_url/configuration.png</property>
+   <property name="available_expr">python:member.getId() == 'admin'</property>
+  </object>
+  <object name="login" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+  <object name="join" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+  <object name="undo" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object> 
+  <object name="logout" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
+  <object name="print" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Imprimer</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:javascript:this.print()</property>
+   <property name="icon_expr">string:$portal_url/print.png</property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">False</property>
+  </object>
+  <object name="broken_links" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Broken links</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${globals_view/navigationRootUrl}/@@brokenlinks</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr"></property>
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="aide" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Aide</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/pages/aide</property>
+   <property name="icon_expr">string:$portal_url/help.png</property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="mon_compte" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Mon compte</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/plone_memberprefs_panel</property>
+   <property name="icon_expr">string:$portal_url/account.png</property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="quitter" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Newsletters</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/newsletters</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="quitter" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Quitter</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/logout?next=logged_out</property>
+   <property name="icon_expr">string:$portal_url/quitter_red.png</property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+ </object>
+ <object name="object_buttons" meta_type="CMF Action Category">
+  <object name="importgopress" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Importer depuis Gopress</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:$object_url/gopress_import</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr">python: context.portal_type != 'Plone Site' and context.isPrincipiaFolderish</property>
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+ </object>
+ <object name="object_buttons" meta_type="CMF Action Category">
+  <object name="copy" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+ </object>
+</object>

@@ -3,7 +3,7 @@
     <script tal:condition="python: not '@@search' in context.REQUEST['URL']"
             type="text/javascript"
             tal:define="portal_url context/@@plone_portal_state/portal_url;"
-            tal:attributes="src string:${portal_url}/++resource++Products.cedes/listings.js">
+            tal:attributes="src string:${portal_url}/++plone++cedes.core/listings.js">
     </script>
 
     <tal:block define="common_result_listing_content context/@@common-result-listing-content/index;">

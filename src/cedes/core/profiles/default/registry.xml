@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<registry xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+          i18n:domain="cedes.core">
+  <records prefix="plone.resources/cedes.core"
+           interface="Products.CMFPlone.interfaces.IResourceRegistry">
+    <value key="css">
+      <element>++plone++cedes.core/main.less</element>
+    </value>
+  </records>
+  <records prefix="plone.bundles/cedes.core"
+           interface="Products.CMFPlone.interfaces.IBundleRegistry">
+    <value key="resources">
+      <element>cedes.core</element>
+    </value>
+    <value key="depends">plone</value>
+    <value key="enabled">True</value>
+    <value key="compile">True</value>
+    <value key="csscompilation">++plone++cedes.core/main-compiled.css</value>
+    <value key="jscompilation">++plone++cedes.core/cedes.js</value>
+    <value key="last_compilation">2021-12-28 17:30:00.000Z</value>
+  </records>
+</registry>

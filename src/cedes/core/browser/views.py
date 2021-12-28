@@ -78,7 +78,8 @@ class CommonResultListingView(BrowserView):
 
     def _findSearchFor(self):
         """
-          Find out what search we have to perform as this is a common view used to perform several searches.
+          Find out what search we have to perform as this is
+          a common view used to perform several searches.
         """
         contextPortalType = self.context.portal_type
         if contextPortalType == 'Theme':
@@ -118,7 +119,7 @@ class ContextCatalogSiteMap(CatalogSiteMap):
 
         strategy = getMultiAdapter((context, self), INavtreeStrategy)
 
-        # XXX begin changes by Products.cedes
+        # XXX begin changes by cedes.core
         query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 3}
         query['portal_type'] = ['Theme']
         query['exclude_from_nav'] = False
@@ -141,7 +142,7 @@ class ContextSitemapView(SitemapView):
         self.portal_url = self.portal.absolute_url()
 
     def createSiteMap(self, context):
-        # XXX begin changes by Products.cedes
+        # XXX begin changes by cedes.core
         # context = aq_inner(self.context)
         # XXX end changes
 

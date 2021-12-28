@@ -15,7 +15,8 @@
 
         <tal:faceted_search condition="python: is_search">
           <div tal:condition="layout/may_search"
-               tal:define="batch python: folderContents;
+               tal:define="dummy python: request.set('folderContents', folderContents);
+                           batch python: folderContents;
                            batch_length python: batch.sequence_length;">
 
                 <dl tal:condition="python: batch_length <= 5"

@@ -30,7 +30,7 @@
         <span tal:omit-tag="" tal:define="desc      item/Description;
                                           item_state item/review_state|nothing;
                                           item_state python: item_state or context.portal_workflow.getInfoFor(item, 'review_state');
-                                          item_big_icon python:portal_url + '/++resource++cedes.core/big-' + normalizeString(item_type) + '.gif';
+                                          item_big_icon python:portal_url + '/++plone++cedes.core/big-' + normalizeString(item_type) + '.gif';
                                           item_absolute_url item/getURL | item/absolute_url;
                                           item_url python:(item_type in use_view_action) and item_absolute_url+'/view' or item_absolute_url;
                                           bc python: request.get('bc', '') or (here.portal_type == 'Theme' and here.UID()) or '';

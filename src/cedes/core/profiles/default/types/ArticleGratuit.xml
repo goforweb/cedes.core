@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <object name="theme" meta_type="theme" i18n:domain="cedes.core"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title" i18n:translate="">theme</property>
+ <property name="title" i18n:translate="">ArticleGratuit</property>
  <property name="description" i18n:translate=""></property>
- <property name="icon_expr">string:${portal_url}/theme.png</property>
- <property name="factory">theme</property>
- <property name="add_view_expr">string:${folder_url}/++add++theme</property>
+ <property name="icon_expr">string:${portal_url}/++ressource++cedes.core/article-gratuit.gif</property>
+ <property name="factory">ArticleGratuit</property>
+ <property name="add_view_expr">string:${folder_url}/++add++ArticleGratuit</property>
  <property name="link_target"></property>
  <property name="immediate_view">view</property>
  <property name="global_allow">True</property>
@@ -20,12 +20,16 @@
  </property>
  <property name="default_view_fallback">False</property>
  <property name="add_permission">cmf.AddPortalContent</property>
- <property name="schema_policy">schema_policy_theme</property>
- <property name="klass">cedes.core.content.theme.Theme</property>
+ <property name="schema_policy">schema_policy_articlegratuit</property>
+ <property name="klass">cedes.core.content.articlegratuit.ArticleGratuit</property>
  <property name="behaviors">
   <element value="plone.app.content.interfaces.INameFromTitle" />
   <element value="plone.app.lockingbehavior.behaviors.ILocking" />
+  <element value="plone.app.dexterity.behaviors.metadata.IDublinCore"/>
+  <element value="plone.excludefromnavigation" />
+  <element value="collective.dexteritytextindexer.behavior.IDexterityTextIndexer" />
  </property>
+ <property name="model_file"></property>
  <property name="schema"></property>
  <property name="model_source">
      &lt;model xmlns="http://namespaces.plone.org/supermodel/schema"&gt;

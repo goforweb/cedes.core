@@ -4,7 +4,7 @@
   <criterion name="c7">
    <property name="widget">daterange</property>
    <property name="title">Encodé le</property>
-   <property name="index">getCr_first_classification_date</property>
+   <property name="index">cr_first_classification_date_index</property>
    <property name="position">top</property>
    <property name="section">advanced</property>
    <property name="hidden">False</property>
@@ -48,7 +48,7 @@
    <property name="operator">or</property>
    <property name="operator_visible">False</property>
    <property
-      name="vocabulary">Products.cedes.vocabularies.searchabletypesvocabulary</property>
+      name="vocabulary">cedes.core.vocabularies.searchabletypesvocabulary</property>
    <property name="catalog"></property>
    <property name="position">center</property>
    <property name="section">default</property>
@@ -63,7 +63,7 @@
    <property name="widget">sorting</property>
    <property name="title">Tri</property>
    <property
-      name="vocabulary">Products.cedes.vocabularies.facetedsortingvocabulary</property>
+      name="vocabulary">cedes.core.vocabularies.facetedsortingvocabulary</property>
    <property name="default">(reverse)</property>
    <property name="position">center</property>
    <property name="section">default</property>
@@ -119,7 +119,7 @@
   <criterion name="c4">
    <property name="widget">tal</property>
    <property name="title">Thème associé</property>
-   <property name="index">getAllAssociatedThemesUID</property>
+   <property name="index">all_associated_theme_uids</property>
    <property name="default">context/UID</property>
    <property name="position">right</property>
    <property name="section">default</property>

@@ -15,23 +15,17 @@ from plone.dexterity.schema import DexteritySchemaPolicy
 from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
-from zope import schema
 from zope.interface import implementer
 
 
 class ITheme(model.Schema):
     """ """
 
-    title = schema.TextLine(
-        title=('Titre'),
-        required=False,
-    )
-
     directives.widget(
         'cc_related',
         RelatedItemsFieldWidget,
         pattern_options={
-            'selectableTypes': ['theme'],
+            'selectableTypes': ['Theme'],
         }, )
     cc_related = RelationList(
         title='Voir aussi',
@@ -40,11 +34,21 @@ class ITheme(model.Schema):
         ),
         required=False, )
 
+
 @implementer(ITheme)
 class Theme(Container):
     """ """
 
     security = ClassSecurityInfo()
+
+    security.declarePublic('get_title_path')
+
+    def get_title_path(self, separator="->"):
+        """
+          Build the title path like physical path (used for displaying the breadcrumbs)
+        """
+        separator = ' ' + separator + ' '
+        return separator.join([p.Title() for p in self.get_themes_path(include_root=False)])
 
     security.declarePublic('is_root')
 
@@ -52,7 +56,7 @@ class Theme(Container):
         """
           returns True if this object is the root of the classification scheme
         """
-        return self.aq_inner.aq_parent.portal_type != 'theme'
+        return self.aq_inner.aq_parent.portal_type != 'Theme'
 
     security.declarePublic('get_root_theme')
 
@@ -75,8 +79,7 @@ class Theme(Container):
           @return List of ressources classified under this theme
         """
         catalog = api.portal.get_tool('portal_catalog')
-        targetUids = [self.UID()]
-        res = catalog(portal_type=CEDES_RESSOURCE_TYPES, targetUID=targetUids)
+        res = catalog(portal_type=CEDES_RESSOURCE_TYPES, associated_theme_uids=self.UID())
 
         if not sorted:
             return res
@@ -141,16 +144,6 @@ class Theme(Container):
         if len(title) > short_length:
             title = title[:short_length] + '...'
         return title.encode('UTF-8')
-
-    def reindex_associated_resources(self):
-        """
-          Reindex the keywords of the associated ressources in SearchableText
-        """
-        associated = self.get_associated_resources(sorted=False)
-        for item in associated:
-            item = item.getObject()
-            item.setCached_searchable()
-            item.reindexObject(idxs=['SearchableText'])
 
 
 class ThemeSchemaPolicy(DexteritySchemaPolicy):

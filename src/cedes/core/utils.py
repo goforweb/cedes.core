@@ -15,7 +15,7 @@ import string
 import unicodedata
 
 
-def normalizeData(data):
+def normalize_data(data):
     """
       Normalize data, remove accents, quotes, capital letters and trailing 's'
     """
@@ -31,7 +31,14 @@ def normalizeData(data):
         normalizedWord = normalizedWord.rstrip('x')
         normalizedWord = normalizedWord.strip()
         res.append(normalizedWord)
-    return ' '.join(res).encode('utf-8')
+    return ' '.join(res)
+
+
+def get_modified_attrs(modified_event):
+    """Useful in a IObjectModifiedEvent to get what fields were actually edited."""
+    mod_attrs = [name for attr in modified_event.descriptions
+                 for name in attr.attributes]
+    return mod_attrs
 
 
 def gopress_stats(context, datefrom, dateto):

@@ -1,24 +1,26 @@
 <?xml version="1.0"?>
-<!-- Mis en commentaire pour éviter que les indexes soient remis à 0 à chaque reinstall... -->
 <object name="portal_catalog" meta_type="Plone Catalog Tool">
- <index name="cr_date" meta_type="CedesDateIndex">
+
+ <index name="cr_date_index" meta_type="DateIndex">
   <property name="index_naive_time_as_local">True</property>
  </index>
- <index name="getAllAssociatedThemesUID" meta_type="KeywordIndex">
-  <indexed_attr value="getAllAssociatedThemesUID"/>
+ <index name="all_associated_theme_uids" meta_type="KeywordIndex">
+    <indexed_attr value="all_associated_theme_uids"/>
  </index>
- <index name="getEventType" meta_type="KeywordIndex">
-  <indexed_attr value="getEventType"/>
+ <index name="associated_theme_uids" meta_type="KeywordIndex">
+    <indexed_attr value="associated_theme_uids"/>
  </index>
- <index name="targetUID" meta_type="KeywordIndex">
-  <indexed_attr value="getAssociatedThemesUID"/>
+ <index name="user_ratings" meta_type="KeywordIndex">
+    <indexed_attr value="user_ratings"/>
  </index>
- <index name="getCr_first_classification_date" meta_type="DateIndex" />
- <column value="getAssociatedThemesTitleAndPath"/>
- <column value="getTitlePath"/>
- <column value="getColophonWithAuthor"/>
- <column value="getCr_first_classification_date"/>
- <column value="cr_date"/>
- <column value="cr_difficulty"/>
- <column value="cr_comment"/>
+ <index name="cr_first_classification_date_index" meta_type="DateIndex" />
+ <index name="has_cr_points" meta_type="BooleanIndex" />
+
+ <column value="associated_themes_title_and_path"/>
+ <column value="title_path"/>
+ <column value="colophon_with_author_index"/>
+ <column value="cr_first_classification_date_index"/>
+ <column value="cr_date_index"/>
+ <column value="cr_comment_index"/>
+
 </object>

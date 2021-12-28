@@ -8,4 +8,8 @@
     factory="cedes.core.content.theme.ThemeSchemaPolicy"
     name="schema_policy_theme" />
 
+  <utility
+    factory="cedes.core.content.articlegratuit.ArticleGratuitSchemaPolicy"
+    name="schema_policy_articlegratuit" />
+
 </configure>

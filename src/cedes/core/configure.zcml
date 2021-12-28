@@ -1,19 +1,56 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:i18n="http://namespaces.zope.org/i18n"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
            xmlns:five="http://namespaces.zope.org/five">
 
     <include package=".browser" />
     <include package=".content" />
     <include package=".gopress" />
 
+    <include package="collective.dexteritytextindexer" />
+
     <include file="events.zcml" />
     <include file="profiles.zcml" />
 
     <i18n:registerTranslations directory="locales" />
 
+    <!-- Faceted criteria adapter -->
     <adapter for="cedes.core.interfaces.IThemeFacetedNavigable"
              provides="eea.facetednavigation.interfaces.ICriteria"
              factory="cedes.core.adapters.ThemeCriteria" />
+
+    <!-- Faceted vocabularies -->
+    <utility component="cedes.core.vocabularies.SearchableTypesVocabularyFactory"
+             name="cedes.core.vocabularies.searchabletypesvocabulary" />
+    <utility component="cedes.core.vocabularies.FacetedSortingVocabularyFactory"
+             name="cedes.core.vocabularies.facetedsortingvocabulary" />
+
+    <!-- portal_catalog indexes -->
+    <adapter name="all_associated_theme_uids"
+             factory=".indexes.all_associated_theme_uids" />
+    <adapter name="associated_themes_title_and_path"
+             factory=".indexes.associated_themes_title_and_path" />
+    <adapter name="associated_theme_uids"
+             factory=".indexes.associated_theme_uids" />
+    <adapter name="title_path"
+             factory=".indexes.title_path" />
+    <adapter name="has_cr_points"
+             factory=".indexes.has_cr_points" />
+    <adapter name="cr_date_index"
+             factory=".indexes.cr_date_index" />
+    <adapter name="cr_first_classification_date_index"
+             factory=".indexes.cr_first_classification_date_index" />
+    <adapter name="user_ratings"
+             factory=".indexes.user_ratings" />
+
+    <!-- collective.dexteritytextindexer RichText converter -->
+    <adapter
+        zcml:condition="installed plone.app.textfield"
+        factory="cedes.core.indexes.RessourceRichTextIndexFieldConverter" />
+
+    <!-- collective.dexteritytextindexer extender -->
+    <adapter factory="cedes.core.indexes.RessourceSearchableTextExtender"
+             name="RessourceSearchableTextExtender" />
 
 </configure>

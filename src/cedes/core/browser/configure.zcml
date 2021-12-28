@@ -8,6 +8,11 @@
 
     <browser:jbot directory="jbot" />
 
+    <!-- Publish static files -->
+    <browser:resourceDirectory
+        name="cedes.core"
+        directory="static" />
+
     <!-- faceted view -->
     <faceted:view
       name="faceted-theme-view"
@@ -50,5 +55,21 @@
         template="templates/common-result-listing-content.pt"
         permission="zope2.View" />
 
+    <!-- Override sitemap to use it to display plan -->
+    <browser:page
+        for="*"
+        name="sitemap_builder_view"
+        class="cedes.core.browser.views.ContextCatalogSiteMap"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope.Public"
+        allowed_attributes="siteMap" />
+    <browser:page
+        for="*"
+        name="planclassement_view"
+        class="cedes.core.browser.views.ContextSitemapView"
+        template="templates/contextsitemap.pt"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope.Public"
+        allowed_interface="Products.CMFPlone.browser.interfaces.ISitemapView" />
 
 </configure>

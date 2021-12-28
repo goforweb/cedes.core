@@ -30,7 +30,7 @@
         <span tal:omit-tag="" tal:define="desc      item/Description;
                                           item_state item/review_state|nothing;
                                           item_state python: item_state or context.portal_workflow.getInfoFor(item, 'review_state');
-                                          item_big_icon python:portal_url + '/big-' + normalizeString(item_type) + '.gif';
+                                          item_big_icon python:portal_url + '/++resource++cedes.core/big-' + normalizeString(item_type) + '.gif';
                                           item_absolute_url item/getURL | item/absolute_url;
                                           item_url python:(item_type in use_view_action) and item_absolute_url+'/view' or item_absolute_url;
                                           bc python: request.get('bc', '') or (here.portal_type == 'Theme' and here.UID()) or '';
@@ -46,7 +46,7 @@
             </a>
           </td>
           <td valign="top" style="padding-top: 0.8em;">
-            <dl style="display:none; margin-top: 0.4em;" class="portalMessage warning" tal:attributes="id string:ap${repeat/item/number}; class python: viewable and 'portalMessage info' or 'portalMessage warning';" tal:define="item_uid item/UID; viewable python: member.checkViewable(item_uid)" tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
+            <dl style="display:none; margin-top: 0.4em;" class="portalMessage warning" tal:attributes="id string:ap${repeat/item/number}; class python: viewable and 'portalMessage info' or 'portalMessage warning';" tal:define="item_uid item/UID; viewable python: True" tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
               <dt tal:condition="not: viewable">Avertissement</dt>
               <dt tal:condition="viewable">Info</dt>
               <dd tal:condition="python: viewable">Votre compte a déjà été débité pour cet article, vous pouvez donc y accéder librement. Cliquez sur 'Continuer' pour confirmer.
@@ -90,10 +90,10 @@
             </form>
 
             <div class="highlight" tal:condition="isManager">
-            <span tal:content="python: context.toLocalizedTime(item.getCr_first_classification_date)" />            
+            <span tal:content="python: context.toLocalizedTime(item.cr_first_classification_date_index)" />
             <div class="actions">
-              <tal:actions replace="structure python: item.getObject().restrictedTraverse(
-                '@@actions_panel')(showTransitions=False, showActions=False)" />
+              <!--tal:actions replace="structure python: item.getObject().restrictedTraverse(
+                '@@actions_panel')(showTransitions=False, showActions=False)" /-->
             </div>
             </div>
 
@@ -124,7 +124,8 @@
             </tal:know_more>
 
             <tal:folder condition="python: view.full and item_type in ['Folder',]">
-              <tal:block define="folder item/getObject; dummy python: request.set('b_start', 0);dummy python: request.set('b_size', 99);">
+              <tal:block define="folder item/getObject; dummy python: request.set('b_start', 0);
+                                 dummy python: request.set('b_size', 99);">
                 <tal:content tal:define="common_result_listing folder/@@common-result-listing/index;"
                              replace="structure common_result_listing" />
               </tal:block>
@@ -136,15 +137,11 @@
             </tal:aLink>
 
             <tal:notALink condition="python: not item_type == 'Link'">
-             <div tal:condition="item/cr_difficulty">
-               <b>Difficult&eacute;:</b> <span tal:repeat="diff item/cr_difficulty" tal:omit-tag=""><span tal:replace="diff"/><span tal:condition="not:repeat/diff/end" tal:replace="string:, "/></span>
-             </div>
-
-             <div tal:condition="item/cr_comment">
-             <b>Commentaire:</b>  <span tal:replace="structure item/cr_comment"/>
+             <div tal:condition="item/cr_comment_index">
+             <b>Commentaire:</b>  <span tal:replace="structure item/cr_comment_index"/>
              </div>
              <div>
-               <div tal:repeat="classification item/getAssociatedThemesTitleAndPath|item/indexAssociatedThemesTitleAndPath"
+               <div tal:repeat="classification item/associated_themes_title_and_path"
                  tal:attributes="style string:background:url($portal_url/arrownav-black.gif) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
                  <a href="#"
                     tal:define="title python:classification[0];

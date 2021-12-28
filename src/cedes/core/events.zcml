@@ -7,4 +7,8 @@
                      zope.lifecycleevent.interfaces.IObjectAddedEvent"
                 handler="cedes.core.events.onThemeAdded" />
 
+    <subscriber for="cedes.core.content.theme.ITheme
+                     zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+                handler="cedes.core.events.onThemeModified" />
+
 </configure>

@@ -45,7 +45,7 @@
               <tal:block define="common_result_listing_content context/@@common-result-listing-content/index;">
                 <tal:content replace="structure common_result_listing_content" />
               </tal:block>
-              <tal:content replace="structure python: ('<script>$(\'#common-result-content\').highlightSearchTerms({terms: %s});</script>' % layout.search_terms()).replace('u\'', '\'')" />
+              <tal:content replace="structure python: ('<script>$(\'#common-result-content\').highlightSearchTerms({terms: %s});</script>' % layout.search_terms())" />
             </tal:results>
           </div>
           <div tal:condition="not:layout/may_search">

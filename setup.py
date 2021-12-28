@@ -25,6 +25,7 @@ setup(name='cedes.core',
       install_requires=[
           'setuptools',
           'cioppino.twothumbs',
+          'collective.dexteritytextindexer',
           'eea.facetednavigation',
 #          'imio.actionspanel',
           'Plone',

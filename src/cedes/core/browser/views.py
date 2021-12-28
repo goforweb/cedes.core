@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from Acquisition import aq_inner
+from plone import api
+from plone.app.layout.navigation.interfaces import INavtreeStrategy
+from plone.app.layout.navigation.navtree import buildFolderTree
 from plone.batching import Batch
 from plone.memoize.view import memoize
+from Products.CMFPlone.browser.navigation import CatalogSiteMap
+from Products.CMFPlone.browser.navtree import SitemapQueryBuilder
+from Products.CMFPlone.browser.sitemap import SitemapView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 
@@ -99,3 +106,46 @@ class CommonResultListingView(BrowserView):
 
     def update_content(self):
         return self.context.restrictedTraverse('@@common-result-listing').index()
+
+
+class ContextCatalogSiteMap(CatalogSiteMap):
+    """ """
+    def siteMap(self):
+        context = aq_inner(self.context)
+
+        queryBuilder = SitemapQueryBuilder(context)
+        query = queryBuilder()
+
+        strategy = getMultiAdapter((context, self), INavtreeStrategy)
+
+        # XXX begin changes by Products.cedes
+        query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 3}
+        query['portal_type'] = ['Theme']
+        query['exclude_from_nav'] = False
+        # path to 'plan'
+        strategy.rootPath = '/'.join(context.aq_parent.getPhysicalPath())
+        # XXX end changes
+
+        return buildFolderTree(context, obj=context,
+                               query=query, strategy=strategy)
+
+
+class ContextSitemapView(SitemapView):
+    """ """
+
+    def __init__(self, context, request):
+        """ """
+        super(ContextSitemapView, self).__init__(context, request)
+        portal_url = api.portal.get_tool('portal_url')
+        self.portal = portal_url.getPortalObject()
+        self.portal_url = self.portal.absolute_url()
+
+    def createSiteMap(self, context):
+        # XXX begin changes by Products.cedes
+        # context = aq_inner(self.context)
+        # XXX end changes
+
+        view = getMultiAdapter((context, self.request),
+                               name='sitemap_builder_view')
+        data = view.siteMap()
+        return self._renderLevel(children=data.get('children', []))

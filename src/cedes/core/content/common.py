@@ -5,23 +5,20 @@
 # GNU General Public License (GPL)
 #
 
+from AccessControl import ClassSecurityInfo
+from cedes.core.interfaces import IRessource
+from collective.dexteritytextindexer.directives import searchable
+from datetime import datetime
+from plone import api
 from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
-from collective.dexteritytextindexer.directives import searchable
-from AccessControl import ClassSecurityInfo
-from plone import api
-from datetime import datetime
+from zope.interface import implementer
 
 
 class ICommon(model.Schema):
     """ """
-
-    searchable("title")
-    title = schema.TextLine(
-        title='Titre',
-        required=True, )
 
     searchable("cr_comment")
     cr_comment = schema.Text(
@@ -53,40 +50,47 @@ class ICommon(model.Schema):
         required=False, )
 
 
+@implementer(IRessource)
 class Ressource(object):
     """ """
 
     security = ClassSecurityInfo()
 
-    def indexAssociatedThemesUID(self):
+    def get_associated_themes(self, as_uids=True):
         """
-          returns all the UID of the associated Themes WITHOUT their parents
+          Returns all the associated Themes WITHOUT their parents.
+          When p_as_uids=True, returns UID of themes.
         """
-        return self.getRawCr_classification()
-
-    def indexAllAssociatedThemesUID(self):
-        """
-          returns all the UID of the associated Themes AND their parents
-        """
-        res = []
-        associated_themes = self.getCr_classification()
-        for theme in associated_themes:
-            for p in theme.getThemesPath():
-                res += [p.UID()]
-                if p.getRawCc_synonyms() is not None:
-                    res += p.getRawCc_synonyms()
+        res = [theme.to_object for theme in self.cr_classification
+               if theme]
+        if as_uids:
+            res = [theme.UID() for theme in res]
         return res
 
-    def indexAssociatedThemesTitleAndPath(self):
+    def get_all_associated_themes(self, as_uids=True):
+        """
+          Returns all the associated Themes AND their parents.
+          When p_as_uids=True, returns UID of themes.
+        """
+        res = []
+        associated_themes = self.get_associated_themes(as_uids=False)
+        for theme in associated_themes:
+            for p in theme.get_themes_path():
+                res += [p]
+        if as_uids:
+            res = [theme.UID() for theme in res]
+        return res
+
+    def get_associated_themes_title_and_path(self):
         """
           returns a list of tuples containing all associated Themes
           (Title, TitlePath and path)
         """
         res = []
         portal_url = api.portal.get_tool('portal_url')
-        associated_themes = self.getCr_classification()
+        associated_themes = self.get_associated_themes(as_uids=False)
         for theme in associated_themes:
-            res.append((theme.Title(), theme.getTitlePath(), '/'.join(
+            res.append((theme.Title(), theme.get_title_path(), '/'.join(
                 portal_url.getRelativeContentPath(theme))))
         return res
 
@@ -203,37 +207,37 @@ class Article(Ressource):
 
     security = ClassSecurityInfo()
 
-    security.declarePublic('getColophon')
+    security.declarePublic('get_colophon')
 
-    def getColophon(self):
+    def get_colophon(self):
         """
           returns the colophon: periodical, date, periodical number, pp, nb of words
         """
         colophon = u''
-        if self.getCr_periodical():
-            colophon += self.getCr_periodical().decode('utf-8')
-        if self.getCr_periodical() and self.getCr_date():
+        if self.cr_periodical:
+            colophon += self.cr_periodical
+        if self.cr_periodical() and self.cr_date:
             colophon += u', '
-        if self.getCr_date():
-            colophon += self.toLocalizedTime(self.getCr_date())
-        if self.getCr_periodical_number():
-            colophon += u', n&deg; ' + self.getCr_periodical_number().decode('utf-8')
-        if self.getCr_periodical_pp():
-            colophon += u', p. ' + self.getCr_periodical_pp().decode('utf-8')
-        if self.getCr_words_nb():
-            colophon += u', ' + self.getCr_words_nb().decode('utf-8') + u' mots'
+        if self.cr_date():
+            colophon += self.toLocalizedTime(self.cr_date)
+        if self.cr_periodical_number:
+            colophon += u', n&deg; ' + self.cr_periodical_number
+        if self.cr_periodical_pp:
+            colophon += u', p. ' + self.cr_periodical_pp
+        if self.cr_words_nb:
+            colophon += u', ' + self.cr_words_nb + u' mots'
         return colophon
 
-    security.declarePublic('getColophonWithAuthor')
+    security.declarePublic('get_colophon_with_author')
 
-    def getColophonWithAuthor(self):
+    def get_colophon_with_author(self):
         """
           returns the author and colophon
         """
         colophon = u''
-        if self.getCr_author():
-            colophon += self.getCr_author().decode('utf-8') + u' &mdash; '
-        colophon += self.getColophon()
+        if self.cr_author:
+            colophon += self.cr_author + u' &mdash; '
+        colophon += self.get_colophon()
         return colophon
 
 

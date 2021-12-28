@@ -1,0 +1,20 @@
+<div tal:content="structure view/portal/pages/arborescence-explications/getText" tal:on-error="string:'arborescence-explications' manquant" >
+    An overview of the available content on this site. Keep the pointer still
+    over an item for a few seconds to get its description.
+</div>
+<br />
+
+<div id="sitemap" style="text-align: center;">
+    <div class="plan_head">Plan de classement du CeDES</div>
+    <table style="display: inline-block">
+        <tr style="vertical-align: top;"
+            tal:define="plan python: view.portal.plan">
+            <td tal:repeat="base_theme python: [t for t in plan.getFolderContents(full_objects=True) if not t.exclude_from_nav]">
+                <ul tal:attributes="id string:portal-sitemap-${base_theme/getId}"
+                    class="navTreeLevel0 visualNoMarker">
+                    <tal:sitemap replace="structure python: view.createSiteMap(base_theme).replace('state-published ', '')" />
+                </ul>
+            </td>
+        </tr>
+    </table>
+</div>

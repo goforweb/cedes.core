@@ -6,14 +6,17 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from zope import schema
-from collective.dexteritytextindexer.directives import searchable
-from cedes.core.content.common import ICommon
 from cedes.core.content.common import Article
-from plone.app.textfield import RichText
-from zope.interface import implementer
-from plone.app.contenttypes.interfaces import IFile
+from cedes.core.content.common import ICommon
+from collective.dexteritytextindexer.directives import searchable
 from plone.app.contenttypes.content import File
+from plone.app.contenttypes.interfaces import IFile
+from plone.app.textfield import RichText
+from plone.dexterity.schema import DexteritySchemaPolicy
+from plone.namedfile.field import NamedBlobFile
+from plone.supermodel import model
+from zope import schema
+from zope.interface import implementer
 
 
 class IArticleGratuit(ICommon, IFile):
@@ -25,27 +28,35 @@ class IArticleGratuit(ICommon, IFile):
 
     searchable("cr_author")
     cr_author = schema.TextLine(
-        title='Auteur', )
+        title='Auteur',
+        required=False, )
 
     searchable("cr_periodical")
     cr_periodical = schema.TextLine(
-        title='Périodique', )
+        title='Périodique',
+        required=False, )
 
     cr_periodical_number = schema.TextLine(
-        title='Numéro du périodique ou date de l\'article', )
+        title='Numéro du périodique ou date de l\'article',
+        required=False, )
 
     cr_periodical_pp = schema.TextLine(
-        title='Numéro de page dans le périodique', )
+        title='Numéro de page dans le périodique',
+        required=False, )
 
     cr_words_nb = schema.TextLine(
-        title='Nombre de mots', )
+        title='Nombre de mots',
+        required=False, )
+
+    model.primary('file')
+    file = NamedBlobFile(
+        title='Fichier',
+        required=False, )
 
     searchable("cr_html_preview")
     cr_html_preview = RichText(
         title='Aperçu',
-        default_mime_type='text/plain',
-        allowed_mime_types=("text/plain", ),
-        output_mime_type='text/x-html-safe',
+        allowed_mime_types=(u"text/html", ),
         required=False)
 
 
@@ -89,3 +100,10 @@ class ArticleGratuit(File, Article):
             colophon += self.cr_author + ' &mdash; '
         colophon += self.get_colophon()
         return colophon
+
+
+class ArticleGratuitSchemaPolicy(DexteritySchemaPolicy):
+    """Schema Policy for ArticleGratuit"""
+
+    def bases(self, schema_name, tree):
+        return (IArticleGratuit, )

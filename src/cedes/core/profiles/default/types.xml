@@ -2,5 +2,6 @@
 <object name="portal_types" meta_type="Plone Types Tool">
   <object name="Theme" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticleGratuit" meta_type="Dexterity FTI" purge="True" />
+  <object name="ArticlePayant" meta_type="Dexterity FTI" purge="True" />
 </object>
 

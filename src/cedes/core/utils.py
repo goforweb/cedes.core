@@ -8,6 +8,7 @@
 from cedes.core import logger
 from collections import OrderedDict
 from DateTime import DateTime
+from plone.app.textfield.value import RichTextValue
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 
@@ -39,6 +40,15 @@ def get_modified_attrs(modified_event):
     mod_attrs = [name for attr in modified_event.descriptions
                  for name in attr.attributes]
     return mod_attrs
+
+
+def richtextval(text, mimeType=u"text/html", outputMimeType=u"text/x-html-safe"):
+    """
+        Return a RichTextValue to be stored in IRichText field
+    """
+    return RichTextValue(raw=text,
+                         mimeType=mimeType,
+                         outputMimeType=outputMimeType)
 
 
 def gopress_stats(context, datefrom, dateto):

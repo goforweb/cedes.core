@@ -24,12 +24,6 @@
    <property name="icon_expr">string:$portal_url/configuration.png</property>
    <property name="available_expr">python:member.getId() == 'admin'</property>
   </object>
-  <object name="login" meta_type="CMF Action">
-   <property name="visible">False</property>
-  </object>
-  <object name="join" meta_type="CMF Action">
-   <property name="visible">False</property>
-  </object>
   <object name="undo" meta_type="CMF Action">
    <property name="visible">False</property>
   </object> 

@@ -8,7 +8,7 @@ import os
 GOPRESS_APIKEY = '5a3cb62a37d3d669dba2e655de'
 # go4web 'support@go4web.be'
 # cedes 'cedes@unamur.be'
-GOPRESS_EMAIL = 'support@go4web.be'
+GOPRESS_EMAIL = 'cedes@unamur.be'
 GOPRESS_URL = 'https://ws.gopress.be'
 
 DATA_PATH = os.environ['BUILDOUT_DIR']

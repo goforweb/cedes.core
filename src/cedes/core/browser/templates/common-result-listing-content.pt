@@ -4,7 +4,7 @@
 
   <div id="common-result-content"
        tal:define="searchterm request/SearchableText|nothing;
-                   use_view_action context/portal_properties/site_properties/typesUseViewActionInListings|python:();
+                   use_view_action python: ['Image', 'File', 'ArticleGratuit', 'ArticlaPayant'];
                    ploneview nocall:context/@@plone;
                    normalizeString nocall:ploneview/normalizeString;
                    portal_state context/@@plone_portal_state;
@@ -14,7 +14,8 @@
                    askConnection python: isAnon and context.doProvokeUnauthorized() or '';
                    global isLinkInDossier python: False;
                    portal portal_state/portal;
-                   portal_url portal_state/portal_url;">
+                   portal_url portal_state/portal_url;
+                   is_cedes_free python: member.is_cedes_free();">
 
     <h3 tal:condition="python: not request.get('folderContents') and context.portal_type in ('Theme', 'PlanClassement') and not '@@updated_search' in context.REQUEST['URL']">
       <span tal:replace="python:(batch.sequence_length>1) and 'Ressources class&eacute;es' or 'Ressource class&eacute;e'"/> : <span tal:replace="python:batch.sequence_length"/>
@@ -41,7 +42,7 @@
             <a style="border-color: white;"
                tal:attributes="href  item_url;
                                title desc;
-                               onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and member.isCedesFree())) and onclick_action or '';">
+                               onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or '';">
               <img tal:attributes="src item_big_icon; title item_type_title" i18n:domain="plone" i18n:attributes="title" style="padding-top:3px;" />
             </a>
           </td>
@@ -56,15 +57,15 @@
                       Continuer...
                     </a>
               </dd>
-              <dd tal:condition="python:member.checkBalance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
+              <dd tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
                 <a href=""
                   tal:attributes="href  item_url;
                                    title item/Description;">
                   Continuer...
                 </a>
               </dd>
-              <dd tal:condition="member/isCedesFree"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
-              <dd tal:condition="python:not(member.isCedesFree()) and not(member.checkBalance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
+              <dd tal:condition="is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
+              <dd tal:condition="python:not is_cedes_free and not(member.check_balance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
             </dl>
 
             <a href="" class=""
@@ -72,7 +73,7 @@
               tal:attributes="href python: item_type == 'Link' and item.getRemoteUrl() or item_url;
                               title python: not item_type == 'DossierStructure' and desc or '';
                               class string:visualIconPadding state-${item_state};
-                              onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and member.isCedesFree())) and onclick_action or ''">
+                              onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or ''">
               <span tal:content="item/Title">Ressource title</span>
               <span class="ds-kw-epc"
                     tal:condition="python: 'ds-kw-epc' in item.Subject">EPC</span>
@@ -98,7 +99,7 @@
             </div>
 
             <div class="documentByLine" style="margin: 0;" tal:condition="python:item_type in use_view_action or item_type in ['Bibliographie', 'SequenceApprentissage', ]">
-              <span tal:replace="structure item/getColophonWithAuthor"/>
+              <span tal:replace="structure item/colophon_with_author"/>
             </div>
 
             <div class="documentDescription" style="margin: 0;" tal:condition="python: desc and not item_type in ['Link', 'DossierStructure',]"
@@ -142,7 +143,7 @@
              </div>
              <div>
                <div tal:repeat="classification item/associated_themes_title_and_path"
-                 tal:attributes="style string:background:url($portal_url/arrownav-black.gif) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
+                 tal:attributes="style string:background:url($portal_url/++plone++cedes.core/arrownav-black.gif) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
                  <a href="#"
                     tal:define="title python:classification[0];
                                 hoverTitle python:classification[1];

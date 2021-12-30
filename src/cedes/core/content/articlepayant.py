@@ -14,26 +14,18 @@ from zope import schema
 from zope.interface import implementer
 
 
-class IArticleGratuit(IArticle):
+class IArticlePayant(IArticle):
     """ """
 
 
-@implementer(IArticleGratuit)
-class ArticleGratuit(Article):
+@implementer(IArticlePayant)
+class ArticlePayant(Article):
     """ """
     security = ClassSecurityInfo()
 
-    security.declarePublic('get_colophon')
 
-    def get_colophon(self):
-        """
-          returns the colophon but NOT the cr_date that is used for search on ArticleGratuit.
-        """
-        return super(ArticleGratuit, self).get_colophon(include_cr_date=False)
-
-
-class ArticleGratuitSchemaPolicy(DexteritySchemaPolicy):
-    """Schema Policy for ArticleGratuit"""
+class ArticlePayantSchemaPolicy(DexteritySchemaPolicy):
+    """Schema Policy for ArticlePayant"""
 
     def bases(self, schema_name, tree):
-        return (IArticleGratuit, )
+        return (IArticlePayant, )

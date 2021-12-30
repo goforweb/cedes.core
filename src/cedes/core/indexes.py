@@ -79,6 +79,13 @@ def title_path(ressource):
     return ressource.get_title_path()
 
 
+@indexer(IRessource)
+def colophon_with_author(ressource):
+    """
+    """
+    return ressource.get_colophon_with_author()
+
+
 @implementer(IDexterityTextIndexFieldConverter)
 @adapter(IRessource, IRichText, IWidget)
 class RessourceRichTextIndexFieldConverter(DexterityRichTextIndexFieldConverter):

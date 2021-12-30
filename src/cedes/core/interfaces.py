@@ -7,9 +7,9 @@
 
 from cioppino.twothumbs.interfaces import ILoveThumbsDontYou
 from eea.facetednavigation.interfaces import IFacetedNavigable
-from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.interface import Interface
 from plone.dexterity.interfaces import IDexterityContent
+from zope.interface import Interface
+from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
 class IThemeFacetedNavigable(IFacetedNavigable):

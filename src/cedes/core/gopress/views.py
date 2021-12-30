@@ -16,9 +16,11 @@ from cedes.core.gopress.config import GOPRESS_PATH
 from cedes.core.gopress.config import GOPRESS_URL
 from cedes.core.gopress.config import GOPRESS_XML_FILE_PATH
 from cedes.core.gopress.config import PRINT_GOPRESS_REQUEST
-from DateTime import DateTime
-from io import StringIO
-from Products.CMFPlone.utils import safe_unicode
+from cedes.core.utils import richtextval
+from datetime import datetime
+from io import BytesIO
+from plone.dexterity.utils import createContentInContainer
+from plone.namedfile import NamedBlobFile
 from Products.Five import BrowserView
 from PyPDF2 import PdfFileReader
 from PyPDF2 import PdfFileWriter
@@ -96,7 +98,7 @@ class GoPressView(BrowserView):
 
         for json_folder in data['RESPONSE']['RESULTS']:
             # only keep 'user-folders'
-            if not 'GP:BUNDLE' in json_folder:
+            if 'GP:BUNDLE' not in json_folder:
                 continue
             # get every usefull informations
             user_folders = json_folder['GP:BUNDLE']
@@ -125,13 +127,13 @@ class GoPressView(BrowserView):
                     folder.append(article)
                     logger.info("Treating article '%s'" % article.get('id'))
                     article_id = article.get('id')
-                    #article_publication = article.findtext('article_publication')
+                    # article_publication = article.findtext('article_publication')
 
                     down_status = self._treat_html_pdf(folder_id, article_id, articleHTML, pdf_path, force=0)
                     if down_status.get('new_art'):
                         sync_status['new_art'] += 1
                     # clean HTML and retrieve metadata : author and abstract
-                    #pbmeta = {
+                    # pbmeta = {
                     #    'article_id': article_id,
                     #    'article_title': article.findtext('article_title', ''),
                         # 'article_pubid' : article.findtext('article_pubid', ''),
@@ -141,13 +143,13 @@ class GoPressView(BrowserView):
                         # 'article_mode': article.findtext('article_mode', ''),
                         # 'article_date': article.findtext('article_date', ''),
                         # 'article_price': article.findtext('article_price', ''),
-                    #}
-                    #meta = cleanArticle(folder_id, article_id,
-                    #                    article_publication, force=0, pbmeta=pbmeta)
-                    #checkMetaForErrors(meta, sync_status,
-                    #                   folder_id, user_folder['INFO']['TITLE'],
-                    #                   article_id, article.findtext('article_title', ''),
-                    #                   article_publication, down_status)
+                    # }
+                    # meta = cleanArticle(folder_id, article_id,
+                    #                     article_publication, force=0, pbmeta=pbmeta)
+                    # checkMetaForErrors(meta, sync_status,
+                    #                    folder_id, user_folder['INFO']['TITLE'],
+                    #                    article_id, article.findtext('article_title', ''),
+                    #                    article_publication, down_status)
 
             if GOPRESS_DO_BACKUP:
                 self._backup_GP(GOPRESS_XML_FILE_PATH, GOPRESS_BACKUP_PATH, suffix=True)
@@ -211,7 +213,7 @@ class GoPressView(BrowserView):
         if not articleHTML:
             return articleHTML
 
-        tree = lxml.html.fromstring(safe_unicode(articleHTML))
+        tree = lxml.html.fromstring(articleHTML)
         children = tree.getchildren()
         # we will clean first 2 tags
         if not len(children) >= 2:
@@ -239,9 +241,9 @@ class GoPressView(BrowserView):
             if child.text and len(child.text) <= 50:
                 child.tag = 'h5'
 
-        stringified = ''.join([lxml.html.tostring(x, encoding='utf-8', pretty_print=True, method='xml')
+        stringified = ''.join([lxml.html.tostring(x, encoding='unicode', pretty_print=True, method='xml')
                               for x in tree.iterchildren()])
-        return unicode(stringified, 'utf-8')
+        return stringified
 
     def _capitalize_author(self, author):
         """Make sure we have Gauthier Bastien, not GAUTHIER BASTIEN or whatever."""
@@ -310,7 +312,7 @@ class GoPressView(BrowserView):
         # XXX change after
         return author
         article_data = self._send_json_request(path='/articledata/' + external_id)
-        if not 'RESPONSE' in article_data:
+        if 'RESPONSE' not in article_data:
             return author
         article_data = article_data['RESPONSE']['RESULTS']
         # if not author, use the 'persons' and check if last person is also <p>Prenom Nom</p>
@@ -361,12 +363,13 @@ class GoPressView(BrowserView):
 
     def _download_pdf(self, pdf_path):
         """ """
-        # avoid TypeError: must be string or buffer, not None, see ticket http://trac-cedes.goforweb.be/ticket/580
+        # avoid TypeError: must be string or buffer, not None
+        # see ticket http://trac-cedes.goforweb.be/ticket/580
         if not pdf_path:
-            return ("nopdf", '')
+            return ("nopdf", b'')
         else:
             res = self._send_json_request(path=pdf_path, return_as_raw=True)
-        if res.endswith("%%EOD"):
+        if res.strip().endswith(b"%%EOD"):
             res = res.replace("%%EOD", "%%EOF")
         return ("pdf", res)
 
@@ -392,11 +395,11 @@ class GoPressView(BrowserView):
             pos = tempInfo.rfind('%%EOF')
             length = len(tempInfo)
             if pos != -1:
-                #removing trailing characters after %%EOF
+                # removing trailing characters after %%EOF
                 if (length-pos) < 20:
                     fileOpen.write(tempInfo[:pos+5])
             else:
-                #removing trailing % because %%%EOF is not correct
+                # removing trailing % because %%%EOF is not correct
                 while tempInfo[-1] == '%':
                     tempInfo = tempInfo[:-1]
                 fileOpen.write(tempInfo)
@@ -434,20 +437,21 @@ class GoPressView(BrowserView):
             force = 1
 
         # tries to download if no download yet
-        if force == 1 or (not os.path.exists(article_largepdf_path) and not os.path.exists(article_nopdf_path)):
+        if force == 1 or (not os.path.exists(article_largepdf_path) and
+                          not os.path.exists(article_nopdf_path)):
             articlePDF = self._download_pdf(pdf_path)
 
             if articlePDF[0] == 'nopdf':
                 pdffile = open(article_nopdf_path, 'w')
                 pdffile.close()
             elif articlePDF[0] == 'pdf':
-                pdffile = open(article_largepdf_path, 'w')
+                pdffile = open(article_largepdf_path, 'wb')
                 pdffile.write(articlePDF[1])
                 pdffile.close()
                 # try to open the PDFFile with PDF Reader, if we cannot do it, insert an error message
                 err = self._test_pdf(article_largepdf_path)
                 if err == 'pdfreadererror EOF marker not found':
-                    #first keeping original
+                    # first keeping original
                     try:
                         orig = article_largepdf_path.replace(".pdf", ".orig.pdf")
                         if not os.path.exists(orig):
@@ -460,7 +464,7 @@ class GoPressView(BrowserView):
                         if not err:
                             down_status['warns'].append("PDF corrigé :-)")
                         else:
-                            #clean isn't good, we get back the original and remove copy
+                            # clean isn't good, we get back the original and remove copy
                             try:
                                 shutil.copyfile(orig, article_largepdf_path)
                                 os.remove(orig)
@@ -515,7 +519,7 @@ class XmlToPloneView(BrowserView):
         xmlTree = ElementTree.parse(GOPRESS_XML_FILE_PATH)
         root = xmlTree.getroot()
         for element in root.findall('folder'):
-            #calculate the price of a folder
+            # calculate the price of a folder
             folder_price = 0
             for article in element.findall('article'):
                 folder_price += float(article.findtext('article_price'))
@@ -589,7 +593,7 @@ class XmlToPloneView(BrowserView):
         create_xml_file()
         xmlTree = ElementTree.parse(os.path.join(GOPRESS_PATH, "metadatas.xml"))
         root = xmlTree.getroot()
-        for article in root.getiterator(tag='article'):
+        for article in root.iter(tag='article'):
             if article.get('id') == articleId:
                 return {
                     'article_id': article.get('id'),
@@ -606,59 +610,57 @@ class XmlToPloneView(BrowserView):
                 }
         return None
 
-    def uploadArticle(self, folderId, articleId):
+    def upload_article(self, folderId, articleId):
         """ """
         article_info = self._get_article_information(folderId, articleId)
+        # html
         if os.path.exists(os.path.join(GOPRESS_PATH, folderId, articleId + '.html.clean.html')):
             article_html = open(os.path.join(GOPRESS_PATH, folderId, articleId + '.html.clean.html'), 'r')
         else:
             article_html = open(os.path.join(GOPRESS_PATH, folderId, articleId + '.html'), 'r')
-        #article_html = open(os.path.join(PB_PATH, folderId, articleId + '.html'), 'r')
+        article_html_data = article_html.read()
+        article_html.close()
+        # file
         article_pdf = os.path.join(GOPRESS_PATH, folderId, articleId + '.pdf')
+        article_pdf_data = None
         if os.path.exists(article_pdf):
-            article_pdf = open(article_pdf, 'r')
-        else:
-            article_pdf = None
+            article_pdf = open(article_pdf, 'rb')
+            article_pdf_data = article_pdf.read()
+            article_pdf.close()
 
-        self.context.manage_addProduct['cedes'].invokeFactory(
+        createContentInContainer(
+            self.context,
             "ArticlePayant",
             id=articleId,
             title=article_info['article_title'],
             description=article_info['article_abstract'],
+            cr_classification=[],
             cr_author=article_info['article_author'],
             cr_periodical=article_info['article_publication'],
             cr_words_nb=article_info['article_words'],
             cr_periodical_pp=article_info['article_page'],
-            cr_date=DateTime(article_info['article_date'], datefmt='international'),
-            file=article_pdf,
-            cr_html_preview=article_html)
-        obj = getattr(self.context, articleId)
-        if not hasattr(obj, 'at_ordered_refs'):
-            obj.at_ordered_refs = {'classification': ()}
+            cr_date=datetime.fromisoformat(article_info['article_date']),
+            file=NamedBlobFile(article_pdf_data, filename=articleId + '.pdf'),
+            cr_html_preview=richtextval(article_html_data))
 
-    def mergeAndUploadArticles(self, article_id, articles_and_folder_ids, option='htmlpdf', pb_folder=GOPRESS_PATH):
+    def merge_and_upload_articles(self,
+                                  article_id,
+                                  articles_and_folder_ids,
+                                  option='htmlpdf',
+                                  pb_folder=GOPRESS_PATH):
         """ """
         # merging the html content
-        article_html = unicode('').encode("utf-8")
+        article_html = ""
         article_count = 0
         merged_authors = ''
         merged_pages = []
-        for item in articles_and_folder_ids:
-            item_info = self._get_article_information(item[2], item[1])
-            #if not first, insert title
+        for item_order, item_article_id, item_folder_id in articles_and_folder_ids:
+            item_info = self._get_article_information(item_folder_id, item_article_id)
+            # if not first, insert title
             if article_count > 0:
-                article_html += unicode('<h1 class="documentFirstHeading">').encode("utf-8") + \
-                    unicode(self._get_article_information(item[2], item[1])['article_title']).encode("utf-8") + \
-                    unicode('</h1>').encode("utf-8")
-                ##if metadata could be extracted, insert abstract Rmq: les abstract sont souvent le début du texte
-          #     if os.path.exists(os.path.join(PB_PATH, item[2], item[1] + '.html.metadata')):
-          #       metadata_file = open(os.path.join(PB_PATH, item[2], item[1] + '.html.metadata'), 'r')
-          #       xmlTree = ElementTree.parse(metadata_file)
-          #       abstract = xmlTree.getroot().findtext('article_abstract')
-          #       if abstract:
-          #         article_html += unicode('<div class="documentDescription">').encode("utf-8") +
-          #             unicode(abstract).encode("utf-8") + unicode('</div>').encode("utf-8")
-          #       metadata_file.close()
+                article_html += '<h1 class="documentFirstHeading">' + \
+                    self._get_article_information(item_folder_id, item_article_id)['article_title'] + \
+                    '</h1>'
 
             # concatenate authors
             if item_info['article_author']:
@@ -674,11 +676,10 @@ class XmlToPloneView(BrowserView):
                         merged_pages.append(page.strip())
 
             # if HTML has been cleaned, use this one
-            if os.path.exists(os.path.join(pb_folder, item[2], item[1] + '.html.clean.html')):
-                html_file = open(os.path.join(pb_folder, item[2], item[1] + '.html.clean.html'), 'r')
+            if os.path.exists(os.path.join(pb_folder, item_folder_id, item_article_id + '.html.clean.html')):
+                html_file = open(os.path.join(pb_folder, item_folder_id, item_article_id + '.html.clean.html'), 'r')
             else:
-                html_file = open(os.path.join(pb_folder, item[2], item[1] + '.html'), 'r')
-            # html_file = open(os.path.join(PB_PATH, item[2], item[1] + '.html'), 'r')
+                html_file = open(os.path.join(pb_folder, item_folder_id, item_article_id + '.html'), 'r')
             article_html += html_file.read()
             html_file.close()
             # if no 'html' in option, we only take the first page
@@ -686,12 +687,13 @@ class XmlToPloneView(BrowserView):
                 break
             article_count += 1
 
-        #merging the pdf content
-        article_pdf = PdfFileWriter()
-        no_double_check = []
+        # merging the pdf content
         if option.endswith('pdf'):
-            for item in articles_and_folder_ids:
-                pdf_path = os.path.join(pb_folder, item[2], item[1] + '.pdf')
+            article_pdf = PdfFileWriter()
+            no_double_check = []
+            article_pdf_string = BytesIO()
+            for item_order, item_article_id, item_folder_id in articles_and_folder_ids:
+                pdf_path = os.path.join(pb_folder, item_folder_id, item_article_id + '.pdf')
                 if os.path.exists(pdf_path):
                     pdf_file = open(pdf_path, 'rb')
                     pdf_file_header = pdf_file.read(10240)
@@ -707,22 +709,24 @@ class XmlToPloneView(BrowserView):
                         pdf_file_reader = PdfFileReader(pdf_file)
                         for page in pdf_file_reader.pages:
                             article_pdf.addPage(page)
-                        #pdf_file.close() #KIM we cannot close the file before the stream is written
+                        article_pdf.write(article_pdf_string)
+                        pdf_file.close() #KIM we cannot close the file before the stream is written
             del no_double_check
-            article_pdf_string = StringIO()
-            article_pdf.write(article_pdf_string)
         else:  # do not group the pdf
             item = articles_and_folder_ids[0]
             pdf_path = os.path.join(pb_folder, item[2], item[1] + '.pdf')
             if os.path.exists(pdf_path):
-                article_pdf_string = open(pdf_path, 'r')
+                article_pdf_string = open(pdf_path, 'rb')
             else:
-                article_pdf_string = StringIO()
-
+                article_pdf_string = BytesIO()
+        article_pdf_string.seek(0)
+        article_pdf_data = article_pdf_string.read()
+        article_pdf_string.close()
         # uploading the article
         article_info = self._get_article_information(articles_and_folder_ids[0][2],
                                                      articles_and_folder_ids[0][1])
-        self.context.manage_addProduct['cedes'].invokeFactory(
+        createContentInContainer(
+            self.context,
             "ArticlePayant",
             id=article_id,
             title=article_info['article_title'],
@@ -731,10 +735,9 @@ class XmlToPloneView(BrowserView):
             cr_periodical=article_info['article_publication'],
             cr_words_nb=article_info['article_words'],
             cr_periodical_pp=merged_pages and ','.join(merged_pages) or article_info['article_page'],
-            cr_date=DateTime(article_info['article_date'], datefmt='international'),
-            file=article_pdf_string,
+            cr_date=datetime.fromisoformat(article_info['article_date']),
+            file=NamedBlobFile(article_pdf_data, filename=article_id + '.pdf'),
             cr_html_preview=article_html)
-        article_pdf_string.close()
 
 
 class DownloadArticlePDFView(BrowserView):
@@ -748,7 +751,7 @@ class DownloadArticlePDFView(BrowserView):
         if large:
             article_pdf += '.large'
         if os.path.exists(article_pdf):
-            article_pdf = open(article_pdf, 'r')
+            article_pdf = open(article_pdf, 'rb')
             content = article_pdf.read()
             article_pdf.close()
             self.request.RESPONSE.setHeader("Content-Disposition", "attachment; filename=%s.pdf" % articleId)

@@ -1,0 +1,14 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:plone="http://namespaces.plone.org/plone"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
+           i18n_domain="cedes.core">
+
+    <!-- CedesMemberData -->
+    <configure package="Products.PlonePAS">
+        <adapter
+            provides="Products.CMFCore.interfaces.IMember"
+            factory="cedes.core.memberdata.CedesMemberData" />
+    </configure>
+
+</configure>

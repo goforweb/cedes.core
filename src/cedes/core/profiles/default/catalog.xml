@@ -18,7 +18,7 @@
 
  <column value="associated_themes_title_and_path"/>
  <column value="title_path"/>
- <column value="colophon_with_author_index"/>
+ <column value="colophon_with_author"/>
  <column value="cr_first_classification_date_index"/>
  <column value="cr_date_index"/>
  <column value="cr_comment_index"/>

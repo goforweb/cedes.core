@@ -27,4 +27,12 @@
         class=".views.DownloadArticlePDFView"
         permission="zope.Public" />
 
+    <!-- Form for gopress import -->
+    <browser:page
+        for="*"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        name="gopress_import"
+        class=".forms.GopressImportFormWrapper"
+        permission="cmf.ManagePortal" />
+
 </configure>

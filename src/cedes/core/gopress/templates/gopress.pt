@@ -1,0 +1,109 @@
+<div id="patience" class="portalMessage" style="display:none;">
+    Synchronisation en cours... Veuillez Patienter...
+</div>
+
+<p>
+  Vous pouvez parcourir ici les articles de Gopress déjà téléchargés sur le serveur.
+  Sélectionnez un article ci-dessous et cliquez sur "Importer" pour rajouter cet article au répertoire courant.
+</p>
+
+<div class="formControls">
+    <button type="submit" id="form-buttons-synchronize" name="form.buttons.synchronize" class="btn submit-widget button-field btn-primary" value="Synchroniser la liste avec Gopress">Synchroniser la liste avec Gopress</button>
+    <button type="submit" id="form-buttons-cancel" name="form.buttons.cancel" class="btn btn-secondary submit-widget button-field" value="Annuler">Annuler</button>
+</div>
+
+<tal:items define="folders context/@@xml-to-plone/getFoldersInformation">
+
+    <fieldset>
+        <legend>Répertoires Gopress disponibles</legend>
+
+        <table class="table table-striped">
+          <thead>
+                <tr>
+                  <th>Nom du répertoire</th>
+                  <th>Nombre d'article</th>
+                  <th>Prix</th>
+                </tr>
+          </thead>
+          <tbody>
+           <tr tal:repeat="folder folders">
+             <td> <a href="" tal:attributes="onclick string:javascript:document.getElementById('${folder/folder_id}').style.display='block';;return false;;" tal:content="folder/folder_name"></a></td>
+             <td tal:content="folder/folder_articlecount"></td>
+             <td tal:content="folder/folder_price"></td>
+           </tr>
+          </tbody>
+        </table>
+
+        <tal:articles tal:repeat="folder folders">
+          <div tal:attributes="id folder/folder_id" style="display:none">
+          <table class="table table-striped">
+            <caption>
+                <span tal:replace="folder/folder_name" />
+                <a href="" tal:attributes="onclick string:javascript:document.getElementById('${folder/folder_id}').style.display='none';;return false;;">[masquer]</a>
+            </caption>
+            <thead>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Titre de l'article</th>
+                    <th style="width: 50px">PDF</th>
+                    <th>Date</th>
+                    <th>Journal</th>
+                    <th>Prix</th>
+                  </tr>
+            </thead>
+            <tbody tal:define="articles python:context.restrictedTraverse('@@xml-to-plone').getArticlesInformation(folder['folder_id'])">
+             <tr tal:repeat="article articles">
+               <td><input type="checkbox" name="form.widgets.article_selection:list" tal:attributes="value string:${folder/folder_id}-${article/article_id}"/></td>
+               <td><select type="radio" tal:define="name string:${folder/folder_id}-${article/article_id};" tal:attributes="name name;
+                                                    onchange string:javascript:selectCorrespondingBox('$name', this);">
+                     <option value=0></option>
+                     <option value=1>1</option>
+                     <option value=2>2</option>
+                     <option value=3>3</option>
+                     <option value=4>4</option>
+                     <option value=5>5</option>
+                     <option value=6>6</option>
+                     <option value=7>7</option>
+                     <option value=8>8</option>
+                     <option value=9>9</option>
+                     <option value=10>10</option>
+                     <option value=11>11</option>
+                     <option value=12>12</option>
+                     <option value=13>13</option>
+                     <option value=14>14</option>
+                     <option value=15>15</option>
+                   </select>
+               </td>
+               <td tal:content="python:article['article_title'] if article['article_title'] else article['article_id']"
+                   tal:attributes="class python: 'empty_html' if article['no_html'] else ''"></td>
+               <td style="padding: 0.2em">
+                  <a style="display: inline"
+                     tal:condition="python:article.get('article_pdf')=='oui'"
+                     tal:attributes="href python:'%s/@@download-article-pdf?folderId=%s&articleId=%s'%(context.absolute_url(),folder['folder_id'],article['article_id'])"
+                     target="_blank">
+                    <img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/pdf_icon.png" src="pdf_icon.png" title="Télécharger le PDF tel qu'il sera importé avec l'article"/>
+                  </a>
+                  <a style="display: inline"
+                     tal:condition="python:article.get('article_pdf')=='oui'"
+                     tal:attributes="href python:'%s/@@download-article-pdf?folderId=%s&articleId=%s&large=True'%(context.absolute_url(),folder['folder_id'],article['article_id'])"
+                     target="_blank">
+                    <img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/pdf_icon_large.png" src="pdf_icon_large.png" title="Télécharger le PDF haute définition"/>
+                  </a>
+                    <span tal:condition="python:article.get('article_pdf')=='non'">non</span>
+                    <span tal:condition="python:article.get('article_pdf_error')">
+                      <a tal:attributes="onclick string:javascript:document.getElementById('error-${folder/folder_id}-${article/article_id}').style.display='block';;return false;;">
+                      <span style="color:red">error</span></a>
+                      <span tal:attributes="id string:error-${folder/folder_id}-${article/article_id}" tal:content="article/article_pdf_error" style="display:none"/>
+                    </span>
+               </td>
+               <td tal:content="article/article_date"></td>
+               <td tal:content="article/article_publication"></td>
+               <td tal:content="article/article_price"></td>
+             </tr>
+            </tbody>
+          </table>
+          </div>
+        </tal:articles>
+    </fieldset>
+</tal:items>

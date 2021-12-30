@@ -12,4 +12,8 @@
     factory="cedes.core.content.articlegratuit.ArticleGratuitSchemaPolicy"
     name="schema_policy_articlegratuit" />
 
+  <utility
+    factory="cedes.core.content.articlepayant.ArticlePayantSchemaPolicy"
+    name="schema_policy_articlepayant" />
+
 </configure>

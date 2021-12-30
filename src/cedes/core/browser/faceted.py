@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core.utils import normalize_data
-from DateTime import DateTime
+from datetime import datetime
 from eea.facetednavigation.browser.app.query import FacetedQueryHandler
-from Products.Five import BrowserView
 from plone import api
+from Products.Five import BrowserView
 
 import re
 
@@ -26,10 +26,11 @@ class FacetedThemeView(BrowserView):
 
     def may_search(self):
         """ """
-        return True
         membership = api.portal.get_tool('portal_membership')
         member = membership.getAuthenticatedMember()
-        return (not(member.isCedesFree()) or (member.isCedesFree() and member.created() + 7 > DateTime()))
+        return (not(member.is_cedes_free()) or
+                (member.is_cedes_free() and
+                 member.get_first_login_time() + 7 > datetime.now()))
 
     def search_terms(self):
         """ """

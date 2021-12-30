@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <registry xmlns:i18n="http://xml.zope.org/namespaces/i18n"
           i18n:domain="cedes.core">
+
+  <!-- types_not_searched -->
+  <record
+      name="plone.types_not_searched"
+      interface="Products.CMFPlone.interfaces.controlpanel.ISearchSchema"
+      field="types_not_searched">
+    <value>
+      <element>News Item</element>
+      <element>Collection</element>
+      <element>Discussion Item</element>
+      <element>Folder</element>
+      <element>File</element>
+      <element>Image</element>
+      <element>Link</element>
+      <element>Document</element>
+      <element>Plone Site</element>
+      <element>TempFolder</element>
+      <element>Theme</element>
+      <element>Event</element>
+    </value>
+  </record>
+
   <records prefix="plone.resources/cedes.core"
            interface="Products.CMFPlone.interfaces.IResourceRegistry">
     <value key="css">

@@ -30,7 +30,8 @@ class ICommon(model.Schema):
         value_type=RelationChoice(
             vocabulary='plone.app.vocabularies.Catalog',
         ),
-        required=False, )
+        required=False,
+        default=[], )
 
     cr_first_classification_date = schema.Datetime(
         title='Date d\'encodage sur le CeDES', )
@@ -201,44 +202,6 @@ class Ressource(object):
         dict = {}
         dict['sort_on'] = 'getObjPositionInParent'
         return dict
-
-
-class Article(Ressource):
-
-    security = ClassSecurityInfo()
-
-    security.declarePublic('get_colophon')
-
-    def get_colophon(self):
-        """
-          returns the colophon: periodical, date, periodical number, pp, nb of words
-        """
-        colophon = u''
-        if self.cr_periodical:
-            colophon += self.cr_periodical
-        if self.cr_periodical() and self.cr_date:
-            colophon += u', '
-        if self.cr_date():
-            colophon += self.toLocalizedTime(self.cr_date)
-        if self.cr_periodical_number:
-            colophon += u', n&deg; ' + self.cr_periodical_number
-        if self.cr_periodical_pp:
-            colophon += u', p. ' + self.cr_periodical_pp
-        if self.cr_words_nb:
-            colophon += u', ' + self.cr_words_nb + u' mots'
-        return colophon
-
-    security.declarePublic('get_colophon_with_author')
-
-    def get_colophon_with_author(self):
-        """
-          returns the author and colophon
-        """
-        colophon = u''
-        if self.cr_author:
-            colophon += self.cr_author + u' &mdash; '
-        colophon += self.get_colophon()
-        return colophon
 
 
 class Lien(Ressource):

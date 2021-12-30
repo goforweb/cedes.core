@@ -4,16 +4,17 @@
            xmlns:zcml="http://namespaces.zope.org/zcml"
            xmlns:five="http://namespaces.zope.org/five">
 
+    <i18n:registerTranslations directory="locales" />
+
+    <include package="collective.dexteritytextindexer" />
+    <include package="Products.CMFCore" file="permissions.zcml" />
+
     <include package=".browser" />
     <include package=".content" />
     <include package=".gopress" />
 
-    <include package="collective.dexteritytextindexer" />
-
     <include file="events.zcml" />
     <include file="profiles.zcml" />
-
-    <i18n:registerTranslations directory="locales" />
 
     <!-- Faceted criteria adapter -->
     <adapter for="cedes.core.interfaces.IThemeFacetedNavigable"
@@ -35,6 +36,8 @@
              factory=".indexes.associated_theme_uids" />
     <adapter name="title_path"
              factory=".indexes.title_path" />
+    <adapter name="colophon_with_author"
+             factory=".indexes.colophon_with_author" />
     <adapter name="has_cr_points"
              factory=".indexes.has_cr_points" />
     <adapter name="cr_date_index"
@@ -52,5 +55,10 @@
     <!-- collective.dexteritytextindexer extender -->
     <adapter factory="cedes.core.indexes.RessourceSearchableTextExtender"
              name="RessourceSearchableTextExtender" />
+
+    <!-- CedesMemberData -->
+    <adapter
+      provides="Products.CMFCore.interfaces.IMember"
+      factory="cedes.core.memberdata.CedesMemberData" />
 
 </configure>

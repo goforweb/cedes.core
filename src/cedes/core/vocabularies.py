@@ -5,6 +5,7 @@
 # GNU General Public License (GPL)
 #
 
+from cedes.core.config import CEDES_RESSOURCE_TYPES
 from Products.CMFCore.utils import getToolByName
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
@@ -20,11 +21,11 @@ class SearchableTypesVocabulary(object):
         res = []
         plone_utils = getToolByName(context, 'plone_utils')
         portal_types = getToolByName(context, 'portal_types')
-        friendly_types = sorted(plone_utils.getUserFriendlyTypes())
-        for portal_type_name in friendly_types:
+        for portal_type_name in CEDES_RESSOURCE_TYPES:
             type_info = portal_types.get(portal_type_name)
-            res.append(
-                SimpleTerm(type_info.id, type_info.id, type_info.title))
+            if type_info:
+                res.append(
+                    SimpleTerm(type_info.id, type_info.id, type_info.title))
         return SimpleVocabulary(res)
 
 

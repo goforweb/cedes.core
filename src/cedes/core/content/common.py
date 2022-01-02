@@ -10,11 +10,14 @@ from cedes.core.interfaces import IRessource
 from collective.dexteritytextindexer.directives import searchable
 from datetime import datetime
 from plone import api
+from plone.autoform import directives
 from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
 from zope.interface import implementer
+from plone.app.z3cform.widget import RelatedItemsFieldWidget
+from plone.app.vocabularies.catalog import StaticCatalogVocabulary
 
 
 class ICommon(model.Schema):
@@ -25,6 +28,13 @@ class ICommon(model.Schema):
         title='Commentaire',
         required=False, )
 
+    directives.widget(
+        'cr_classification',
+        RelatedItemsFieldWidget,
+        pattern_options={
+            'basPath': '/plan',
+            'selectableTypes': ['Theme'],
+            'mode': 'auto', }, )
     cr_classification = RelationList(
         title='Classification',
         value_type=RelationChoice(
@@ -33,16 +43,26 @@ class ICommon(model.Schema):
         required=False,
         default=[], )
 
+    directives.omitted('cr_first_classification_date')
     cr_first_classification_date = schema.Datetime(
         title='Date d\'encodage sur le CeDES', )
 
+    directives.widget(
+        'cr_points',
+        RelatedItemsFieldWidget,
+        pattern_options={
+            'basPath': '/dossiers-structures',
+            'selectableTypes': ['Point'], }, )
     cr_points = RelationList(
         title='Points auxquels la ressource est liée',
         value_type=RelationChoice(
             vocabulary='plone.app.vocabularies.Catalog',
         ),
         required=False, )
-
+    directives.widget(
+        'related_items',
+        RelatedItemsFieldWidget,
+        pattern_options={}, )
     related_items = RelationList(
         title='Ressources liées',
         value_type=RelationChoice(

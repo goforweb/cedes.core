@@ -3,6 +3,7 @@
            xmlns:i18n="http://namespaces.zope.org/i18n"
            xmlns:five="http://namespaces.zope.org/five">
 
+    <!-- Theme -->
     <subscriber for="cedes.core.content.theme.ITheme
                      zope.lifecycleevent.interfaces.IObjectAddedEvent"
                 handler="cedes.core.events.onThemeAdded" />
@@ -10,5 +11,10 @@
     <subscriber for="cedes.core.content.theme.ITheme
                      zope.lifecycleevent.interfaces.IObjectModifiedEvent"
                 handler="cedes.core.events.onThemeModified" />
+
+    <!-- Ressource -->
+    <subscriber for="cedes.core.content.common.IRessource
+                     zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+                handler="cedes.core.events.onRessourceModified" />
 
 </configure>

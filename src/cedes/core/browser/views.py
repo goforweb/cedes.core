@@ -11,6 +11,7 @@ from Products.CMFPlone.browser.navtree import SitemapQueryBuilder
 from Products.CMFPlone.browser.sitemap import SitemapView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
+from plone.formwidget.namedfile.widget import Download as fnw_Download
 
 
 class CommonResultListingView(BrowserView):
@@ -150,3 +151,18 @@ class ContextSitemapView(SitemapView):
                                name='sitemap_builder_view')
         data = view.siteMap()
         return self._renderLevel(children=data.get('children', []))
+
+
+class ArticlePayantDownload(fnw_Download):
+    """Make sure access to ArticlePayant file is controled."""
+
+    def __call__(self):
+        can_download = True
+        parent = self.context.__parent__.context
+        if parent.portal_type in ['ArticlePayant']:
+            member = api.user.get_current()
+            can_download = member.check_viewable(parent.UID())
+        if can_download:
+            return super(ArticlePayantDownload, self).__call__()
+        else:
+            raise Unauthorized

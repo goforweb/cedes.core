@@ -3,6 +3,7 @@
 from cedes.core import logger
 from cedes.core.interfaces import IThemeFacetedNavigable
 from cedes.core.utils import get_modified_attrs
+from datetime import datetime
 from eea.facetednavigation.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.layout.interfaces import IFacetedLayout
 from persistent.list import PersistentList
@@ -37,6 +38,16 @@ def onThemeModified(theme, event):
         for item in associated:
             item = item.getObject()
             item.reindexObject(idxs=['SearchableText'])
+
+
+def onRessourceModified(obj, event):
+    """Called when existing ressource modified."""
+    # set a first classification date if empty and a classification is defined
+    if not obj.cr_first_classification_date and obj.cr_classification:
+        obj.cr_first_classification_date = datetime.now()
+    # remove first classification date if no more classification
+    elif not obj.cr_classification:
+        obj.cr_first_classification_date = None
 
 
 def onRessourceLiked(obj, event):

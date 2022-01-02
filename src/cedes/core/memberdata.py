@@ -12,6 +12,8 @@ from Products.PlonePAS.tools.memberdata import MemberData
 class CedesMemberData(MemberData):
     """ """
 
+    account_transactions = {}
+
     def check_balance(self, price):
         """
           Checks if we can afford a purchase's price
@@ -23,6 +25,19 @@ class CedesMemberData(MemberData):
             return True
         else:
             return False
+
+    def check_viewable(self, article_uid):
+        """
+          Check if the article can still be viewed.
+          An element is viewable when his UID is found in member transactions
+        """
+        res = "Manager" in self.getRoles()
+        if not res:
+            inversed_transactions = tuple(reversed(self.account_transactions))
+            for tr_uid, tr_price, tr_date in inversed_transactions:
+                if tr_uid == article_uid:
+                    res = True
+        return res
 
     def get_first_login_time(self):
         """ """

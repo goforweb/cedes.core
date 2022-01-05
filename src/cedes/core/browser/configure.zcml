@@ -114,5 +114,17 @@
         name="portlet_recent"
         template="templates/portlet_recent.pt"
         permission="zope2.View" />
+    <browser:page
+        for="*"
+        class="cedes.core.browser.portlets.PortletPlan"
+        name="portlet_plan"
+        template="templates/portlet_plan.pt"
+        permission="zope2.View" />
+    <browser:page
+        for="*"
+        class="cedes.core.browser.portlets.PortletDossiers"
+        name="portlet_dossiers"
+        template="templates/portlet_dossiers.pt"
+        permission="zope2.View" />
 
 </configure>

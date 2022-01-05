@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      i18n:domain="plone">
+
+<body>
+
+<dl class="portlet" id="portlet-plan"
+     tal:define="portal_url python: view.portal_url;
+                 portal python: view.portal;
+                 context_url python: context.absolute_url();
+                 isInPlan python: '/plan' in context_url;
+                 isOnPlan python: context_url.endswith('/plan');">
+    <dt class="portletHeader">
+        <a href="#" tal:attributes="href string:$portal_url/plan">Accès aux thèmes</a>
+    </dt>
+    <dd class="portletItem">
+      <ul tal:define="themes python: portal.plan.getFolderContents()">
+         <li class="root_plan">
+            <a tal:attributes="class python: isOnPlan and 'selected' or '';
+                               href string:${portal_url}/plan">
+                <span tal:content="python: portal.plan.Title()">PLAN DE CLASSEMENT</span>
+                <img tal:attributes="src string:${portal_url}/++plone++cedes.core/icone_loupe.png" />
+            </a>
+         </li>
+         <li tal:repeat="theme themes">
+            <tal:defines define="selected python: '/plan/' + theme.getId in context_url">
+                <a tal:define="selected_class python: selected and 'selected ' or ''"
+                   tal:attributes="href string:${theme/getURL};
+                                   class string:${selected_class} state-${theme/review_state}"
+                   tal:content="theme/Title">Theme title</a>
+            </tal:defines>
+         </li>
+      </ul>
+    </dd>
+
+</dl>
+
+</body>
+</html>

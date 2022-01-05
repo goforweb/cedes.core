@@ -1,0 +1,31 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      i18n:domain="plone">
+<body>
+<div metal:define-macro="portlet"
+     tal:omit-tag=""
+     tal:condition="python: view.available()">
+
+<dl class="portlet" id="portlet-dossiers">
+
+    <dt class="portletHeader">
+        <a href="#" tal:attributes="href string:${view/portal_url}/dossiers-structures">Acc&egrave;s aux dossiers</a>
+    </dt>
+    <dd class="portletItem">
+      <ul>
+         <tal:block tal:repeat="brain python: view.get_folders()">
+          <li>
+           <a tal:attributes="href python: brain.getURL();
+                              class string:state-${brain/review_state}"
+              tal:content="python: brain.Title">Titre du dossier structur&eacute;</a>
+          </li>
+         </tal:block>
+      </ul>
+    </dd>
+
+</dl>
+
+</div>
+</body>
+</html>
+

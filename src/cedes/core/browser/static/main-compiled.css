@@ -11,6 +11,11 @@ button.hidden {
     padding-left: 22px;
 }
 
+/* hide contenttype icon in toolbar */
+div.plone-toolbar-container [class*="contenttype-"] {
+    background-image: none;
+}
+
 .contenttype-folder {
     background: no-repeat transparent url("++plone++cedes.core/folder.gif");
 }
@@ -43,4 +48,8 @@ button.hidden {
 }
 .contenttype-theme {
     background: no-repeat transparent url("++plone++cedes.core/theme.gif");
+}
+
+.state-private {
+    color: red;
 }

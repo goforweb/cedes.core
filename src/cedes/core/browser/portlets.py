@@ -32,3 +32,43 @@ class PortletRecent(BrowserView):
                 self.member.is_cedes_free()):
             onclick = onclick_action
         return onclick
+
+
+class PortletPlan(BrowserView):
+    """ """
+    def _update(self):
+        """ """
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
+
+    def __call__(self):
+        """ """
+        self._update()
+        return super(PortletPlan, self).__call__()
+
+
+class PortletDossiers(BrowserView):
+    """ """
+    def _update(self):
+        """ """
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
+
+    def __call__(self):
+        """ """
+        self._update()
+        return super(PortletDossiers, self).__call__()
+
+    def available(self):
+        """ """
+        return not self.portal.portal_membership.isAnonymousUser()
+
+    def get_folders(self):
+        """ """
+        catalog = api.portal.get_tool('portal_catalog')
+        portal_path = "/".join(self.portal.getPhysicalPath())
+        brains = catalog(
+            portal_type='Folder',
+            path={'query': portal_path + '/dossiers-structures', 'depth': 1},
+            sort_on='getObjPositionInParent')
+        return brains

@@ -6,23 +6,18 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from cedes.core.content.common import ICommon
-from cedes.core.content.common import Ressource
+from cedes.core.content.ressource import IRessource
+from cedes.core.content.ressource import Ressource
 from collective.dexteritytextindexer.directives import searchable
-from datetime import datetime
-from plone import api
 from plone.app.contenttypes.content import File
 from plone.app.contenttypes.interfaces import IFile
 from plone.app.textfield import RichText
 from plone.namedfile.field import NamedBlobFile
 from plone.supermodel import model
-from z3c.relationfield.schema import RelationChoice
-from z3c.relationfield.schema import RelationList
 from zope import schema
-from zope.interface import implementer
 
 
-class IArticle(ICommon, IFile):
+class IArticle(IRessource, IFile):
     """ """
 
     cr_date = schema.Datetime(
@@ -60,7 +55,7 @@ class IArticle(ICommon, IFile):
     cr_html_preview = RichText(
         title='Aperçu',
         allowed_mime_types=(u"text/html", ),
-        required=False)
+        required=False, )
 
 
 class Article(File, Ressource):

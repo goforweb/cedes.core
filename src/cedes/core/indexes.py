@@ -6,8 +6,8 @@
 #
 
 from cedes.core import logger
+from cedes.core.content.ressource import IRessource
 from cedes.core.interfaces import ICeDESLoveThumbsDontYou
-from cedes.core.interfaces import IRessource
 from cedes.core.utils import normalize_data
 from cioppino.twothumbs.rate import yays
 from collective.dexteritytextindexer.converters import DexterityRichTextIndexFieldConverter

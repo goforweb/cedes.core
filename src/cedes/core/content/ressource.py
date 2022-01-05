@@ -6,23 +6,19 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from cedes.core.interfaces import IRessource
 from collective.dexteritytextindexer.directives import searchable
 from datetime import datetime
 from plone import api
+from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
 from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
 from zope.interface import implementer
-from plone.app.z3cform.widget import RelatedItemsFieldWidget
-from plone.app.vocabularies.catalog import StaticCatalogVocabulary
-from plone.app.contenttypes.content import Link
-from plone.app.contenttypes.interfaces import ILink
 
 
-class ICommon(model.Schema):
+class IRessource(model.Schema):
     """ """
 
     searchable("cr_comment")

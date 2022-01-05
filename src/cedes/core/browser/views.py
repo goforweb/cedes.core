@@ -5,13 +5,13 @@ from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
 from plone.app.layout.navigation.navtree import buildFolderTree
 from plone.batching import Batch
+from plone.formwidget.namedfile.widget import Download as fnw_Download
 from plone.memoize.view import memoize
 from Products.CMFPlone.browser.navigation import CatalogSiteMap
 from Products.CMFPlone.browser.navtree import SitemapQueryBuilder
 from Products.CMFPlone.browser.sitemap import SitemapView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
-from plone.formwidget.namedfile.widget import Download as fnw_Download
 
 
 class CommonResultListingView(BrowserView):

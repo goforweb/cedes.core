@@ -13,10 +13,25 @@
         factory="cedes.core.content.articlepayant.ArticlePayantSchemaPolicy"
         name="schema_policy_articlepayant" />
     <utility
+        factory="cedes.core.content.audio.AudioSchemaPolicy"
+        name="schema_policy_audio" />
+    <utility
+        factory="cedes.core.content.bibliographie.BibliographieSchemaPolicy"
+        name="schema_policy_bibliographie" />
+    <utility
+        factory="cedes.core.content.sequenceapprentissage.SequenceApprentissageSchemaPolicy"
+        name="schema_policy_sequenceapprentissage" />
+    <utility
         factory="cedes.core.content.siteinternet.SiteInternetSchemaPolicy"
         name="schema_policy_siteinternet" />
     <utility
+        factory="cedes.core.content.statistiques.StatistiquesSchemaPolicy"
+        name="schema_policy_statistiques" />
+    <utility
         factory="cedes.core.content.theme.ThemeSchemaPolicy"
         name="schema_policy_theme" />
+    <utility
+        factory="cedes.core.content.video.VideoSchemaPolicy"
+        name="schema_policy_video" />
 
 </configure>

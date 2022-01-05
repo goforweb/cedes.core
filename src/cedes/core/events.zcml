@@ -13,7 +13,7 @@
                 handler="cedes.core.events.onThemeModified" />
 
     <!-- Ressource -->
-    <subscriber for="cedes.core.content.common.IRessource
+    <subscriber for="cedes.core.content.ressource.IRessource
                      zope.lifecycleevent.interfaces.IObjectModifiedEvent"
                 handler="cedes.core.events.onRessourceModified" />
 

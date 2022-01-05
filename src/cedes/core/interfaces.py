@@ -7,8 +7,6 @@
 
 from cioppino.twothumbs.interfaces import ILoveThumbsDontYou
 from eea.facetednavigation.interfaces import IFacetedNavigable
-from plone.dexterity.interfaces import IDexterityContent
-from zope.interface import Interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
@@ -22,7 +20,3 @@ class ICedesCoreLayer(IDefaultBrowserLayer):
 
 class ICeDESLoveThumbsDontYou(ILoveThumbsDontYou):
     """ """
-
-
-class IRessource(IDexterityContent):
-    """Ressource marker interface"""

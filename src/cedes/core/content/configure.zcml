@@ -4,16 +4,19 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="cedes.core">
 
-  <utility
-    factory="cedes.core.content.theme.ThemeSchemaPolicy"
-    name="schema_policy_theme" />
 
-  <utility
-    factory="cedes.core.content.articlegratuit.ArticleGratuitSchemaPolicy"
-    name="schema_policy_articlegratuit" />
-
-  <utility
-    factory="cedes.core.content.articlepayant.ArticlePayantSchemaPolicy"
-    name="schema_policy_articlepayant" />
+    <!-- SchemaPolicy -->
+    <utility
+        factory="cedes.core.content.articlegratuit.ArticleGratuitSchemaPolicy"
+        name="schema_policy_articlegratuit" />
+    <utility
+        factory="cedes.core.content.articlepayant.ArticlePayantSchemaPolicy"
+        name="schema_policy_articlepayant" />
+    <utility
+        factory="cedes.core.content.siteinternet.SiteInternetSchemaPolicy"
+        name="schema_policy_siteinternet" />
+    <utility
+        factory="cedes.core.content.theme.ThemeSchemaPolicy"
+        name="schema_policy_theme" />
 
 </configure>

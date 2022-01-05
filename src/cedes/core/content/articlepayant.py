@@ -25,7 +25,7 @@ class ArticlePayant(Article):
 
 
 class ArticlePayantSchemaPolicy(DexteritySchemaPolicy):
-    """Schema Policy for ArticlePayant"""
+    """Schema Policy for ArticlePayant."""
 
     def bases(self, schema_name, tree):
         return (IArticlePayant, )

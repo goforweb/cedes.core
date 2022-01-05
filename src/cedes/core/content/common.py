@@ -43,9 +43,10 @@ class ICommon(model.Schema):
         required=False,
         default=[], )
 
-    directives.omitted('cr_first_classification_date')
     cr_first_classification_date = schema.Datetime(
-        title='Date d\'encodage sur le CeDES', )
+        title='Date d\'encodage sur le CeDES (initialisé automatiquement lors '
+            'de la première classification)',
+        required=False, )
 
     directives.widget(
         'cr_points',
@@ -222,8 +223,3 @@ class Ressource(object):
         dict = {}
         dict['sort_on'] = 'getObjPositionInParent'
         return dict
-
-
-class Lien(Ressource):
-    security = ClassSecurityInfo()
-    security.declarePublic('getPdfRepresentation')

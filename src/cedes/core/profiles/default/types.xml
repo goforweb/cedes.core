@@ -3,5 +3,6 @@
   <object name="Theme" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticleGratuit" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticlePayant" meta_type="Dexterity FTI" purge="True" />
+  <object name="SiteInternet" meta_type="Dexterity FTI" purge="True" />
 </object>
 

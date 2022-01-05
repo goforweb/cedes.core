@@ -33,7 +33,7 @@ class ArticleGratuit(Article):
 
 
 class ArticleGratuitSchemaPolicy(DexteritySchemaPolicy):
-    """Schema Policy for ArticleGratuit"""
+    """Schema Policy for ArticleGratuit."""
 
     def bases(self, schema_name, tree):
         return (IArticleGratuit, )

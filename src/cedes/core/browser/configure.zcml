@@ -107,4 +107,12 @@
         attribute="update_content"
         permission="zope2.View" />
 
+    <!-- portlets -->
+    <browser:page
+        for="*"
+        class="cedes.core.browser.portlets.PortletRecent"
+        name="portlet_recent"
+        template="templates/portlet_recent.pt"
+        permission="zope2.View" />
+
 </configure>

@@ -8,6 +8,7 @@
 from cedes.core import logger
 from collections import OrderedDict
 from DateTime import DateTime
+from plone import api
 from plone.app.textfield.value import RichTextValue
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
@@ -102,3 +103,26 @@ def gopress_stats(context, datefrom, dateto):
     logger.info('Done.')
 
     return output
+
+
+def get_latest_entries(sort_limit=5):
+    catalog = api.portal.get_tool('portal_catalog')
+    # we use getCr_first_classification_date that is initialized only when a resource is classified
+    res = list(catalog.unrestrictedSearchResults(
+        portal_type=['ArticleGratuit',
+                     'ArticlePayant',
+                     'Audio',
+                     'Video',
+                     'SiteInternet',
+                     'Statistiques',
+                     'Cederom',
+                     'Bibliographie',
+                     'SequenceApprentissage'],
+        review_state='published',
+        cr_first_classification_date_index={
+            'query': DateTime('01/01/1950'),
+            'range': 'min'},
+        sort_on='cr_first_classification_date_index',
+        sort_order='reverse',
+        sort_limit=sort_limit))
+    return res

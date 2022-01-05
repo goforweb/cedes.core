@@ -18,6 +18,8 @@ from zope import schema
 from zope.interface import implementer
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.app.vocabularies.catalog import StaticCatalogVocabulary
+from plone.app.contenttypes.content import Link
+from plone.app.contenttypes.interfaces import ILink
 
 
 class ICommon(model.Schema):
@@ -45,7 +47,7 @@ class ICommon(model.Schema):
 
     cr_first_classification_date = schema.Datetime(
         title='Date d\'encodage sur le CeDES (initialisé automatiquement lors '
-            'de la première classification)',
+        'de la première classification)',
         required=False, )
 
     directives.widget(

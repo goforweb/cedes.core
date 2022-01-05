@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from AccessControl import Unauthorized
 from Acquisition import aq_inner
 from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
@@ -93,7 +94,7 @@ class CommonResultListingView(BrowserView):
             return 'recently_modified'
 
         contextLayout = self.context.getLayout()
-        if contextLayout in ['folder_listing', 'folder_full_listing']:
+        if contextLayout in ['listing_view']:
             return 'folder_listing'
         if contextLayout == 'dossier_view':
             return 'dossier_view'

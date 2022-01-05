@@ -142,7 +142,7 @@
              <b>Commentaire:</b>  <span tal:replace="structure item/cr_comment_index"/>
              </div>
              <div>
-               <div tal:repeat="classification item/associated_themes_title_and_path"
+               <div tal:repeat="classification python: item.associated_themes_title_and_path or []"
                  tal:attributes="style string:background:url($portal_url/++plone++cedes.core/arrownav-black.gif) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
                  <a href="#"
                     tal:define="title python:classification[0];

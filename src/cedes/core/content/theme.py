@@ -56,7 +56,7 @@ class Theme(Container):
         """
           returns True if this object is the root of the classification scheme
         """
-        return self.aq_inner.aq_parent.portal_type != 'Theme'
+        return self.portal_type == "PlanClassement"
 
     security.declarePublic('get_root_theme')
 

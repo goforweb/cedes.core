@@ -81,4 +81,30 @@
         class=".views.ArticlePayantDownload"
         permission="zope2.Public" />
 
+    <!-- overrides the @@listing_view for Folders -->
+    <browser:page
+        for="plone.dexterity.interfaces.IDexterityContainer"
+        name="listing_view"
+        class="plone.app.contenttypes.browser.folder.FolderView"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope2.View"
+        template="templates/folder-listing.pt" />
+    <!-- make original @@listing_view available as @@plone_listing_view -->
+    <configure package="plone.app.contenttypes.browser">
+        <browser:page
+            for="plone.dexterity.interfaces.IDexterityContainer"
+            name="plone_listing_view"
+            class=".folder.FolderView"
+            permission="zope2.View"
+            template="templates/listing.pt" />
+    </configure>
+
+    <!-- The jQuery/ajax content refresh view that refresh common-result-listing-content -->
+    <browser:page
+        for="*"
+        class="cedes.core.browser.views.CommonResultListingView"
+        name="get_common_result_listing"
+        attribute="update_content"
+        permission="zope2.View" />
+
 </configure>

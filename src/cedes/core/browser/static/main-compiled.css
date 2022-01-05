@@ -5,3 +5,42 @@ form.gopress_import caption {
 button.hidden {
     display: None;
 }
+
+[class*="contenttype-"],
+.pattern-relateditems-result-info [class*="contenttype-"] {
+    padding-left: 22px;
+}
+
+.contenttype-folder {
+    background: no-repeat transparent url("++plone++cedes.core/folder.gif");
+}
+.contenttype-articlegratuit {
+    background: no-repeat transparent url("++plone++cedes.core/article-gratuit.gif");
+}
+.contenttype-articlepayant {
+    background: no-repeat transparent url("++plone++cedes.core/article-payant.gif");
+}
+.contenttype-audio {
+    background: no-repeat transparent url("++plone++cedes.core/audio.gif");
+}
+.contenttype-video {
+    background: no-repeat transparent url("++plone++cedes.core/video.gif");
+}
+.contenttype-bibliographie {
+    background: no-repeat transparent url("++plone++cedes.core/bibliographie.gif");
+}
+.contenttype-sequenceapprentissage {
+    background: no-repeat transparent url("++plone++cedes.core/sequence-apprentissage.gif");
+}
+.contenttype-siteinternet {
+    background: no-repeat transparent url("++plone++cedes.core/site-internet.gif");
+}
+.contenttype-statistiques {
+    background: no-repeat transparent url("++plone++cedes.core/statistiques.gif");
+}
+.contenttype-planclassement {
+    background: no-repeat transparent url("++plone++cedes.core/theme.gif");
+}
+.contenttype-theme {
+    background: no-repeat transparent url("++plone++cedes.core/theme.gif");
+}

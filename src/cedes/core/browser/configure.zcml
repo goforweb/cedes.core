@@ -124,7 +124,13 @@
         for="*"
         class="cedes.core.browser.portlets.PortletDossiers"
         name="portlet_dossiers"
-        template="templates/portlet_dossiers.pt"
+        template="templates/portlet_folders.pt"
+        permission="zope2.View" />
+    <browser:page
+        for="*"
+        class="cedes.core.browser.portlets.PortletCedes"
+        name="portlet_cedes"
+        template="templates/portlet_folders.pt"
         permission="zope2.View" />
 
 </configure>

@@ -11,8 +11,9 @@ button.hidden {
     padding-left: 22px;
 }
 
-/* hide contenttype icon in toolbar */
-div.plone-toolbar-container [class*="contenttype-"] {
+/* hide contenttype icon in toolbar and in navigation portlet */
+div.plone-toolbar-container [class*="contenttype-"],
+div.portletNavigationTree [class*="contenttype-"] {
     background-image: none;
 }
 

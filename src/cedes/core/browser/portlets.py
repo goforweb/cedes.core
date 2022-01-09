@@ -47,8 +47,12 @@ class PortletPlan(BrowserView):
         return super(PortletPlan, self).__call__()
 
 
-class PortletDossiers(BrowserView):
-    """ """
+class BasePortletFolders(BrowserView):
+    """A portlet that displays published folders of a specific folder at root of Plone."""
+
+    # to be overrided
+    main_folder_id = None
+
     def _update(self):
         """ """
         self.portal = api.portal.get()
@@ -57,11 +61,15 @@ class PortletDossiers(BrowserView):
     def __call__(self):
         """ """
         self._update()
-        return super(PortletDossiers, self).__call__()
+        return super(BasePortletFolders, self).__call__()
 
     def available(self):
         """ """
         return not self.portal.portal_membership.isAnonymousUser()
+
+    def main_folder_title(self):
+        """ """
+        return self.portal.get(self.main_folder_id).Title()
 
     def get_folders(self):
         """ """
@@ -69,6 +77,18 @@ class PortletDossiers(BrowserView):
         portal_path = "/".join(self.portal.getPhysicalPath())
         brains = catalog(
             portal_type='Folder',
-            path={'query': portal_path + '/dossiers-structures', 'depth': 1},
+            path={'query': portal_path + '/' + self.main_folder_id, 'depth': 1},
             sort_on='getObjPositionInParent')
         return brains
+
+
+class PortletDossiers(BasePortletFolders):
+    """ """
+
+    main_folder_id = "dossiers-structures"
+
+
+class PortletCedes(BasePortletFolders):
+    """ """
+
+    main_folder_id = "boite-a-outils"

@@ -6,12 +6,12 @@
      tal:omit-tag=""
      tal:condition="python: view.available()">
 
-<dl class="portlet" id="portlet-dossiers">
+<div class="card portlet portletDosseiers">
 
-    <dt class="portletHeader">
+    <div class="card-header">
         <a href="#" tal:attributes="href string:${view/portal_url}/dossiers-structures">Acc&egrave;s aux dossiers</a>
-    </dt>
-    <dd class="portletItem">
+    </div>
+    <div class="card-body">
       <ul>
          <tal:block tal:repeat="brain python: view.get_folders()">
           <li>
@@ -21,9 +21,9 @@
           </li>
          </tal:block>
       </ul>
-    </dd>
+    </div>
 
-</dl>
+</div>
 
 </div>
 </body>

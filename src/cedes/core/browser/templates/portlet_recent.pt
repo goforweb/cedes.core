@@ -2,97 +2,93 @@
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   i18n:domain="plone">
   <body>
-    <div metal:define-macro="portlet"
-         tal:define="member python: view.member;
-                     is_anon python: view.is_anon;
-                     is_cedes_free python: member.is_cedes_free();">
+    <tal:defines define="member python: view.member;
+                         is_anon python: view.is_anon;
+                         is_cedes_free python: member.is_cedes_free();
+                         results python:view.get_latest_entries(sort_limit=8);">
 
-      <tal:recentlist tal:define="results python:view.get_latest_entries(sort_limit=8);">
+        <div class="portlet card portletRecent">
 
-        <dl class="portlet" id="portlet-recent">
-
-          <dt class="portletHeader">
+          <div class="card-header">
             <a href="#" tal:attributes="href string:${view/portal_url}/recently_modified">Nouveaut&eacute;s</a>
-          </dt>
-          <div class="portletBox">
-          <dd class="portletItem firstPortletItem" tal:condition="not: is_anon"></dd>
-          <tal:items tal:repeat="obj results">
-            <dd class="portletItem">
-              <div tal:define="item_url string:${obj/getURL}/view;
-                               item_icon string:${obj/getIcon};
-                               desc obj/Description;
-                               onclick_action string:document.getElementById('apn${repeat/obj/number}').style.display='block';;return false;;">
-                <img tal:attributes="src item_icon" class="visualIconPadding" />
-                <a href=""
-                  tal:attributes="href item_url;
-                                  title desc;
-                                  onclick python: view.get_on_click(obj, onclick_action);
-                                  class python: 'contenttype-' + obj.portal_type.lower();">
-                  <tal:title content="obj/pretty_title_or_id">
-                    Title
-                  </tal:title>
-                </a>
-                <br />
-                <i tal:define="colophon python: obj.colophon_with_author" tal:condition="colophon">
-                    <span tal:replace="structure colophon" />
-                </i>
-                <tal:block condition="python: obj.portal_type == 'SequenceApprentissage'">
-                    <br />
-                </tal:block>
-                <i tal:condition="python: obj.portal_type == 'SequenceApprentissage' or not obj.colophon_with_author">
-                  <span tal:replace="desc" />
-                </i>
-                <a class="more" tal:attributes="href item_url;
-                                                title desc;
-                                                onclick python: view.get_on_click(obj, onclick_action);">[...]</a>
-
-                <tal:warningMessage condition="python:obj.portal_type in ('ArticlePayant', 'SequenceApprentissage') and not(is_anon)">
-                 <dl style="display:none;"
-                     class="portalMessage warning"
-                     tal:attributes="id string:apn${repeat/obj/number};
-                                     class python: viewable and 'portalMessage info', 'portalMessage warning';"
-                     tal:define="viewable python: member.check_viewable(obj.UID)">
-                  <dd tal:condition="python: viewable">Votre compte a d&eacute;j&agrave; &eacute;t&eacute; d&eacute;bit&eacute; pour cet article, vous pouvez donc y acc&eacute;der librement. Cliquez sur 'Continuer' pour confirmer.
-                    <a href=""
-                      tal:attributes="href  item_url;
-                                       title desc;">
-                      Continuer...
-                    </a>
-                  </dd>
-                  <dd tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
-                    <a href=""
-                      tal:attributes="href  item_url;
-                                       title desc;">
-                      Continuer...
-                    </a>
-                  </dd>
-                  <dd tal:condition="is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
-                  <dd tal:condition="python:not(is_cedes_free) and not(member.check_balance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
-                 </dl>
-                </tal:warningMessage>
-              </div>
-            </dd>
-          </tal:items>
-
-          <dd class="portletItem"
-            tal:condition="not: results"
-            i18n:translate="box_recent_no_items">
-            No items changed yet.
-          </dd>
-
-          <dd class="portletFooter">
-            <a href="#"
-              class="tile"
-              tal:attributes="href string:${view/portal_url}/recently_modified">
-              Toutes les nouveaut&eacute;s&hellip;
-            </a>
-          </dd>
           </div>
-        </dl>
+          <div class="portle-body">
+            <dd class="portletItem firstPortletItem" tal:condition="not: is_anon"></dd>
+            <tal:items tal:repeat="obj results">
+              <dd class="portletItem">
+                <div tal:define="item_url string:${obj/getURL}/view;
+                                 item_icon string:${obj/getIcon};
+                                 desc obj/Description;
+                                 onclick_action string:document.getElementById('apn${repeat/obj/number}').style.display='block';;return false;;">
+                  <img tal:attributes="src item_icon" class="visualIconPadding" />
+                  <a href=""
+                    tal:attributes="href item_url;
+                                    title desc;
+                                    onclick python: view.get_on_click(obj, onclick_action);
+                                    class python: 'contenttype-' + obj.portal_type.lower();">
+                    <tal:title content="obj/pretty_title_or_id">
+                      Title
+                    </tal:title>
+                  </a>
+                  <br />
+                  <i tal:define="colophon python: obj.colophon_with_author" tal:condition="colophon">
+                      <span tal:replace="structure colophon" />
+                  </i>
+                  <tal:block condition="python: obj.portal_type == 'SequenceApprentissage'">
+                      <br />
+                  </tal:block>
+                  <i tal:condition="python: obj.portal_type == 'SequenceApprentissage' or not obj.colophon_with_author">
+                    <span tal:replace="desc" />
+                  </i>
+                  <a class="more" tal:attributes="href item_url;
+                                                  title desc;
+                                                  onclick python: view.get_on_click(obj, onclick_action);">[...]</a>
 
-      </tal:recentlist>
+                  <tal:warningMessage condition="python:obj.portal_type in ('ArticlePayant', 'SequenceApprentissage') and not(is_anon)">
+                   <dl style="display:none;"
+                       class="portalMessage warning"
+                       tal:attributes="id string:apn${repeat/obj/number};
+                                       class python: viewable and 'portalMessage info', 'portalMessage warning';"
+                       tal:define="viewable python: member.check_viewable(obj.UID)">
+                    <dd tal:condition="python: viewable">Votre compte a d&eacute;j&agrave; &eacute;t&eacute; d&eacute;bit&eacute; pour cet article, vous pouvez donc y acc&eacute;der librement. Cliquez sur 'Continuer' pour confirmer.
+                      <a href=""
+                        tal:attributes="href  item_url;
+                                         title desc;">
+                        Continuer...
+                      </a>
+                    </dd>
+                    <dd tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
+                      <a href=""
+                        tal:attributes="href  item_url;
+                                         title desc;">
+                        Continuer...
+                      </a>
+                    </dd>
+                    <dd tal:condition="is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
+                    <dd tal:condition="python:not(is_cedes_free) and not(member.check_balance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
+                   </dl>
+                  </tal:warningMessage>
+                </div>
+              </dd>
+            </tal:items>
 
-    </div>
+            <div class="card-footer"
+              tal:condition="not: results"
+              i18n:translate="box_recent_no_items">
+              No items changed yet.
+            </div>
+
+            <div class="card-footer">
+              <a href="#"
+                class="tile"
+                tal:attributes="href string:${view/portal_url}/recently_modified">
+                Toutes les nouveaut&eacute;s&hellip;
+              </a>
+            </div>
+          </div>
+        </div>
+
+    </tal:defines>
   </body>
 </html>
 

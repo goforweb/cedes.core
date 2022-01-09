@@ -1,0 +1,33 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      i18n:domain="plone">
+<body>
+<div tal:omit-tag=""
+     tal:condition="python: view.available()">
+
+    <div class="card portlet portletFolders">
+
+        <div class="card-header">
+            <a href="#"
+               tal:attributes="href string:${view/portal_url}/${view/main_folder_id}"
+               tal:content="python: view.main_folder_title()">
+                Main folder title
+            </a>
+        </div>
+        <div class="card-body">
+          <ul>
+             <tal:block tal:repeat="brain python: view.get_folders()">
+              <li>
+               <a tal:attributes="href python: brain.getURL();
+                                  class string:state-${brain/review_state}"
+                  tal:content="python: brain.Title">Sub folder title</a>
+              </li>
+             </tal:block>
+          </ul>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

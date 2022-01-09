@@ -21,7 +21,7 @@
         </tal:block>
 
         <span tal:omit-tag=""
-              tal:define="contentFilter python:{'portal_type':['Folder', 'Document', 'Link', 'Image', 'File', 'Event', 'News Item',], 'sort_on':'getObjPositionInParent'};
+              tal:define="contentFilter python:{'portal_type':['Document', 'Link', 'Image', 'File', 'Event', 'News Item',], 'sort_on':'getObjPositionInParent'};
                           dummy python: context.REQUEST.set('contentFilter', contentFilter);">
           <div metal:use-macro="here/@@plone_listing_view/macros/listing" />
         </span>

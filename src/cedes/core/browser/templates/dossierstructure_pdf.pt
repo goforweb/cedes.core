@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr"
+        lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type"
+          content="text/html;charset=utf-8" />
+
+<title tal:content="here/Title">The title</title>
+<style type='text/css'>
+@media print {
+
+	@page {
+
+    -pdf-page-orientation: portrait;
+		-pdf-page-size: a4;
+
+		margin-top: 2cm;
+		margin-left: 2cm;
+		margin-right: 2cm;
+		margin-bottom: 3cm;
+
+	}
+
+	@page regular {
+
+		-pdf-page-orientation: portrait;
+		-pdf-page-size: a4;
+
+		margin-top: 2cm;
+		margin-left: 2cm;
+		margin-right: 2cm;
+		margin-bottom: 3cm;
+
+		@frame footer {
+			-pdf-frame-content: footer;
+			bottom: 2cm;
+			left: 4cm;
+			right: 2cm;
+			height: 1cm;
+		}
+	}
+
+}
+
+body{
+  font-size:10pt;
+}
+
+.text{
+  text-align: justify;
+  font-size:10pt;
+}
+
+.documentPageHeading {
+  text-align: center;
+	font-size: 300%;
+	line-height: 90%;
+	font-weight: bold;
+	margin-top: 20pt;
+	margin-bottom: 20pt;
+}
+
+.documentFirstHeading {
+  margin-top:20px;
+  font-size:14pt;
+	font-weight: bold;
+	margin-bottom:0px;
+	-pdf-keep-with-next:true;
+  border-bottom-color: #000000; border-bottom-style:solid; border-bottom-width:1px;padding-bottom:5px;
+}
+
+.apprentitre {
+  margin-top:20px;
+  font-size:14pt;
+	font-weight: bold;
+	margin-bottom:0px;
+	-pdf-keep-with-next:true;
+  border-bottom-color: #000000; border-bottom-style:solid; border-bottom-width:1px;padding-bottom:5px;
+}
+.documentHeading {
+  text-align: left;
+	font-size: 18pt;
+	font-weight: normal;
+	margin-top: 20pt;
+	margin-bottom: 20pt;
+}
+
+#footer {
+	text-align: center;
+}
+
+pdftoc {
+  font-size: 9pt;
+}
+
+pdftoc.pdftoclevel0 {
+  margin-top:0.1cm;
+	margin-left: 0cm;
+}
+
+pdftoc.pdftoclevel1 {
+  margin-top:0.1cm;
+	margin-left: 0.5cm;
+}
+
+pdftoc.pdftoclevel2 {
+  margin-top:0.1cm;
+	margin-left: 1cm;
+}
+
+pdftoc.pdftoclevel3 {
+  margin-top:0.1cm;
+	margin-left: 1.5cm;
+}
+
+pdftoc.pdftoclevel4 {
+  margin-top:0.1cm;
+	margin-left: 2cm;
+}
+
+pdftoc.pdftoclevel5 {
+  margin-top:0.1cm;
+	margin-left: 2.5cm;
+}
+
+pdftoc.pdftoclevel6 {
+  margin-top:0.1cm;
+	margin-left: 3cm;
+}
+
+pdftoc.pdftoclevel7 {
+  margin-top:0.1cm;
+	margin-left: 3.5cm;
+}
+
+.level1{
+  font-size:15pt;
+}
+.level2{
+  font-size:14pt;
+}
+.level3{
+  font-size:13pt;
+}
+.level4{
+  font-size:12pt;
+}
+.level5{
+  font-size:11pt;
+}
+.level6{
+  font-size:10pt;
+}
+.level7{
+  font-size:9pt;
+}
+
+.cedestitle{
+  margin-top:20px;
+  font-size:16pt;
+	font-weight: bold;
+	margin-bottom:0px;
+	-pdf-keep-with-next:true;
+}
+
+.colophon{
+  margin-top:0px;
+  font-size:12pt;
+  -pdf-keep-with-next:true;
+	/**text-decoration:underline;**/
+}
+
+.link{
+  font-family: 'Courier New', monospace;
+  color: #00909e;
+}
+
+.Tableau{
+  -pdf-keep-with-next:true;
+  text-decoration:none;
+}
+
+.brownHeader{
+background-color:#B4A290;
+color:white;
+display:block;
+font-size:14px;
+font-weight:bold;
+height:20px;
+margin:0;
+padding:0;
+text-align:center;
+}
+
+blockquote {
+border-left:4px solid #B6B6B6;
+color:#76797C;
+margin-left:0;
+padding-left:0.5em;
+}
+
+</style>
+
+</head>
+
+<body tal:define="member here/portal_membership/getAuthenticatedMember;
+                  toc_view python: context.restrictedTraverse('@@html-toc');
+                  wf_tool python: view.wf_tool;">
+
+<div tal:omit-tag="" tal:condition="python:member.has_role('Manager')">
+
+        <div tal:content="here/pretty_title_or_id" class="documentPageHeading">
+          Title or id
+        </div>
+
+        <div class="documentDescription"
+           tal:content="structure python:here.Description().replace('\n', '<br/>')"
+           tal:condition="here/Description">
+            Description
+        </div>
+        <table><tr><td width="90%">
+        <p class="documentHeading">
+          A. Table des mati&egrave;res
+        </p></td><td align="right" valign="bottom">page</td></table>
+
+        <div class="pdf"><pdf:toc/></div>
+
+        <pdf:nexttemplate name="regular"/>
+        <pdf:nextpage/>
+
+
+        <p class="documentHeading">
+          B. Ressources
+        </p>
+
+       <div tal:repeat="subitem python:[elt for elt in here.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">
+          <h1 class="level1"><span tal:replace="python: toc_view.point_number(subitem)"/> <span tal:replace="subitem/Title"/></h1>
+            <span metal:define-macro="subitem-resources">
+              <div tal:omit-tag="" tal:condition="python:subitem.portal_type == 'Link'">
+                <a class="link"
+                   tal:attributes="href subitem/getRemoteUrl"
+                   tal:content="structure python:here.clean_linkforpdf(subitem.getRemoteUrl())">Link</a>
+              </div>
+              <div tal:omit-tag="" tal:condition="python:subitem.portal_type == 'Point'" tal:repeat="resource python: view.get_resources(subitem)">
+
+                <table style="-pdf-keep-with-next:true; border-bottom-color: #000000; border-bottom-style:solid; border-bottom-width:1px;padding-bottom:5px;"><tr>
+                  <td width="20" style="padding-top:5px;">
+                    <img style="padding-right:3px;"
+                         tal:define="item_type resource/portal_type;
+                                     normalizeString nocall: context/plone_utils/normalizeString;"
+                         tal:attributes="src python: here.portal_url() + '/++plone++cedes.core/big-' + normalizeString(item_type) + '.gif';"/>
+                  </td>
+                  <td>
+                    <span tal:content="resource/Title" class="cedestitle"></span>
+                  </td></tr>
+                </table>
+                <span tal:condition="python:resource.portal_type in ('ArticlePayant', )" tal:omit-tag="">
+                  <div class="colophon"> <span style="font-weight:bold;" tal:content="python:resource.cr_author"></span>,
+                    <span tal:replace="structure python:resource.get_colophon()"/></div>
+                  <div tal:content="structure python:context.clean_htmlforpdf(resource.cr_html_preview.output)" class="text" tal:condition="python: resource.cr_html_preview.raw"></div>
+                  <a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:here.clean_linkforpdf(resource.absolute_url())" tal:condition="python: not resource.cr_html_preview.raw"></a>
+                </span>
+                <span tal:condition="python:resource.portal_type in ('ArticleGratuit', )" tal:omit-tag="">
+                  <div class="colophon"> <span style="font-weight:bold;" tal:content="python:resource.cr_author"></span>,
+                    <span tal:replace="structure python:resource.get_colophon()"/></div>
+                  <div tal:content="resource/Description" class="text"></div>
+                  <a tal:condition="python: resource.file" class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())"></a>
+                  <a tal:condition="python: not resource.file" class="link" tal:attributes="href python: resource.absolute_url() + '/view'" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url() + '/view')"></a>
+                </span>
+                <span tal:condition="python:resource.portal_type in ('SiteInternet', 'Statistiques', 'Audio', 'Video', 'Cederom')" tal:omit-tag="">
+                  <div tal:content="resource/Description" class="text"></div>
+                  <a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())"></a>
+                </span>
+                <span tal:condition="python:resource.portal_type in ('SequenceApprentissage')" tal:omit-tag="">
+                  <div tal:content="resource/getColophonWithAuthor" class="colophon"></div>
+                  <i tal:content="resource/Description" class="text"></i>
+                  <div><a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())"></a></div>
+                </span>
+                <span tal:condition="python:resource.portal_type in ('Bibliographie')" tal:omit-tag="">
+                    <div tal:content="python: view.clean_htmlforpdf(resource.cr_subtitle)" tal:condition="python: resource.cr_subtitle" class="text" />
+                    <div tal:content="python: view.clean_htmlforpdf(resource.cr_author)" tal:condition="python: resource.cr_author" class="text" />
+                    <div tal:content="python: view.clean_htmlforpdf(resource.cr_reference)" tal:condition="python: resource.cr_reference" class="text" />
+                    <div><a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:here.clean_linkforpdf(resource.absolute_url())"></a></div>
+                </span>
+
+                <br/><br/>
+            </div>
+            </span>
+          <div tal:define="prefix repeat/subitem/number" tal:repeat="subitem python:[elt for elt in subitem.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">
+            <h2 class="level2"> <span tal:replace="string:${prefix}.${repeat/subitem/number} ${subitem/Title}"/> </h2>
+            <span metal:use-macro="here/dossierstructure_pdf/macros/subitem-resources"/>
+            <div tal:define="prefix string:${prefix}.${repeat/subitem/number}" tal:repeat="subitem python:[elt for elt in subitem.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">
+              <h3 class="level3"> <span tal:replace="string:${prefix}.${repeat/subitem/number} ${subitem/Title}"/> </h3>
+              <span metal:use-macro="here/dossierstructure_pdf/macros/subitem-resources"/>
+              <div tal:define="prefix string:${prefix}.${repeat/subitem/number}" tal:repeat="subitem python:[elt for elt in subitem.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">
+                <h4 class="level4"> <span tal:replace="string:${prefix}.${repeat/subitem/number} ${subitem/Title}"/> </h4>
+                <span metal:use-macro="here/dossierstructure_pdf/macros/subitem-resources"/>
+                <div tal:define="prefix string:${prefix}.${repeat/subitem/number}" tal:repeat="subitem python:[elt for elt in subitem.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">
+                  <h5 class="level5" tal:content="string:${prefix}.${repeat/subitem/number} ${subitem/Title}"> </h5>
+                  <span metal:use-macro="here/dossierstructure_pdf/macros/subitem-resources"/>
+                  <div tal:define="prefix string:${prefix}.${repeat/subitem/number}" tal:repeat="subitem python:[elt for elt in subitem.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">
+                    <h6 class="level6" tal:content="string:${prefix}.${repeat/subitem/number} ${subitem/Title}"> </h6>
+                    <span metal:use-macro="here/dossierstructure_pdf/macros/subitem-resources"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+         <div id="footer">
+          - <pdf:pagenumber> -
+        </div>
+  </div>
+  </body>
+</html>

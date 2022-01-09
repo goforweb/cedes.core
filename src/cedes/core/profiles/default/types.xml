@@ -3,8 +3,9 @@
   <object name="Audio" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticleGratuit" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticlePayant" meta_type="Dexterity FTI" purge="True" />
-  <object name="Bibliographie" meta_type="Dexterity FTI" purge="True" />
+  <object name="DossierStructure" meta_type="Dexterity FTI" purge="True" />
   <object name="PlanClassement" meta_type="Dexterity FTI" purge="True" />
+  <object name="Point" meta_type="Dexterity FTI" purge="True" />
   <object name="SequenceApprentissage" meta_type="Dexterity FTI" purge="True" />
   <object name="SiteInternet" meta_type="Dexterity FTI" purge="True" />
   <object name="Statistiques" meta_type="Dexterity FTI" purge="True" />

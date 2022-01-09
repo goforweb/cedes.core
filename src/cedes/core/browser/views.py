@@ -22,8 +22,7 @@ class CommonResultListingView(BrowserView):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        portal_state = getMultiAdapter((self.context, self.request), name=u'plone_portal_state')
-        self.portal = portal_state.portal()
+        self.portal = api.portal.get()
         self.full = self.context.getLayout() == 'folder_full_listing'
 
     def performSearch(self, b_size=30, b_start=0):

@@ -19,6 +19,12 @@
         factory="cedes.core.content.bibliographie.BibliographieSchemaPolicy"
         name="schema_policy_bibliographie" />
     <utility
+        factory="cedes.core.content.dossierstructure.DossierStructureSchemaPolicy"
+        name="schema_policy_dossierstructure" />
+    <utility
+        factory="cedes.core.content.dossierstructure.PointSchemaPolicy"
+        name="schema_policy_point" />
+    <utility
         factory="cedes.core.content.sequenceapprentissage.SequenceApprentissageSchemaPolicy"
         name="schema_policy_sequenceapprentissage" />
     <utility

@@ -14,14 +14,13 @@
         type="plone"
         directory="static" />
 
-    <!-- faceted view -->
+    <!-- faceted view for Theme -->
     <faceted:view
       name="faceted-theme-view"
       class="cedes.core.browser.faceted.FacetedThemeView"
       template="templates/faceted-theme-view.pt"
       title="Faceted CeDES Theme view"
       permission="zope2.View" />
-
     <configure package="eea.facetednavigation">
       <browser:page
         for="cedes.core.interfaces.IThemeFacetedNavigable"
@@ -30,7 +29,6 @@
         template="browser/template/query.pt"
         permission="zope2.View" />
     </configure>
-
     <browser:page
         for="cedes.core.content.theme.ITheme"
         name="view"
@@ -105,6 +103,22 @@
         class="cedes.core.browser.views.CommonResultListingView"
         name="get_common_result_listing"
         attribute="update_content"
+        permission="zope2.View" />
+
+    <!-- dossierstructure_pdf -->
+    <browser:page
+        for="*"
+        class="cedes.core.browser.dossierstructure.DossierStructurePDF"
+        name="dossierstructure_pdf"
+        template="templates/dossierstructure_pdf.pt"
+        permission="zope2.View" />
+    <!-- The view rendering html-toc -->
+    <browser:view
+        for="*"
+        class="cedes.core.browser.dossierstructure.HTMLTocView"
+        name="html-toc"
+        allowed_attributes="point_title
+                            point_number"
         permission="zope2.View" />
 
     <!-- portlets -->

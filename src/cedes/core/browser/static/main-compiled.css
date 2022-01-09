@@ -29,11 +29,11 @@ div.portletNavigationTree [class*="contenttype-"] {
 .contenttype-audio {
     background: no-repeat transparent url("++plone++cedes.core/audio.gif");
 }
-.contenttype-video {
-    background: no-repeat transparent url("++plone++cedes.core/video.gif");
-}
 .contenttype-bibliographie {
     background: no-repeat transparent url("++plone++cedes.core/bibliographie.gif");
+}
+.contenttype-dossierstructure {
+    background: no-repeat transparent url("++plone++cedes.core/dossierstructure.gif");
 }
 .contenttype-sequenceapprentissage {
     background: no-repeat transparent url("++plone++cedes.core/sequence-apprentissage.gif");
@@ -47,8 +47,14 @@ div.portletNavigationTree [class*="contenttype-"] {
 .contenttype-planclassement {
     background: no-repeat transparent url("++plone++cedes.core/theme.gif");
 }
+.contenttype-point {
+    background: no-repeat transparent url("++plone++cedes.core/point.gif");
+}
 .contenttype-theme {
     background: no-repeat transparent url("++plone++cedes.core/theme.gif");
+}
+.contenttype-video {
+    background: no-repeat transparent url("++plone++cedes.core/video.gif");
 }
 
 .state-private {

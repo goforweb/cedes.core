@@ -39,6 +39,10 @@ class CedesMemberData(MemberData):
                     res = True
         return res
 
+    def get_account_transactions(self):
+        """ """
+        return {}
+
     def get_first_login_time(self):
         """ """
         return datetime.now()

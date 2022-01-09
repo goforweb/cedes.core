@@ -52,16 +52,19 @@ class IRessource(model.Schema):
         pattern_options={
             'basPath': '/dossiers-structures',
             'selectableTypes': ['Point'], }, )
+
     cr_points = RelationList(
         title='Points auxquels la ressource est liée',
         value_type=RelationChoice(
             vocabulary='plone.app.vocabularies.Catalog',
         ),
         required=False, )
+
     directives.widget(
         'related_items',
         RelatedItemsFieldWidget,
         pattern_options={}, )
+
     related_items = RelationList(
         title='Ressources liées',
         value_type=RelationChoice(

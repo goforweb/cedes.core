@@ -4,6 +4,9 @@ from plone import api
 from Products.Five import BrowserView
 from collections import OrderedDict
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from plone.dexterity.browser.view import DefaultView
+from cedes.core.pisa import generate_pdf
+from cedes.core.pisa import pdf
 
 import re
 
@@ -118,13 +121,15 @@ def get_html_toc(context, data=None, prefix=''):
             css_class_item_state = ' state-private'
         opening_div = '<div class="item_level_{0}{1}">'.format(css_class_level, css_class_item_state)
         if item.portal_type == 'Point' and item.cf_resources:
-            content = opening_div + '<a href="' + item.absolute_url() + '">' + title + '</a>' + '</div>'
+            content = opening_div + '<a ' + 'class="{0}"'.format(css_class_item_state) + \
+                ' href="' + item.absolute_url() + '">' + title + '</a>' + '</div>'
         elif item.portal_type == 'Link':
             if is_manager:
                 item_url = item.absolute_url()
             else:
                 item_url = item.getRemoteUrl()
-            content = opening_div + '<a href="' + item_url + '">' + title + '</a>' + \
+            content = opening_div + '<a ' + 'class="{0}"'.format(css_class_item_state) + \
+                ' href="' + item_url + '">' + title + '</a>' + \
                 '&nbsp;<img src={0}/++plone++cedes.core/icon-external-link.png />'.format(
                     portal_url) + '</div>'
         else:
@@ -176,3 +181,35 @@ class HTMLTocView(BrowserView):
     def display_context_toc(self):
         """ """
         return ViewPageTemplateFile("templates/context_toc.pt")(self)
+
+
+class DossierStructureDefaultView(DefaultView):
+    """ """
+
+    def _update(self):
+        super(DossierStructureDefaultView, self)._update()
+        self.member = api.user.get_current()
+        self.is_manager = self.member.has_role('Manager')
+        self.is_cedes_free = self.member.is_cedes_free()
+        self.has_credits = self.member.get_balance() > 0
+        self.price = self.context.get_price()
+
+    def may_access(self):
+        return (not self.is_cedes_free and self.has_credits and self.price == 0) \
+            or self.is_manager
+
+
+class GeneratePDFView(BrowserView):
+    """ """
+
+    def __call__(self):
+        """ """
+        return generate_pdf(self.context)
+
+
+class GetPDFView(BrowserView):
+    """ """
+
+    def __call__(self):
+        """ """
+        return pdf(self.context)

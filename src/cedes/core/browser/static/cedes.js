@@ -17,14 +17,14 @@ function showRealPrice(UID, baseUrl) {
   var spinner = $('#ajax-spinner').hide();
   $(document).ajaxStart(function() { spinner.hide(); });
   $(document).ajaxStop(function() { spinner.hide(); });
-  jq.ajax({
+  $.ajax({
     url: baseUrl + "/@@ds_price",
     dataType: 'html',
     data: {UID:UID},
     cache: false,
     success: function(data) {
       var selector = '#marker_ds_price_' + UID;
-      var $span = jq(selector);
+      var $span = $(selector);
       $span.html(data);
       },
     error: function(jqXHR, textStatus, errorThrown) {

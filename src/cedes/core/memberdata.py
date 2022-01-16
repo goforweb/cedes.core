@@ -49,8 +49,45 @@ class CedesMemberData(MemberData):
 
     def get_balance(self):
         """ """
+        if "Manager" in self.getRoles():
+            return 1000
         return 0
 
     def is_cedes_free(self):
         """ """
         return False
+
+    def add_transaction(self, article_uid, article_price=1, id_dossier_structure=False):
+        """ """
+        if not("Manager" in self.getRoles()):
+            # an article is payed once then accessed
+            # but for DossierStructure, if it has been updated, the price is adapted and
+            # the pdf is no more accessible
+            if not id_dossier_structure and self.check_viewable(article_uid):
+                return None
+            previous_balance = self.get_balance()
+            self.account_balance -= article_price
+            if previous_balance >= 20 and self.account_balance < 20:
+                self.send_low_reminder()
+            self.account_transactions = self.account_transactions + \
+                ((article_uid, article_price, datetime.now()), )
+        return None
+
+    def get_transactions(self):
+        """ """
+        return []
+
+    def send_low_reminder(self):
+        """ """
+        # XXX
+        return
+        skintool = getToolByName(self, 'portal_skins')
+        mailHost = getToolByName(self, 'MailHost')
+        email = skintool.cedes_emails.credit_low_notification(
+            self.REQUEST,
+            fullname=self.fullname,
+            firstname=self.firstname,
+            member_email=self.email,
+            balance=self.getBalance())
+        mailHost.send(email.encode('utf-8'))
+        return True

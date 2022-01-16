@@ -107,7 +107,6 @@
             Description
             </div>
 
-
             <tal:know_more condition="python: desc and item_type in ['DossierStructure',]">
               <div id="collapsible-more" class="collapsible-content">
                 <div class="collapsible-inner-content">
@@ -117,7 +116,7 @@
                       tal:attributes="id string:marker_ds_price_$UID;">
                   <img onload="#"
                        tal:attributes="onload string:showRealPrice('$UID','$portal_url');
-                                       src string:portal_url/spinner.gif"
+                                       src string:portal_url/++plone++cedes.core/spinner_small.gif"
                        width="24" height="24" /><b>Coût du dossier en cours de calcul...</b></span>
    
                  </div>

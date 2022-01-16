@@ -29,11 +29,22 @@
         template="browser/template/query.pt"
         permission="zope2.View" />
     </configure>
+
+    <!-- conent_types default view -->
+    <!-- Theme -->
     <browser:page
         for="cedes.core.content.theme.ITheme"
         name="view"
         class="cedes.core.browser.theme.ThemeDefaultView"
         template="templates/theme-view.pt"
+        permission="zope2.View" />
+
+    <!-- DossierStructure -->
+    <browser:page
+        for="cedes.core.content.dossierstructure.IDossierStructure"
+        name="view"
+        class="cedes.core.browser.dossierstructure.DossierStructureDefaultView"
+        template="templates/dossierstructure_view.pt"
         permission="zope2.View" />
 
     <!-- The view rendering common-result-listing -->
@@ -120,6 +131,18 @@
         allowed_attributes="point_title
                             point_number"
         permission="zope2.View" />
+    <!-- generate_pdf -->
+    <browser:view
+        for="cedes.core.content.dossierstructure.IDossierStructure"
+        class="cedes.core.browser.dossierstructure.GeneratePDFView"
+        name="generate_pdf"
+        permission="cmf.ManagePortal" />
+    <!-- pdf -->
+    <browser:view
+        for="cedes.core.content.dossierstructure.IDossierStructure"
+        class="cedes.core.browser.dossierstructure.GetPDFView"
+        name="pdf"
+        permission="zope2.View" />
 
     <!-- portlets -->
     <browser:page
@@ -145,6 +168,13 @@
         class="cedes.core.browser.portlets.PortletCedes"
         name="portlet_cedes"
         template="templates/portlet_folders.pt"
+        permission="zope2.View" />
+
+    <!-- Asynchronous calls (ajax) -->
+    <browser:page
+        name="ds_price"
+        class=".async.DSPrice"
+        for="*"
         permission="zope2.View" />
 
 </configure>

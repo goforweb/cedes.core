@@ -61,7 +61,7 @@ class Base(object):
         """
           returns all the direct points of this Folder
         """
-        return self.objectValues('Point')
+        return self.objectValues()
 
     security.declarePrivate('get_price')
 

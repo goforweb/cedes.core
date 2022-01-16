@@ -12,7 +12,6 @@
                    isManager python: member.has_role('Manager');
                    isAnon portal_state/anonymous;
                    askConnection python: isAnon and context.doProvokeUnauthorized() or '';
-                   global isLinkInDossier python: False;
                    portal portal_state/portal;
                    portal_url portal_state/portal_url;
                    is_cedes_free python: member.is_cedes_free();">
@@ -36,7 +35,6 @@
                                           item_url python:(item_type in use_view_action) and item_absolute_url+'/view' or item_absolute_url;
                                           bc python: request.get('bc', '') or (here.portal_type == 'Theme' and here.UID()) or '';
                                           item_url python: bc and item_url + '?bc=' +bc or item_url;
-                                          global isLinkInDossier python: (isLinkInDossier or item_type == 'Link') and True or False;
                                           onclick_action string:document.getElementById('ap${repeat/item/number}').style.display='block';;return false;;">
           <td valign="top" style="width: 32px; padding-right: 0.5em; padding-top: 0.8em; padding-left: 0.5em;">
             <a style="border-color: white;"
@@ -164,8 +162,6 @@
         </span>
       </tr>
       </tal:loop>
-      <tr tal:condition="isLinkInDossier"><td colspan=2>&nbsp;</td></tr>
-      <tr tal:condition="isLinkInDossier"><td colspan=2 class="discreet">Le <span class="linkindossierstructure">fond bleuté</span> identifie les ressources qui sont classées uniquement sous la rubrique "Outils pour faire la classe" dans la colonne verticale à gauche de l'écran</td></tr>
     </table>
     <div metal:use-macro="here/batch_macros/macros/navigation" />
   </div>

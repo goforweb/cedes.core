@@ -17,9 +17,6 @@ div.portletNavigationTree [class*="contenttype-"] {
     background-image: none;
 }
 
-.contenttype-folder {
-    background: no-repeat transparent url("++plone++cedes.core/folder.gif");
-}
 .contenttype-articlegratuit {
     background: no-repeat transparent url("++plone++cedes.core/article-gratuit.gif");
 }
@@ -34,6 +31,15 @@ div.portletNavigationTree [class*="contenttype-"] {
 }
 .contenttype-dossierstructure {
     background: no-repeat transparent url("++plone++cedes.core/dossierstructure.gif");
+}
+.contenttype-file {
+    background: no-repeat transparent url("++plone++cedes.core/file.gif");
+}
+.contenttype-folder {
+    background: no-repeat transparent url("++plone++cedes.core/folder.gif");
+}
+.contenttype-image {
+    background: no-repeat transparent url("++plone++cedes.core/image.gif");
 }
 .contenttype-sequenceapprentissage {
     background: no-repeat transparent url("++plone++cedes.core/sequence-apprentissage.gif");
@@ -59,4 +65,10 @@ div.portletNavigationTree [class*="contenttype-"] {
 
 .state-private {
     color: red;
+}
+
+/* override faceted spinner */
+div.faceted_loading {
+  background: url(../../++plone++cedes.core/spinner.gif) no-repeat 50% 1.5em;
+  height: 200px;
 }

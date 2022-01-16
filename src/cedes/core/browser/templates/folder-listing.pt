@@ -23,7 +23,8 @@
         <span tal:omit-tag=""
               tal:define="contentFilter python:{'portal_type':['Document', 'Link', 'Image', 'File', 'Event', 'News Item',], 'sort_on':'getObjPositionInParent'};
                           dummy python: context.REQUEST.set('contentFilter', contentFilter);">
-          <div metal:use-macro="here/@@plone_listing_view/macros/listing" />
+          <div tal:define="plone_listing_view python: context.restrictedTraverse('@@plone_listing_view')"
+               metal:use-macro="plone_listing_view/macros/listing" />
         </span>
 
         <div class="visualClear"><!-- --></div>

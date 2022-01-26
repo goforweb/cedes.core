@@ -6,7 +6,7 @@
 #
 
 from cedes.core import logger
-from datetime import datetime
+from DateTime import DateTime
 from plone.app.users import schema as pau_schema
 from plone.autoform import directives
 from Products.CMFPlone import PloneMessageFactory as _
@@ -142,7 +142,7 @@ class CedesMemberData(MemberData):
 
     def get_first_login_time(self):
         """ """
-        return datetime.now()
+        return DateTime()
 
     def get_balance(self):
         """ """
@@ -167,7 +167,7 @@ class CedesMemberData(MemberData):
             if previous_balance >= 20 and self.account_balance < 20:
                 self.send_low_reminder()
             self.account_transactions = self.account_transactions + \
-                ((article_uid, article_price, datetime.now()), )
+                ((article_uid, article_price, DateTime()), )
         return None
 
     def get_transactions(self):

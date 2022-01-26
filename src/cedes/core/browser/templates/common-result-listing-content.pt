@@ -45,7 +45,11 @@
             </a>
           </td>
           <td valign="top" style="padding-top: 0.8em;">
-            <dl style="display:none; margin-top: 0.4em;" class="portalMessage warning" tal:attributes="id string:ap${repeat/item/number}; class python: viewable and 'portalMessage info' or 'portalMessage warning';" tal:define="item_uid item/UID; viewable python: True" tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
+            <dl style="display:none; margin-top: 0.4em;"
+                class="portalMessage warning"
+                tal:attributes="id string:ap${repeat/item/number};
+                                class python: viewable and 'portalMessage info' or 'portalMessage warning';"
+                tal:define="item_uid item/UID; viewable python: member.check_viewable(item_uid)" tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
               <dt tal:condition="not: viewable">Avertissement</dt>
               <dt tal:condition="viewable">Info</dt>
               <dd tal:condition="python: viewable">Votre compte a déjà été débité pour cet article, vous pouvez donc y accéder librement. Cliquez sur 'Continuer' pour confirmer.

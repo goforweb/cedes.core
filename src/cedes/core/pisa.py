@@ -6,8 +6,10 @@
 #
 
 from io import StringIO
-import xhtml2pdf.pisa as pisa
+
 import os.path
+import xhtml2pdf.pisa as pisa
+
 
 DATA_PATH = os.environ['BUILDOUT_DIR']
 DOSSIER_STRUCTURE_PATH = os.path.join(DATA_PATH, 'var/dossier-structure')

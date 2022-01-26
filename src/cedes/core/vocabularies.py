@@ -6,6 +6,7 @@
 #
 
 from cedes.core.config import CEDES_RESSOURCE_TYPES
+from cedes.core.config import COUNTRIES
 from Products.CMFCore.utils import getToolByName
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
@@ -49,3 +50,19 @@ class FacetedSortingVocabulary(object):
 
 
 FacetedSortingVocabularyFactory = FacetedSortingVocabulary()
+
+
+@implementer(IVocabularyFactory)
+class CountriesVocabulary(object):
+    """ """
+
+    def __call__(self, context):
+        res = []
+        for country_code, country_name in COUNTRIES:
+            res.append(SimpleTerm(country_code,
+                                  country_code,
+                                  country_name))
+        return SimpleVocabulary(res)
+
+
+CountriesVocabularyFactory = CountriesVocabulary()

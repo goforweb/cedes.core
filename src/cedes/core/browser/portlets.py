@@ -2,6 +2,7 @@
 
 from cedes.core import utils
 from plone import api
+from Products.CMFCore.utils import _checkPermission
 from Products.Five import BrowserView
 
 
@@ -14,6 +15,12 @@ class PortletRecent(BrowserView):
         self.portal_url = self.portal.absolute_url()
         self.member = api.user.get_current()
         self.is_anon = self.portal.portal_membership.isAnonymousUser()
+        self.is_cedes_free = not self.is_anon and self.member.is_cedes_free or False
+
+    def available(self):
+        """ """
+        return not self.portal.portal_membership.isAnonymousUser() and \
+            _checkPermission("View", self.portal.plan)
 
     def __call__(self):
         """ """
@@ -36,6 +43,12 @@ class PortletRecent(BrowserView):
 
 class PortletPlan(BrowserView):
     """ """
+
+    def available(self):
+        """ """
+        return not self.portal.portal_membership.isAnonymousUser() and \
+            _checkPermission("View", self.portal.plan)
+
     def _update(self):
         """ """
         self.portal = api.portal.get()
@@ -65,7 +78,8 @@ class BasePortletFolders(BrowserView):
 
     def available(self):
         """ """
-        return not self.portal.portal_membership.isAnonymousUser()
+        return not self.portal.portal_membership.isAnonymousUser() and \
+            _checkPermission("View", self.portal.get(self.main_folder_id))
 
     def main_folder_title(self):
         """ """

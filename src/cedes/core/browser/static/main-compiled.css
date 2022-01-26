@@ -72,3 +72,24 @@ div.faceted_loading {
   background: url(../../++plone++cedes.core/spinner.gif) no-repeat 50% 1.5em;
   height: 200px;
 }
+
+/* hide 'Personal preferences' (rich editor, language, timezont) in user panel to non admins */
+li a#contentview-user_data-personal-preferences {
+    display: none;
+}
+body.userrole-manager li a#contentview-user_data-personal-preferences {
+    display: block;
+}
+
+/* make registration form work fullscreen */
+#content .login-wrapper .card {
+    max-width: inherit;
+}
+
+.glyphicon.disabled {
+    color: grey;
+    cursor: help;
+}
+.bold {
+    font-weight: bold;
+}

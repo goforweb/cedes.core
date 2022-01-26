@@ -1,10 +1,9 @@
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   i18n:domain="plone">
-  <body>
+  <body tal:condition="python: view.available()">
     <tal:defines define="member python: view.member;
                          is_anon python: view.is_anon;
-                         is_cedes_free python: member.is_cedes_free();
                          results python:view.get_latest_entries(sort_limit=8);">
 
         <div class="portlet card portletRecent">
@@ -13,7 +12,6 @@
             <a href="#" tal:attributes="href string:${view/portal_url}/recently_modified">Nouveaut&eacute;s</a>
           </div>
           <div class="portle-body">
-            <dd class="portletItem firstPortletItem" tal:condition="not: is_anon"></dd>
             <tal:items tal:repeat="obj results">
               <dd class="portletItem">
                 <div tal:define="item_url string:${obj/getURL}/view;
@@ -49,7 +47,7 @@
                        class="portalMessage warning"
                        tal:attributes="id string:apn${repeat/obj/number};
                                        class python: viewable and 'portalMessage info', 'portalMessage warning';"
-                       tal:define="viewable python: member.check_viewable(obj.UID)">
+                       tal:define="viewable python: member.check_viewable(obj.UID);">
                     <dd tal:condition="python: viewable">Votre compte a d&eacute;j&agrave; &eacute;t&eacute; d&eacute;bit&eacute; pour cet article, vous pouvez donc y acc&eacute;der librement. Cliquez sur 'Continuer' pour confirmer.
                       <a href=""
                         tal:attributes="href  item_url;
@@ -64,8 +62,8 @@
                         Continuer...
                       </a>
                     </dd>
-                    <dd tal:condition="is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
-                    <dd tal:condition="python:not(is_cedes_free) and not(member.check_balance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
+                    <dd tal:condition="python: view.is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
+                    <dd tal:condition="python:not view.is_cedes_free and not member.check_balance(1) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
                    </dl>
                   </tal:warningMessage>
                 </div>

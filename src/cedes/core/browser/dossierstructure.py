@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from plone import api
-from Products.Five import BrowserView
-from collections import OrderedDict
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from plone.dexterity.browser.view import DefaultView
 from cedes.core.pisa import generate_pdf
 from cedes.core.pisa import pdf
+from collections import OrderedDict
+from plone import api
+from plone.dexterity.browser.view import DefaultView
+from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 import re
 

@@ -1,0 +1,134 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+    <metal:body fill-slot="body">
+
+        <article id="content" tal:condition="not: view/submitted">
+            <h1 class="documentFirstHeading"
+                tal:content="view/label | nothing" />
+            <div id="content-core">
+                <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
+            </div>
+        </article>
+
+        <tal:block condition="view/submitted">
+          <article id="content"
+               tal:define="listing_allowed python: checkPermission('List portal members', here);
+                           results python:listing_allowed and view.results;
+                           Batch python:modules['Products.CMFPlone'].Batch;
+                           DateTime python:modules['DateTime'].DateTime;
+                           b_size python:12;b_start python:0;b_start request/b_start | b_start;">
+            <h1 class="documentFirstHeading"
+                i18n:translate="heading_search_results">Search results</h1>
+
+            <div id="content-core">
+                <p tal:condition="not: listing_allowed"
+                    i18n:translate="member_listing_not_allowed">
+                    You are not allowed to list portal members.
+                </p>
+
+                <tal:block condition="python: results and listing_allowed">
+                  <div tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1)">
+
+                    <strong i18n:translate="batch_x_items_matching_your_criteria">
+                        <span i18n:name="number" tal:omit-tag="" tal:content="python:len(results)">234</span> items matching your search terms.
+                    </strong>
+
+                    <div metal:use-macro="here/batch_macros/macros/navigation"/>
+
+                    <div tal:define="pm context/@@plone_tools/membership;
+                                     portal_url context/@@plone_portal_state/portal_url">
+
+                        <table class="table table-striped">
+                          <tr>
+                            <th>Identifiant</th>
+                            <th>Type</th>
+                            <th>E-mail</th>
+                            <th>Nom</th>
+                            <th>Dernière Connexion</th>
+                            <th>Expire le</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                          </tr>
+                          <tr tal:repeat="result batch" tal:attributes="class python:result['member_type'] == 'CeDES 100%' and 'cedes-100pc' or ''">
+                            <span tal:omit-tag="" tal:define="userid python: result['login'];">
+                            <td><a tal:attributes="href python:portal_url + '/@@user-information?userid=' + userid;"><span tal:content="userid">user id</span></a></td>
+                            <td><span tal:replace="python:result['member_type'][5:]"/></td>
+                            <td><span tal:replace="result/email"/></td>
+                            <td><span tal:replace="result/fullname"/></td>
+                            <td><span tal:replace="python:view.toLocalizedTime(result['login_time'])"/></td>
+                            <td><span tal:replace="python:view.toLocalizedTime(result['expiration_date'])"/></td>
+                            <td><a tal:attributes="href python:portal_url + '/@@user-information?userid=' + userid;"><span title="Editer le profil" class="icon-edit bold" /></a></td>
+                            <td><a tal:attributes="href python:portal_url + '/@@member-account-details?userid=' + userid;"><span title="Historique" class="icon-history bold" /></a></td>
+                            <td>
+                              <a tal:condition="python: not (not result['member_type'] == 'CeDES Free' and result['last_payment_date'] and result['expiration_date'] < DateTime() and not result['has_bill_waiting_payment'])"
+                                 tal:attributes="href python:portal_url + '/@@member-credit?userid=' + userid;">
+                                <span title="Créditer le compte"
+                                      class="glyphicon glyphicon-piggy-bank" />
+                              </a>
+                              <span tal:condition="python: not result['member_type'] == 'CeDES Free' and result['last_payment_date'] and result['expiration_date'] < DateTime() and not result['has_bill_waiting_payment']"
+                                    title="Les crédits de ce membre 100% sont expirés.  Repassez manuellement ce membre en Free avant de pouvoir le créditer sinon ses crédits seront annulés cette nuit"
+                                    class="glyphicon glyphicon-piggy-bank disabled" />
+                            </td>
+                            <td>
+                              <a tal:condition="python: result['member_type'] == 'CeDES 100%'"
+                                 href="#"
+                                 tal:attributes="href python:portal_url + '/@@member-renew?userid=' + userid;">
+                                <span title="Renouveler l'abonnement"
+                                      class="glyphicon glyphicon-refresh" />
+                              </a>
+                              <span tal:condition="not: python: result['member_type'] == 'CeDES 100%'"
+                                    title="Faites passer ce membre en CeDES 100% avant de pouvoir renouveler son abonnement"
+                                    class="glyphicon glyphicon-refresh disabled" />
+                            </td>
+                            <td>
+                              <a tal:condition="python: result['has_failed_accounting_f']"
+                                 href="#"
+                                 tal:attributes="href python:portal_url + '/portal_memberdata/' + userid + '/member_cancel_failed_accounting?accounting_mode=F';">
+                                <img title="Annuler la facture échouée, ceci créera une facture en attente de paiement et l'enverra au membre par e-mail"
+                                     src="#" tal:attributes="src string:$portal_url/cancel_failed_accounting_f.gif" /></a>
+                              <a tal:condition="python: result['has_failed_accounting_n']"
+                                 href="#"
+                                 tal:attributes="href python:portal_url + '/portal_memberdata/' + userid + '/member_cancel_failed_accounting?accounting_mode=N';">
+                                <img title="Annuler la note de crédit échouée, ceci créera une note de crédit, l'enverra par e-mail au membre et annulera la facture en attente de paiement"
+                                     src="#"
+                                     tal:attributes="src string:$portal_url/cancel_failed_accounting_n.gif" />
+                              </a>
+                              <span tal:condition="python: not result['has_failed_accounting_f'] and not result['has_failed_accounting_n']"
+                                   title="Ce membre n'a pas de facture échouée en attente"
+                                   class="glyphicon glyphicon-remove-sign disabled" />
+                            </td>
+                            </span>
+                          </tr>
+                        </table>
+
+                    </div>
+
+                    <div class="visualClear" id="clear-space-before-navigation"><!-- --></div>
+
+                    <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+                    <div class="visualClear" id="clear-space-after-navigation"><!-- --></div>
+
+                  </div>
+                </tal:block>
+
+                <div tal:condition="python: not results and listing_allowed">
+                    <p><strong i18n:translate="description_no_results_found">No results were found.</strong></p>
+                </div>
+            </div>
+          </article>
+        </tal:block>
+
+
+    </metal:body>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<object name="portal_memberdata" meta_type="PlonePAS MemberData Tool">
+
+ <property name="member_type" type="string"></property>
+ <property name="legal_validation" type="boolean"></property>
+
+ <property name="school_name" type="string"></property>
+ <property name="school_email" type="string"></property>
+ <property name="school_address" type="string"></property>
+ <property name="school_postal_code" type="string"></property>
+ <property name="school_locality" type="string"></property>
+ <property name="school_country" type="string"></property>
+ <property name="school_phone" type="string"></property>
+
+ <property name="bill_use_tva" type="boolean"></property>
+ <property name="bill_tva" type="string"></property>
+ <property name="bill_name" type="string"></property>
+ <property name="bill_email" type="string"></property>
+ <property name="bill_address" type="string"></property>
+ <property name="bill_postal_code" type="string"></property>
+ <property name="bill_locality" type="string"></property>
+ <property name="bill_country" type="string"></property>
+
+ <!-- account properties, not editable thru UI -->
+ <property name="account_balance" type="int">0</property>
+ <property name="account_transactions" type="lines"></property>
+ <property name="account_bills" type="lines"></property>
+ <!-- accounting process markers -->
+ <property name="has_failed_accounting_f" type="boolean"></property>
+ <property name="has_failed_accounting_n" type="boolean"></property>
+ <property name="has_bill_waiting_payment" type="boolean"></property>
+ <!-- former methods now stored -->
+ <property name="last_payment_date" type="date">1950/01/01</property>
+
+</object>

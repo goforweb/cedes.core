@@ -6,6 +6,7 @@
 #
 
 from io import StringIO
+from plone import api
 
 import os.path
 import xhtml2pdf.pisa as pisa
@@ -29,16 +30,16 @@ def pdf(self):
       returns a pdf file for a Dossier Structuré
       can be called on any DosierStructure content type
     """
-    member = self.portal_membership.getAuthenticatedMember()
+    member = api.user.get_current()
     # if enough credit, return pdf file
     # member can not be Free, must have enough credits and credits can not be 0
     if not member.is_cedes_free() and \
        member.check_balance(self.get_price()) and \
-       member.get_balance():
-        member.add_transaction(self.UID(), self.get_price(), id_dossier_structure=True)
+       member.get_account_balance():
+        member.add_transaction(self.UID(), self.get_price(), is_dossier_structure=True)
         # remember access to sub ArticlePayant
         all_ressource_uids = self.get_all_ressource_uids()
-        already_payed_uids = [elt[0] for elt in member.get_transactions()]
+        already_payed_uids = [elt[0] for elt in member.get_account_transactions()]
         for paying in self.get_paying_ressources(all_ressource_uids):
             # as already payed here above by the DossierStructure price
             # just remember the access to the ArticlePayant but with a price of 0

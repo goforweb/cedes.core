@@ -197,5 +197,23 @@
         layer="cedes.core.interfaces.ICedesCoreLayer"
         template="templates/registered.pt"
         permission="cmf.AddPortalMember" />
+    <browser:page
+        name="member-account-details"
+        for="*"
+        class=".member.AccountDetailsView"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        template="templates/member_account_details.pt"
+        permission="zope2.View" />
+    <browser:page
+        name="member-credit"
+        for="*"
+        class=".member.MemberCreditForm"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="cmf.ManagePortal" />
+    <browser:page
+        name="member-renew"
+        for="plone.app.layout.navigation.interfaces.INavigationRoot"
+        class=".member.RenewAccountForm"
+        permission="cmf.SetOwnProperties" />
 
 </configure>

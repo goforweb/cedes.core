@@ -17,4 +17,10 @@
                      zope.lifecycleevent.interfaces.IObjectModifiedEvent"
                 handler="cedes.core.events.onRessourceModified" />
 
+    <!-- Principal -->
+    <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
+                handler=".events.onPrincipalCreated" />
+    <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
+                handler=".events.onPrincipalDeleted" />
+
 </configure>

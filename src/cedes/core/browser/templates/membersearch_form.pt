@@ -33,11 +33,16 @@
                 </p>
 
                 <tal:block condition="python: results and listing_allowed">
-                  <div tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1)">
+                  <div tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1);
+                                   batch_length python: len(batch);">
 
-                    <strong i18n:translate="batch_x_items_matching_your_criteria">
-                        <span i18n:name="number" tal:omit-tag="" tal:content="python:len(results)">234</span> items matching your search terms.
-                    </strong>
+                    <div>
+                        <h3 class="search-results-number">
+                            <span tal:omit-tag="" tal:content="batch_length">234</span> <span tal:replace="python:batch_length>1 and 'éléments correspondent à vos critères de recherche' or 'élément correspond à vos critères de recherche'"/>
+                        </h3>
+                    </div>
+
+                    <a href=".">Nouvelle recherche</a>
 
                     <div metal:use-macro="here/batch_macros/macros/navigation"/>
 
@@ -49,9 +54,10 @@
                             <th>Identifiant</th>
                             <th>Type</th>
                             <th>E-mail</th>
-                            <th>Nom</th>
+                            <th>Nom complet</th>
                             <th>Dernière Connexion</th>
                             <th>Expire le</th>
+                            <th>Crédits</th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -60,13 +66,14 @@
                           </tr>
                           <tr tal:repeat="result batch" tal:attributes="class python:result['member_type'] == 'CeDES 100%' and 'cedes-100pc' or ''">
                             <span tal:omit-tag="" tal:define="userid python: result['login'];">
-                            <td><a tal:attributes="href python:portal_url + '/@@user-information?userid=' + userid;"><span tal:content="userid">user id</span></a></td>
+                            <td><a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a></td>
                             <td><span tal:replace="python:result['member_type'][5:]"/></td>
                             <td><span tal:replace="result/email"/></td>
                             <td><span tal:replace="result/fullname"/></td>
                             <td><span tal:replace="python:view.toLocalizedTime(result['login_time'])"/></td>
                             <td><span tal:replace="python:view.toLocalizedTime(result['expiration_date'])"/></td>
-                            <td><a tal:attributes="href python:portal_url + '/@@user-information?userid=' + userid;"><span title="Editer le profil" class="icon-edit bold" /></a></td>
+                            <td tal:content="python: result['account_balance']">Account balance</td>
+                            <td><a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span title="Editer le profil" class="icon-edit bold" /></a></td>
                             <td><a tal:attributes="href python:portal_url + '/@@member-account-details?userid=' + userid;"><span title="Historique" class="icon-history bold" /></a></td>
                             <td>
                               <a tal:condition="python: not (not result['member_type'] == 'CeDES Free' and result['last_payment_date'] and result['expiration_date'] < DateTime() and not result['has_bill_waiting_payment'])"
@@ -93,8 +100,9 @@
                               <a tal:condition="python: result['has_failed_accounting_f']"
                                  href="#"
                                  tal:attributes="href python:portal_url + '/portal_memberdata/' + userid + '/member_cancel_failed_accounting?accounting_mode=F';">
-                                <img title="Annuler la facture échouée, ceci créera une facture en attente de paiement et l'enverra au membre par e-mail"
-                                     src="#" tal:attributes="src string:$portal_url/cancel_failed_accounting_f.gif" /></a>
+                                <span title="Annuler la facture échouée, ceci créera une facture en attente de paiement et l'enverra au membre par e-mail"
+                                      class="glyphicon glyphicon-remove-sign mode-f" />
+                              </a>
                               <a tal:condition="python: result['has_failed_accounting_n']"
                                  href="#"
                                  tal:attributes="href python:portal_url + '/portal_memberdata/' + userid + '/member_cancel_failed_accounting?accounting_mode=N';">

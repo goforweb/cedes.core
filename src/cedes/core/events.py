@@ -7,6 +7,8 @@ from datetime import datetime
 from eea.facetednavigation.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.layout.interfaces import IFacetedLayout
 from persistent.list import PersistentList
+from persistent.mapping import PersistentMapping
+from plone import api
 from zope.annotation import IAnnotations
 from zope.interface import alsoProvides
 from zope.interface import noLongerProvides
@@ -58,3 +60,23 @@ def onRessourceLiked(obj, event):
 def onRessourceUnliked(obj, event):
     """ """
     obj.reindexObject(idxs=['user_ratings'])
+
+
+def onPrincipalCreated(event):
+    """Register new user into the account_bills and account_transactions PersistentMappings."""
+    # create account_bills and account_transactions if it does not exist
+    portal = api.portal.get()
+    account_bills = getattr(portal, 'account_bills', None)
+    if account_bills is None:
+        portal.account_bills = PersistentMapping()
+        portal.account_transactions = PersistentMapping()
+    portal.account_bills[event.object.getId()] = PersistentList()
+    portal.account_transactions[event.object.getId()] = PersistentList()
+
+
+def onPrincipalDeleted(event):
+    """ """
+    if event.object.getId() in portal.account_bills:
+        del portal.account_bills[event.object.getId()]
+    if event.object.getId() in portal.account_transactions:
+        del portal.account_transactions[event.object.getId()]

@@ -74,7 +74,7 @@
    </property>
    <property name="visible">True</property>
   </object>
-  <object name="quitter" meta_type="CMF Action" i18n:domain="cedes">
+  <object name="newsletters" meta_type="CMF Action" i18n:domain="cedes">
    <property name="title" i18n:translate="">Newsletters</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:${portal_url}/newsletters</property>
@@ -88,7 +88,7 @@
   <object name="quitter" meta_type="CMF Action" i18n:domain="cedes">
    <property name="title" i18n:translate="">Quitter</property>
    <property name="description" i18n:translate=""></property>
-   <property name="url_expr">string:${portal_url}/logout?next=logged_out</property>
+   <property name="url_expr">string:${portal_url}/logout</property>
    <property name="icon_expr">string:$portal_url/quitter_red.png</property>
    <property name="available_expr">python:member is not None</property>
    <property name="permissions">

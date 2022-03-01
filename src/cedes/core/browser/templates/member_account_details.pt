@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  lang="en"
+  metal:use-macro="here/main_template/macros/master"
+  i18n:domain="plone">
+
+  <metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border',1)" />
+
+  <body>
+    <div metal:fill-slot="main">
+      <h1 class="documentFirstHeading"> Historique des transactions de <span tal:replace="here/id"/></h1>
+
+      <a href="javascript:history.back()"
+         class="link-parent">
+          Retourner à la page précédente
+      </a>
+
+      <h3 tal:define="bill python: view.member.get_bill_waiting_payment()"
+          tal:condition="python: bill and bill.get('pdf')">
+        <br />Ce membre a une facture en attente de paiement, <a href="" target="_blank" tal:attributes="href string:${here/absolute_url}/@@download-bill-waiting-payment"><img src="pdf_icon.gif" />&nbsp;télécharger la facture au format PDF.</a><br /><br /></h3>
+
+      <table class="table table-striped"
+             width="100%"
+             tal:define="transactions python: list(view.member.get_account_transactions());
+                         dummy python: transactions.reverse();">
+        <tr>
+          <th colspan="2" style="text-align:right"><label>Solde actuel :</label></th>
+          <th style="text-align:right"><label tal:content="python:str(view.member.get_account_balance()) + ' points'"></label></th>
+        </tr>
+        <tr>
+          <th> Date et heure</th>
+          <th> Article consulté </th>
+          <th> Prix </th>
+        </tr>
+        <tr tal:repeat="transaction transactions">
+        <tal:notNullTransactions define="res python:view.catalog(UID=transaction[0])" condition="python: transaction[1] != 0 or (res and res[0].portal_type != 'ArticlePayant')">
+          <td tal:content="python:view.plone_view.toLocalizedTime(transaction[2], long_format=1)">date</td>
+          <td>
+            <span tal:condition="not: res" tal:content="python:transaction[0]">art</span>
+            <a class="#" tal:condition="res" href="#" tal:attributes="href python: view.portal_url + '/' + res[0].getPath() + '/view'; class python: 'contenttype-' + res[0].portal_type.lower()" tal:content="python: res[0].Title">art</a>
+          </td>
+          <td style="text-align:right" tal:content="python:transaction[1]">points</td>
+        </tal:notNullTransactions>
+        </tr>
+        <tr>
+          <th colspan="2" style="text-align:right"><label>Solde actuel :</label></th>
+          <th style="text-align:right"><label tal:content="python:str(view.member.get_account_balance()) + ' points'"></label></th>
+        </tr>
+      </table>
+
+    </div>
+  </body>
+</html>

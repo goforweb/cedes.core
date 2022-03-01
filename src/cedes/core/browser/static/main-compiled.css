@@ -87,7 +87,7 @@ body.userrole-manager li a#contentview-user_data-personal-preferences {
 }
 
 .glyphicon.disabled {
-    color: grey;
+    color: lightgrey;
     cursor: help;
 }
 .bold {

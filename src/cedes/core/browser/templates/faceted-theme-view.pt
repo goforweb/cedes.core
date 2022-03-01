@@ -34,13 +34,12 @@
                 <dd>Votre recherche affiche trop de résultats? <a href="#" tal:attributes="href string:$portal_url/pages/aide#S8">Cliquez ici</a> pour savoir comment en améliorer la pertinence.</dd>
                 </dl>
 
-                <a class="reinit_faceted_search" href="#" onclick="event.preventDefault();resetFaceted();">Réintialiser la recherche</a>
-
                 <div tal:condition="batch_length">
-                    <h2 class="search-results-number">
+                    <h3 class="search-results-number">
                         <span tal:omit-tag="" tal:content="batch_length">234</span> <span tal:replace="python:batch_length>1 and 'éléments correspondent à vos critères de recherche' or 'élément correspond à vos critères de recherche'"/>
-                    </h2>
+                    </h3>
                 </div>
+                <a class="reinit_faceted_search" href="#" onclick="event.preventDefault();resetFaceted();">Réintialiser la recherche</a>
 
             <tal:results condition="folderContents">
               <tal:block define="common_result_listing_content context/@@common-result-listing-content/index;">

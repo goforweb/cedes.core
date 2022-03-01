@@ -191,7 +191,7 @@ class DossierStructureDefaultView(DefaultView):
         self.member = api.user.get_current()
         self.is_manager = self.member.has_role('Manager')
         self.is_cedes_free = self.member.is_cedes_free()
-        self.has_credits = self.member.get_balance() > 0
+        self.has_credits = self.member.get_account_balance() > 0
         self.price = self.context.get_price()
 
     def may_access(self):

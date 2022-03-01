@@ -76,7 +76,7 @@ class GopressImportForm(form.Form):
         self.request = request
 
     def _check_auth(self):
-        """Raise Unauthorized if current user can not manage itemSignatures."""
+        """Raise Unauthorized if current user can not use gopress."""
         member = api.user.get_current()
         if not member.has_role("Manager"):
             raise Unauthorized

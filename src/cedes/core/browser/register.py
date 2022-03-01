@@ -52,7 +52,6 @@ class CeDESRegistrationForm(RegistrationForm):
             portal_url = api.portal.get().absolute_url()
             url = "{0}/@@registered?member_type={1}".format(
                 portal_url, self.widgets['member_type'].value[0])
-            import ipdb; ipdb.set_trace()
             return self.request.RESPONSE.redirect(url)
 
         return super(CeDESRegistrationForm, self).render()
@@ -72,3 +71,8 @@ class CeDESRegistrationForm(RegistrationForm):
         self.widgets['member_type'].mode = HIDDEN_MODE
         self.label = "Formulaire d'inscription - {0}".format(
             self.widgets['member_type'].value[0])
+        # if member_type is "Free", hide the bill_* fields
+        if self.widgets['member_type'].value == ["CeDES Free"]:
+            for w in self.widgets:
+                if w.startswith('bill'):
+                    self.widgets[w].mode = HIDDEN_MODE

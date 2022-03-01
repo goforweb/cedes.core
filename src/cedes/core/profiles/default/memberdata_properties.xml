@@ -29,6 +29,9 @@
  <property name="has_failed_accounting_f" type="boolean"></property>
  <property name="has_failed_accounting_n" type="boolean"></property>
  <property name="has_bill_waiting_payment" type="boolean"></property>
+ <property name="payment_notification_date" type="date"></property>
+ <property name="expiration_notification_date" type="date"></property>
+ <property name="bill_accounting_failed" type="lines"></property>
  <!-- former methods now stored -->
  <property name="last_payment_date" type="date">1950/01/01</property>
 

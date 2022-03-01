@@ -94,6 +94,9 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
 class CeDESMemberSearchForm(MemberSearchForm):
     """ """
 
+    # disable to ease back to search form results after actions (member credit, ...)
+    enableCSRFProtection = False
+
     schema = ICeDESMemberSearchSchema
     template = ViewPageTemplateFile('templates/membersearch_form.pt')
 

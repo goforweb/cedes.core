@@ -45,30 +45,33 @@
             </a>
           </td>
           <td valign="top" style="padding-top: 0.8em;">
-            <dl style="display:none; margin-top: 0.4em;"
-                class="portalMessage warning"
+            <div style="display:none; margin-top: 0.4em;"
+                class="portalMessage statusmessage statusmessage-warning alert alert-warning"
                 tal:attributes="id string:ap${repeat/item/number};
-                                class python: viewable and 'portalMessage info' or 'portalMessage warning';"
-                tal:define="item_uid item/UID; viewable python: member.check_viewable(item_uid)" tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
-              <dt tal:condition="not: viewable">Avertissement</dt>
-              <dt tal:condition="viewable">Info</dt>
-              <dd tal:condition="python: viewable">Votre compte a déjà été débité pour cet article, vous pouvez donc y accéder librement. Cliquez sur 'Continuer' pour confirmer.
+                                class python: viewable and 'portalMessage statusmessage statusmessage-info alert alert-info' or 'portalMessage statusmessage statusmessage-warning alert alert-warning';"
+                tal:define="item_uid item/UID; viewable python: member.check_viewable(item_uid);
+                            icons nocall: context/@@iconresolver"
+                tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
+              <tal:icon tal:replace="structure python:icons.tag(viewable and 'plone-statusmessage-info' or 'plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+              <strong tal:condition="not: viewable">Avertissement</strong>
+              <strong tal:condition="viewable">Info</strong>
+              <span tal:condition="python: viewable">Votre compte a déjà été débité pour cet article, vous pouvez donc y accéder librement. Cliquez sur 'Continuer' pour confirmer.
                     <a href=""
                       tal:attributes="href  item_url;
                                        title desc;">
                       Continuer...
                     </a>
-              </dd>
-              <dd tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
+              </span>
+              <span tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
                 <a href=""
                   tal:attributes="href  item_url;
                                    title item/Description;">
                   Continuer...
                 </a>
-              </dd>
-              <dd tal:condition="is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
-              <dd tal:condition="python:not is_cedes_free and not(member.check_balance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
-            </dl>
+              </span>
+              <span tal:condition="is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</span>
+              <span tal:condition="python:not is_cedes_free and not(member.check_balance(1)) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </span>
+            </div>
 
             <a href="" class=""
               tal:define="onclick_action string:document.getElementById('ap${repeat/item/number}').style.display='block';;return false;;"

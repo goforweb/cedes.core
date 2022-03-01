@@ -39,7 +39,7 @@
                 </a>
               </dd>
               <dd tal:condition="is_cedes_free"> Vous devez être membre CeDES 100% pour pouvoir télécharger le PDF d'un dossier. Allez dans <a tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
-              <dd tal:condition="python: not is_cedes_free and not member.get_balance()">L'acc&egrave;s aux dossiers est conditionn&eacute; par un solde de points cr&eacute;diteur (voir "Mon compte" en caract&egrave;res blancs au-dessus de l'&eacute;cran).  Pour recevoir des crédits:<br />
+              <dd tal:condition="python: not is_cedes_free and not member.get_account_balance()">L'acc&egrave;s aux dossiers est conditionn&eacute; par un solde de points cr&eacute;diteur (voir "Mon compte" en caract&egrave;res blancs au-dessus de l'&eacute;cran).  Pour recevoir des crédits:<br />
                 a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
                 b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien bris&eacute;, partagez une ressource int&eacute;ressante, ....). Saisissez la zone commentaire disponible au bas de chaque ressource ou utilisez le formulaire mis &agrave; votre disposition sous "Contact" au-dessus de l'&eacute;cran
               </dd>

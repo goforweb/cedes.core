@@ -22,5 +22,7 @@
                 handler=".events.onPrincipalCreated" />
     <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
                 handler=".events.onPrincipalDeleted" />
+    <subscriber for="Products.PlonePAS.interfaces.events.IUserInitialLoginInEvent"
+                handler=".events.onUserInitialLogin" />
 
 </configure>

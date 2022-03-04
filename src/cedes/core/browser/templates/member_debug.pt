@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  lang="en"
+  metal:use-macro="here/main_template/macros/master"
+  i18n:domain="plone">
+
+  <metal:block fill-slot="top_slot"
+    tal:define="dummy python:request.set('disable_border',1)" />
+
+  <body>
+    <div metal:fill-slot="main">
+      <h1 class="documentFirstHeading">
+        Informations de <span tal:replace="python: view.member.Title()"/>
+      </h1>
+
+      <a href="" tal:attributes="href python: view.request['HTTP_REFERER']"
+         class="link-parent">
+          Retourner à la page précédente
+      </a>
+
+      <h3>Données calculées</h3>
+      <table class="table table-striped" width="100%">
+        <tr>
+          <th><label>Donnée</label></th>
+          <th><label>Valeur</label></th>
+        </tr>
+        <tr tal:repeat="prop python: view.computed">
+          <td tal:content="python: prop[0]">Property name</td>
+          <td tal:content="python: prop[1]">Property value</td>
+        </tr>
+      </table>
+
+      <h3>Données stockées</h3>
+      <table class="table table-striped" width="100%">
+        <tr>
+          <th><label>Propriété</label></th>
+          <th><label>Valeur</label></th>
+        </tr>
+        <tr tal:repeat="prop python: view.data">
+          <td tal:content="python: prop[0]">Property name</td>
+          <td tal:content="python: prop[1]">Property value</td>
+        </tr>
+      </table>
+
+    </div>
+  </body>
+</html>

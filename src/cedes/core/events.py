@@ -4,6 +4,7 @@ from cedes.core import logger
 from cedes.core.interfaces import IThemeFacetedNavigable
 from cedes.core.utils import get_modified_attrs
 from datetime import datetime
+from DateTime import DateTime
 from eea.facetednavigation.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.layout.interfaces import IFacetedLayout
 from persistent.list import PersistentList
@@ -63,20 +64,24 @@ def onRessourceUnliked(obj, event):
 
 
 def onPrincipalCreated(event):
-    """Register new user into the account_bills and account_transactions PersistentMappings."""
-    # create account_bills and account_transactions if it does not exist
-    portal = api.portal.get()
-    account_bills = getattr(portal, 'account_bills', None)
-    if account_bills is None:
-        portal.account_bills = PersistentMapping()
-        portal.account_transactions = PersistentMapping()
-    portal.account_bills[event.object.getId()] = PersistentList()
-    portal.account_transactions[event.object.getId()] = PersistentList()
-
+    """Setup new member."""
+    # set registration_date (used as a "created" attribute)
+    member = api.user.get(event.object.getId())
+    member.set_registration_date(DateTime())
+    # send email to administrator
+    # mailHost = getToolByName(self, 'MailHost')
+    # skinsTool = getToolByName(self, 'portal_skins')
+    # email = skinsTool.cedesmember.mail_newmember_template(self.REQUEST)
+    # mailHost.send(email.encode('utf-8'))
+    # # asks for a bill
+    if not member.is_cedes_free():
+        member.bill_credits()
 
 def onPrincipalDeleted(event):
     """ """
-    if event.object.getId() in portal.account_bills:
-        del portal.account_bills[event.object.getId()]
-    if event.object.getId() in portal.account_transactions:
-        del portal.account_transactions[event.object.getId()]
+    pass
+
+
+def onUserInitialLogin(event):
+    """Set the member first_login_time."""
+    api.user.get(event.object.getId()).set_first_login_time(DateTime())

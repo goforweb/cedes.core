@@ -6,20 +6,27 @@
 #
 
 from cedes.core import logger
+from copy import deepcopy
 from DateTime import DateTime
+from plone import api
 from plone.app.users import schema as pau_schema
 from plone.autoform import directives
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.PlonePAS.tools.memberdata import MemberData
 from zope import schema
 from zope.interface import Interface
-from plone import api
+from zope.interface import Invalid
 
-# need to monkey patch user schemas because it is not overridable as is
+
+def legal_validation_constraint(value):
+    """Must be True."""
+    if value is not True:
+        raise Invalid('Vous devez accepter la charte afin de pouvoir vous inscrire comme membre.')
+    return True
+
 
 class ICeDESUserDataSchema(Interface):
-    """
-    """
+    """Need to monkey patch user schemas because it is not overridable as is."""
     # XXX original values of IUserDataSchema
     fullname = pau_schema.ProtectedTextLine(
         title=_(u'label_full_name', default=u'Full Name'),
@@ -44,7 +51,7 @@ class ICeDESUserDataSchema(Interface):
     legal_validation = schema.Bool(
         title=_(u'label_legal_validation', default=u'Legal validation'),
         required=True,
-        default=False)
+        constraint=legal_validation_constraint)
 
     # school
     school_name = schema.TextLine(
@@ -109,17 +116,21 @@ logger.info("Monkey patching plone.app.users.schema (IUserDataSchema)")
 class CedesMemberData(MemberData):
     """ """
 
+    def Title(self):
+        """ """
+        return "{0} ({1})".format(deepcopy(self.getProperty('fullname')), self.getId())
+
     def get_account_bills(self):
         """ """
-        return self.getProperty('account_bills')
-
-    def get_account_transactions(self):
-        """ """
-        return self.getProperty('account_transactions')
+        return deepcopy(self.getProperty('account_bills'))
 
     def set_account_bills(self, account_bills):
         """ """
         self.setMemberProperties({'account_bills': account_bills})
+
+    def get_account_transactions(self):
+        """ """
+        return deepcopy(self.getProperty('account_transactions'))
 
     def set_account_transactions(self, account_transactions):
         """ """
@@ -130,7 +141,7 @@ class CedesMemberData(MemberData):
         if "Manager" in self.getRoles():
             return 1000
         else:
-            return self.getProperty('account_balance')
+            return deepcopy(self.getProperty('account_balance'))
 
     def set_account_balance(self, account_balance):
         """ """
@@ -138,15 +149,31 @@ class CedesMemberData(MemberData):
 
     def get_member_type(self):
         """ """
-        return self.getProperty('member_type')
+        return deepcopy(self.getProperty('member_type'))
 
-    def set_member_type(self, member_type):
+    def set_member_type(self, value):
         """ """
-        self.setMemberProperties({'member_type': member_type})
+        self.setMemberProperties({'member_type': value})
+
+    def get_registration_date(self):
+        """ """
+        return deepcopy(self.getProperty('registration_date'))
+
+    def set_registration_date(self, value):
+        """ """
+        self.setMemberProperties({'registration_date': value})
+
+    def get_first_login_time(self):
+        """ """
+        return deepcopy(self.getProperty('first_login_time'))
+
+    def set_first_login_time(self, value):
+        """ """
+        self.setMemberProperties({'first_login_time': value})
 
     def get_bill_accounting_failed(self):
         """ """
-        return self.getProperty('bill_accounting_failed')
+        return deepcopy(self.getProperty('bill_accounting_failed'))
 
     def set_bill_accounting_failed(self, total, mode, now):
         """ """
@@ -155,6 +182,10 @@ class CedesMemberData(MemberData):
             self.setMemberProperties({'has_failed_accounting_f': True})
         else:
             self.setMemberProperties({'has_failed_accounting_n': True})
+
+    def set_has_bill_waiting_payment(self, value):
+        """ """
+        self.setMemberProperties({'has_bill_waiting_payment': value})
 
     def check_balance(self, price):
         """
@@ -174,11 +205,11 @@ class CedesMemberData(MemberData):
         self.set_account_transactions(self.get_account_transactions() +
                                       (('Crédit', value, DateTime()),))
         # email notification
-        #skintool = getToolByName(self, 'portal_skins')
-        #mailHost = getToolByName(self, 'MailHost')
-        #email = skintool.cedes_emails.credit_activation_notification(
-        #   self.REQUEST, member_email=self.email, firstname=self.firstname, credit=value)
-        #mailHost.send(email.encode('utf-8'))
+        # skintool = getToolByName(self, 'portal_skins')
+        # mailHost = getToolByName(self, 'MailHost')
+        # email = skintool.cedes_emails.credit_activation_notification(
+        #    self.REQUEST, member_email=self.email, firstname=self.firstname, credit=value)
+        # mailHost.send(email.encode('utf-8'))
 
     def request_credit(self):
         """ """
@@ -197,13 +228,13 @@ class CedesMemberData(MemberData):
         """ """
         now = DateTime()
         self.set_bill_accounting_failed(total, mode, now)
-        #skinTool = getToolByName(self, 'portal_skins')
-        #mailHost = getToolByName(self, 'MailHost')
-        #error_text = "SERVEUR INDISPONIBLE, L'application Cedes tentera de se " \
-        #    "reconnecter à l'application comptable plus tard."
-        #email = skinTool.cedes_emails.registration_error_manager(
-        #    self.REQUEST, member_id=bill_id, error_text=error_text)
-        #mailHost.send(email.encode('utf-8'))
+        # skinTool = getToolByName(self, 'portal_skins')
+        # mailHost = getToolByName(self, 'MailHost')
+        # error_text = "SERVEUR INDISPONIBLE, L'application Cedes tentera de se " \
+        #     "reconnecter à l'application comptable plus tard."
+        # email = skinTool.cedes_emails.registration_error_manager(
+        #     self.REQUEST, member_id=bill_id, error_text=error_text)
+        # mailHost.send(email.encode('utf-8'))
         return False
 
     def check_viewable(self, article_uid):
@@ -225,7 +256,7 @@ class CedesMemberData(MemberData):
 
     def is_cedes_free(self):
         """ """
-        return self.getProperty('member_type') == "CeDES Free"
+        return self.get_member_type() == "CeDES Free"
 
     def add_bill(self, bill_id, price=3000, mode='F', date=None, payment_date=None):
         """ """
@@ -237,6 +268,7 @@ class CedesMemberData(MemberData):
               'mode': mode,
               'date': date,
               'payment_date': payment_date},))
+        self.set_has_bill_waiting_payment(True)
 
     def add_transaction(self, article_uid, article_price=1, is_dossier_structure=False):
         """ """
@@ -262,22 +294,9 @@ class CedesMemberData(MemberData):
             self.get_account_bills()[-1]['payment_date'] = now
             self.set_payment_notification_date(None)
             self.set_expiration_notification_date(None)
+            self.set_has_bill_waiting_payment(False)
             return True
         return False
-
-    def get_last_payment_date(self):
-        '''
-          Returns the Date of the last time the account payment was validated.
-          Returns None if the account was never credited
-        '''
-        last_payment_date = self.getProperty('last_payment_date')
-        return last_payment_date if last_payment_date.year() != 1950 else None
-        #if self.account_bills:
-        #    bill_reversed = tuple(reversed(self.account_bills))
-        #    for item in bill_reversed:
-        #        if item['payment_date'] is not None and item['mode'] == "F":
-        #            return item['payment_date']
-        #return None
 
     def get_bill_waiting_payment(self):
         '''
@@ -293,6 +312,19 @@ class CedesMemberData(MemberData):
         return None
 
     @staticmethod
+    def get_last_payment_date(account_bills):
+        '''
+          Returns the Date of the last time the account payment was validated.
+          Returns None if the account was never credited
+        '''
+        if account_bills:
+            bill_reversed = tuple(reversed(account_bills))
+            for item in bill_reversed:
+                if item['payment_date'] is not None and item['mode'] == "F":
+                    return item['payment_date']
+        return None
+
+    @staticmethod
     def get_expiration_date(last_payment_date):
         '''
           Returns the expiration date (last payment date + 365 days).
@@ -302,31 +334,222 @@ class CedesMemberData(MemberData):
             return last_payment_date + 365
         return None
 
+    def get_payment_notification_date(self):
+        """ """
+        return deepcopy(self.getProperty('payment_notification_date'))
+
     def set_payment_notification_date(self, date=None):
         """ """
         self.setMemberProperties({'payment_notification_date': date})
+
+    def get_expiration_notification_date(self):
+        """ """
+        return deepcopy(self.getProperty('expiration_notification_date'))
 
     def set_expiration_notification_date(self, date=None):
         """ """
         self.setMemberProperties({'expiration_notification_date': date})
 
+    def get_no_login_notification_date(self):
+        """ """
+        return deepcopy(self.getProperty('no_login_notification_date'))
+
+    def set_no_login_notification_date(self, date=None):
+        """ """
+        self.setMemberProperties({'no_login_notification_date': date})
+
+    def fix_failed_accounting(self, bill_id):
+        '''
+          Fix a failed accounting, turn the failed bill into a correct bill
+          with a special id 'no_bill_id_failed_accounting_managed_manually'.
+        '''
+        bill_accounting_failed = self.get_bill_accounting_failed()
+        if bill_accounting_failed is not None:
+            if not bill_id:
+                bill_id = 'no_bill_id_failed_accounting_managed_manually'
+            self.add_bill(bill_id,
+                          bill_accounting_failed[0],
+                          bill_accounting_failed[1],
+                          bill_accounting_failed[2], )
+            self.setMemberProperties({'bill_accounting_failed': ()})
+            self.setMemberProperties({'has_failed_accounting_f': False})
+            self.setMemberProperties({'has_failed_accounting_n': False})
+
     def send_low_reminder(self):
         """ """
-        #skintool = getToolByName(self, 'portal_skins')
-        #mailHost = getToolByName(self, 'MailHost')
-        #email = skintool.cedes_emails.credit_low_notification(
+        # skintool = getToolByName(self, 'portal_skins')
+        # mailHost = getToolByName(self, 'MailHost')
+        # email = skintool.cedes_emails.credit_low_notification(
         #    self.REQUEST,
         #    fullname=self.fullname,
         #    firstname=self.firstname,
         #    member_email=self.email,
         #    balance=self.getBalance())
-        #mailHost.send(email.encode('utf-8'))
+        # mailHost.send(email.encode('utf-8'))
         return True
 
     def send_credit_request_confirmation(self):
         """ """
-        #skintool = getToolByName(self, 'portal_skins')
-        #mailHost = getToolByName(self, 'MailHost')
-        #email = skintool.cedes_emails.credit_request_confirmation(self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(), member_email=self.email)
-        #mailHost.send(email.encode('utf-8'))
+        # skintool = getToolByName(self, 'portal_skins')
+        # mailHost = getToolByName(self, 'MailHost')
+        # email = skintool.cedes_emails.credit_request_confirmation(
+        #    self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(), member_email=self.email)
+        # mailHost.send(email.encode('utf-8'))
         return True
+
+    def send_no_login_notification(self, now, days=3):
+        '''
+          Sends an email to notify the user that he has never logged in after 3 days
+          Returns True if email was sent
+        '''
+        # dont send notification if we have already send it within last d days
+        # if a user has never logged in, the login time is set to 2000/01/01
+        no_login_notification_date = self.get_no_login_notification_date()
+        if not no_login_notification_date and \
+           deepcopy(self.getProperty('last_login_time', '')).year() == 2000:
+            registration_date = self.get_registration_date()
+            # sends an email d days after registration
+            if registration_date + days < now:
+                # sends email
+                # skintool = getToolByName(self, 'portal_skins')
+                # mailHost = getToolByName(self, 'MailHost')
+                # email = skintool.cedes_emails.registration_nologin_notification(
+                #   self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(),
+                #   member_email=self.email)
+                # mailHost.send(email.encode('utf-8'))
+                # marks member that notification has been sent
+                self.set_no_login_notification_date(now)
+                return True
+        return False
+
+    def reset_credit(self):
+        '''Sets the balance to zero and adds the transaction information'''
+        account_transactions = self.get_account_transactions()
+        account_transactions = account_transactions + (
+            ('expiration du crédit', self.get_account_balance(), DateTime()),)
+        self.set_account_balance(0)
+
+    def reset_expired_credit(self, now):
+        '''
+          Reset credit of member if it has expired
+          Returns 2 if credit was reset, 1 if credits reset and member set to "CeDES Free" and 0 if nothing is done...
+        '''
+        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+            last_payment_date = self.get_last_payment_date(self.get_account_bills())
+            if last_payment_date and self.get_expiration_date(last_payment_date) < now:
+                self.reset_credit()
+                # !!! set the member to Free if his credits have expired and no bill is waiting payment !!!
+                if not self.get_bill_waiting_payment():
+                    self.set_member_type("CeDES Free")
+                    # send a mail to the member to warn him...
+                    # skintool = getToolByName(self, 'portal_skins')
+                    # mailHost = getToolByName(self, 'MailHost')
+                    # email = skintool.cedes_emails.credit_expired_notification(
+                    #   self.REQUEST, fullname=self.fullname, firstname=self.firstname,
+                    #   member_email=self.email, expiration_date = self.getExpirationDate())
+                    # mailHost.send(email.encode('utf-8'))
+                    return 1
+                return 2
+        return 0
+
+    def send_expiration_reminder(self, now, days=14):
+        '''
+          Sends expiration email reminder if credit expires in 14 days
+          Returns True if email sent, False otherwise
+        '''
+        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+            last_payment_date = self.get_last_payment_date(self.get_account_bills())
+            expiration_date = self.get_expiration_date(last_payment_date)
+            # sends an email d days before only if the credits are not already expired!!!
+            if expiration_date and expiration_date - days < now and not expiration_date < now:
+                # dont send notification if we have already send it within last d days
+                expiration_notification_date = self.get_expiration_notification_date()
+                if not expiration_notification_date:
+                    # sends email
+                    # skintool = getToolByName(self, 'portal_skins')
+                    # mailHost = getToolByName(self, 'MailHost')
+                    # email = skintool.cedes_emails.credit_expiration_notification(
+                    #    self.REQUEST, fullname=self.fullname, firstname=self.firstname,
+                    #    member_email=self.email, expiration_date = expiration_date)
+                    # mailHost.send(email.encode('utf-8'))
+                    # marks member that notification has been sent
+                    self.set_expiration_notification_date(now)
+                    return True
+        return False
+
+    def send_payment_reminder(self, now, days=10):
+        '''
+          Sends a payment reminder email if payment has not been made last 10 days
+          Returns True if email sent, False if there was an error getting the bill
+          in the accounting application or None if nothing to do
+        '''
+        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+            bill_waiting_payment = self.get_bill_waiting_payment()
+            if bill_waiting_payment:
+                waiting_payment_date = bill_waiting_payment['date']
+                # sends an email d days after
+                if now > waiting_payment_date + days:
+                    # dont send notification if we have already sent
+                    if not(self.get_payment_notification_date()):
+                        # sends email with bill duplicata as attachment
+                        bill = bill_waiting_payment.get('pdf', None)
+                        if not bill:
+                            return False
+                        # skintool = getToolByName(self, 'portal_skins')
+                        # mailHost = getToolByName(self, 'MailHost')
+                        # from email.mime.multipart import MIMEMultipart
+                        # from email.mime.base import MIMEBase
+                        # from email.mime.text import MIMEText
+                        # from email import Encoders
+                        # msg = MIMEMultipart()
+                        # msg['Subject'] = 'CeDES - Votre paiement en attente'
+                        # msg['From'] = '%s <%s>' % (skintool.email_from_address, skintool.email_from_name)
+                        # msg['To'] = '%s %s <%s>' % (self.fullname, self.firstname, self.email)
+                        # body = MIMEText(skintool.cedes_emails.credit_payment_notification(self.REQUEST,
+                        #                                                                   firstname=self.firstname).encode('utf-8'),
+                        #                 'plain', 'utf-8')
+                        # attachment = MIMEBase('application', 'pdf')
+                        # attachment.set_payload(bill)
+                        # Encoders.encode_base64(attachment)
+                        # attachment.add_header('Content-Disposition', 'attachment', filename='facture.pdf')
+                        # msg.attach(body)
+                        # msg.attach(attachment)
+                        # mailHost.send(msg)
+                        # marks member that notification has been sent
+                        self.set_payment_notification_date(now)
+                        return True
+        return None
+
+    def retry_bill_credits(self):
+        '''
+          Tries to rebill credits if previous attempt failed
+          Returns True if successfull, False otherwise
+          None if member was not waiting to send a bill
+        '''
+        bill_accounting_failed = self.get_bill_accounting_failed()
+        if bill_accounting_failed:
+            return self.bill_credits(total=bill_accounting_failed[0], mode=bill_accounting_failed[1])
+        else:
+            return None
+
+    def cancel_100_pc(self, now, days=30):
+        '''
+          Switch member to cedes free if never paid 30 days later, and his balance is 0
+          deletes the payment_notification_date variable
+          Sends a credit note to accounting
+          Returns True if credit note was sent, False otherwise
+        '''
+        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+            bill_waiting_payment = self.get_bill_waiting_payment()
+            if bill_waiting_payment:
+                waiting_payment_date = bill_waiting_payment['date']
+                if now > waiting_payment_date + days:
+                    # set member to free only if his balance is zero
+                    if self.get_account_balance() <= 0:
+                        self.set_member_type("CeDES Free")
+                    self.set_payment_notification_date(None)
+                    # if len(self.account_bills)>0:
+                    #   last_bill = self.account_bills[-1]
+                    self.bill_credits(total=bill_waiting_payment['price'], mode="N")
+                    return True
+        return False

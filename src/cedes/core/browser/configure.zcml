@@ -177,7 +177,16 @@
         for="*"
         permission="zope2.View" />
 
+    <!-- CeDES night tasks view -->
+    <browser:page
+        name="cedes-night-tasks"
+        class=".views.CeDESNightTasks"
+        for="*"
+        permission="cmf.ManagePortal" />
+
     <!-- Members management -->
+    <!-- Views -->
+    <!-- plone.app.users -->
     <browser:page
         name="member-search"
         for="*"
@@ -197,6 +206,13 @@
         layer="cedes.core.interfaces.ICedesCoreLayer"
         template="templates/registered.pt"
         permission="cmf.AddPortalMember" />
+  <browser:page
+        name="personal-information"
+        for="plone.app.layout.navigation.interfaces.INavigationRoot"
+        class=".overrides.CeDESUserDataPanel"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="cmf.SetOwnProperties" />
+    <!-- CeDES views -->
     <browser:page
         name="member-account-details"
         for="*"
@@ -204,6 +220,19 @@
         layer="cedes.core.interfaces.ICedesCoreLayer"
         template="templates/member_account_details.pt"
         permission="zope2.View" />
+    <browser:page
+        name="member-debug"
+        for="*"
+        class=".member.MemberDebugView"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        template="templates/member_debug.pt"
+        permission="cmf.ManagePortal" />
+    <browser:view
+        for="*"
+        class=".member.DownloadBillWaitingPayment"
+        name="download-bill-waiting-payment"
+        permission="zope2.View" />
+    <!-- Forms -->
     <browser:page
         name="member-credit"
         for="*"
@@ -215,5 +244,10 @@
         for="plone.app.layout.navigation.interfaces.INavigationRoot"
         class=".member.RenewAccountForm"
         permission="cmf.SetOwnProperties" />
+    <browser:page
+        for="*"
+        name="member-fix-failed-accounting"
+        permission="cmf.ManagePortal"
+        class=".member.FixFailedAccountingFormWrapper" />
 
 </configure>

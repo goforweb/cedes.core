@@ -8,16 +8,21 @@
 
   <body>
     <div metal:fill-slot="main">
-      <h1 class="documentFirstHeading"> Historique des transactions de <span tal:replace="here/id"/></h1>
-
-      <a href="javascript:history.back()"
-         class="link-parent">
-          Retourner à la page précédente
-      </a>
+      <h1 class="documentFirstHeading">
+        Historique des transactions de <span tal:replace="python: view.member.Title()"/>
+      </h1>
 
       <h3 tal:define="bill python: view.member.get_bill_waiting_payment()"
           tal:condition="python: bill and bill.get('pdf')">
-        <br />Ce membre a une facture en attente de paiement, <a href="" target="_blank" tal:attributes="href string:${here/absolute_url}/@@download-bill-waiting-payment"><img src="pdf_icon.gif" />&nbsp;télécharger la facture au format PDF.</a><br /><br /></h3>
+        Il y a une facture en attente de paiement!
+        <br />
+        <a target="_blank"
+           tal:attributes="href python: view.download_bill_url()">
+            <img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/pdf_icon.gif" />
+            &nbsp;Télécharger la facture au format PDF
+        </a>
+        <br />
+      </h3>
 
       <table class="table table-striped"
              width="100%"

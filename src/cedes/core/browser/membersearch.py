@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core import logger
+from cedes.core.memberdata import CedesMemberData
+from DateTime import DateTime
+from plone import api
 from plone.app.users.browser import membersearch
 from plone.app.users.browser.membersearch import IMemberSearchSchema
 from plone.app.users.browser.membersearch import MemberSearchForm
@@ -9,9 +12,8 @@ from Products.CMFPlone import PloneMessageFactory as _
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form import button
 from zope import schema
-from plone import api
 from zope.component import getMultiAdapter
-from cedes.core.memberdata import CedesMemberData
+
 
 # monkey patch the extractCriteriaFromRequest to manage our usecases
 membersearch.__old__extractCriteriaFromRequest = membersearch.extractCriteriaFromRequest
@@ -97,6 +99,9 @@ class CeDESMemberSearchForm(MemberSearchForm):
     # disable to ease back to search form results after actions (member credit, ...)
     enableCSRFProtection = False
 
+    # use GET instead POST so we have parameters in URL and it is easier to come back to it
+    method = 'get'
+
     schema = ICeDESMemberSearchSchema
     template = ViewPageTemplateFile('templates/membersearch_form.pt')
 
@@ -106,6 +111,7 @@ class CeDESMemberSearchForm(MemberSearchForm):
         """ """
         super(CeDESMemberSearchForm, self).handleApply(self, action)
         if self.results:
+            self.now = DateTime()
             ploneview = getMultiAdapter((self.context, self.request), name='plone')
             self.toLocalizedTime = ploneview.toLocalizedTime
             # complete results data
@@ -114,5 +120,8 @@ class CeDESMemberSearchForm(MemberSearchForm):
             for user_info in self.results:
                 if user_info['login'] in properties_storage:
                     user_info.update(properties_storage.get(user_info['login']))
+                # expiration_date and last_payment_date are not stored
                 user_info['expiration_date'] = \
-                    CedesMemberData.get_expiration_date(user_info['last_payment_date'])
+                    CedesMemberData.get_expiration_date(
+                        CedesMemberData.get_last_payment_date(
+                            user_info['account_bills']))

@@ -2,6 +2,8 @@
 
 from AccessControl import Unauthorized
 from Acquisition import aq_inner
+from DateTime import DateTime
+from io import StringIO
 from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
 from plone.app.layout.navigation.navtree import buildFolderTree
@@ -166,3 +168,54 @@ class ArticlePayantDownload(fnw_Download):
             return super(ArticlePayantDownload, self).__call__()
         else:
             raise Unauthorized
+
+
+class CeDESNightTasks(BrowserView):
+    """ """
+
+    def __call__(self):
+        ''' '''
+        out = StringIO()
+        now = DateTime()
+
+        for member in api.user.get_users():
+            member_id = member.getId()
+            if member.send_no_login_notification(now=now):
+                out.write("%s : rappel pas de login depuis 3 jours envoyé" % member_id)
+
+            creditState = member.reset_expired_credit(now=now)
+            if creditState == 1:
+                out.write("%s : rappel crédits expirés envoyé et nouveau status CeDES Free" %  member_id)
+            if creditState == 2:
+                out.write("%s : crédits expirés, facture en attente" % member_id)
+
+            if member.send_expiration_reminder(now=now, days=14):
+                out.write("%s : rappel expiration des crédits dans 14 jours envoyé" % member_id)
+
+            res = member.retry_bill_credits()
+            if res is True:
+                out.write("%s : données envoyées à la comptabilité pour facture/note de crédit" % member_id)
+            if res is False:
+                out.write("%s : nouvelle tentative d'envoi à la comptabilité échoué" % member_id)
+
+            res = member.send_payment_reminder(now=now, days=10)
+            if res is True:
+                out.write("%s : rappel paiement envoyé" % member_id)
+            if res is False:
+                out.write("%s : impossible de se connecter à la comptabilité pour joindre "
+                          "la facture au rappel de paiement" % member_id)
+
+            if member.cancel_100_pc(now=now, days=30):
+                out.write("%s : annulation de la facture après 30 jours pour cause "
+                          "de non paiement. Devient cedes Free si balance nulle." % member_id)
+
+        res = out.getvalue()
+        if not res:
+            res = "Aucune action à effectuer"
+
+        #skintool = getToolByName(self, 'portal_skins')
+        #mailHost = getToolByName(self, 'MailHost')
+        #email = skintool.cedes_emails.crontasks_result(request=self.REQUEST, res=res, startdate=now, enddate=DateTime())
+        #mailHost.send(email.encode('utf-8'))
+
+        return res

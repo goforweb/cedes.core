@@ -5,7 +5,10 @@ from cedes.core.browser.member import get_member
 from plone.app.contenttypes.browser.folder import FolderView
 from plone.app.users.browser.account import AccountPanelForm
 from plone.app.users.browser.userdatapanel import UserDataPanel
+from plone.app.z3cform.inline_validation import InlineValidationView
 from z3c.form.interfaces import HIDDEN_MODE
+
+import json
 
 
 class CedesFolderView(FolderView):
@@ -22,6 +25,7 @@ class CedesFolderView(FolderView):
 @property
 def label(self):
     return self.member.Title()
+
 
 AccountPanelForm.label = label
 logger.info("Monkey patching plone.app.users.account.AccountPanelForm (label)")
@@ -48,3 +52,12 @@ class CeDESUserDataPanel(UserDataPanel):
             for w in self.widgets:
                 if w.startswith('bill'):
                     self.widgets[w].mode = HIDDEN_MODE
+
+
+class CeDESInlineValidationView(InlineValidationView):
+    """Disable the z3cform inline validation."""
+
+    def __call__(self, fname=None, fset=None):
+        """ """
+        self.request.response.setHeader('Content-Type', 'application/json')
+        return json.dumps({'errmsg': ''})

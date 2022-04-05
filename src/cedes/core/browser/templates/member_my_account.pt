@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<metal:block fill-slot="top_slot"
+             tal:define="dummy python:request.set('disable_border',1)" />
+
+<body>
+
+   <div metal:fill-slot="main">
+
+    <h1 class="documentFirstHeading">
+      <span tal:replace="python: view.member.Title()"/>
+    </h1>
+
+    <p class="lead">Paramètres de mon compte</p>
+
+    <p tal:condition="python: not view.member.is_cedes_free()">
+      Le solde de votre compte est de <b tal:content="python: view.member.get_account_balance()"/> points.
+      Vos points sont valides jusqu'au <b tal:content="python:view.plone_view.toLocalizedTime(view.expiration_date)"/>.
+    </p>
+
+    <ul>
+      <li>
+         <a href="" tal:attributes="href string:${portal_url}/@@change-password">Définir un nouveau mot de passe</a>
+      </li>
+      <li>
+         <a href="" tal:attributes="href string:${portal_url}/@@personal-information">Editer mes données personnelles</a>
+      </li>
+      <li tal:condition="python: not view.member.is_cedes_free()">
+         <a href="" tal:attributes="href string:${portal_url}/@@member-account-details">Consulter le solde de mon compte et mes transactions</a>
+      </li>
+      <li tal:condition="python: not view.member.is_cedes_free()">
+        <a href="" tal:attributes="href string:${portal_url}/@@member-renew">Renouveler mon abonnement (30€ par an). La confirmation vous sera demandée dans l'écran suivant. </a>
+      </li>
+      <li tal:condition="python: view.member.is_cedes_free()">
+        <a href="" tal:attributes="href string:${portal_url}/@@member-switch100">Devenir membre CeDES 100% (30€ par an). La confirmation vous sera demandée dans l'écran suivant. </a>
+      </li>
+    </ul>
+    </div>
+
+</body>
+</html>

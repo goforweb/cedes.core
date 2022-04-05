@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+  metal:use-macro="here/main_template/macros/master">
+  <body>
+
+  <metal:title fill-slot="content-title">
+  </metal:title>
+
+  <metal:content fill-slot="content-core">
+    <tal:content-macro metal:define-macro="content">
+
+    <tal:defines define="toc_view python: context.restrictedTraverse('@@html-toc')">
+
+        <h1 class="documentFirstHeading" tal:content="python: toc_view.point_title()">
+          Point title with prefix
+        </h1>
+
+        <div class="dossier-structure">
+          <span tal:replace="structure toc_view/display_context_toc"/>
+        </div>
+        <br/>
+
+        <div class="visualClear"><!-- --></div>
+
+        <a class="link-parent" tal:attributes="href python:context.get_dossier_structure().absolute_url()"> Retour à la table des matières du dossier structuré </a>
+
+        <tal:block define="common_result_listing context/@@common-result-listing/index;">
+            <tal:content replace="structure common_result_listing" />
+        </tal:block>
+
+        <div class="visualClear"><!-- --></div>
+    </tal:defines>
+
+    </tal:content-macro>
+  </metal:content>
+
+  </body>
+</html>

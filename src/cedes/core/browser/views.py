@@ -52,14 +52,15 @@ class CommonResultListingView(BrowserView):
         elif search_for == 'theme_view':
             result = self.searchForThemeView()
         elif search_for == 'point_view':
-            # query using portal_catalog to return brains
-            uids = self.context.getRawCf_resources()
+            # we need to return brains...
+            # we will get every path of relations and query it
+            paths = [rel.to_path for rel in self.context.cf_resources]
             catalog = self.portal.portal_catalog
-            brains = catalog(UID=uids)
+            brains = catalog(path={'query': paths, 'depth': 0})
 
-            # sort brains by original uids order
+            # sort brains by original paths order
             def getKey(item):
-                return uids.index(item.UID)
+                return paths.index(item.getPath())
             result = sorted(brains, key=getKey)
         elif search_for == 'recently_modified':
             result = self.context.getLatestEntries(sort_limit=20)
@@ -173,49 +174,65 @@ class ArticlePayantDownload(fnw_Download):
 class CeDESNightTasks(BrowserView):
     """ """
 
-    def __call__(self):
-        ''' '''
-        out = StringIO()
+    def _get_last_execution(self):
+        """Return the last time check was executed."""
+        last_tasks_execution = getattr(self.context, '_last_tasks_execution', DateTime('1950/01/01'))
+        return last_tasks_execution
+
+    def __call__(self, check_period=True, force_execution=False):
+        """ """
+        if check_period and not force_execution:
+            last = self._get_last_execution()
+            now = DateTime()
+            # period is in days
+            period = now - last
+            if (now.hour() == 4 and period < 0.5) or period < 1:
+                return
+
+        out = []
         now = DateTime()
 
         for member in api.user.get_users():
             member_id = member.getId()
             if member.send_no_login_notification(now=now):
-                out.write("%s : rappel pas de login depuis 3 jours envoyé" % member_id)
+                out.append("%s : rappel pas de login depuis 3 jours envoyé" % member_id)
 
             creditState = member.reset_expired_credit(now=now)
             if creditState == 1:
-                out.write("%s : rappel crédits expirés envoyé et nouveau status CeDES Free" %  member_id)
+                out.append("%s : rappel crédits expirés envoyé et nouveau status CeDES Free" % member_id)
             if creditState == 2:
-                out.write("%s : crédits expirés, facture en attente" % member_id)
+                out.append("%s : crédits expirés, facture en attente" % member_id)
 
             if member.send_expiration_reminder(now=now, days=14):
-                out.write("%s : rappel expiration des crédits dans 14 jours envoyé" % member_id)
+                out.append("%s : rappel expiration des crédits dans 14 jours envoyé" % member_id)
 
             res = member.retry_bill_credits()
             if res is True:
-                out.write("%s : données envoyées à la comptabilité pour facture/note de crédit" % member_id)
+                out.append("%s : données envoyées à la comptabilité pour facture/note de crédit" % member_id)
             if res is False:
-                out.write("%s : nouvelle tentative d'envoi à la comptabilité échoué" % member_id)
+                out.append("%s : nouvelle tentative d'envoi à la comptabilité échoué" % member_id)
 
             res = member.send_payment_reminder(now=now, days=10)
             if res is True:
-                out.write("%s : rappel paiement envoyé" % member_id)
+                out.append("%s : rappel paiement envoyé" % member_id)
             if res is False:
-                out.write("%s : impossible de se connecter à la comptabilité pour joindre "
-                          "la facture au rappel de paiement" % member_id)
+                out.append("%s : impossible de se connecter à la comptabilité pour joindre "
+                           "la facture au rappel de paiement" % member_id)
 
             if member.cancel_100_pc(now=now, days=30):
-                out.write("%s : annulation de la facture après 30 jours pour cause "
-                          "de non paiement. Devient cedes Free si balance nulle." % member_id)
+                out.append("%s : annulation de la facture après 30 jours pour cause "
+                           "de non paiement. Devient cedes Free si balance nulle." % member_id)
 
-        res = out.getvalue()
-        if not res:
-            res = "Aucune action à effectuer"
+        if not out:
+            out = "Aucune action à effectuer"
+        out = "\n".join(out)
 
-        #skintool = getToolByName(self, 'portal_skins')
-        #mailHost = getToolByName(self, 'MailHost')
-        #email = skintool.cedes_emails.crontasks_result(request=self.REQUEST, res=res, startdate=now, enddate=DateTime())
-        #mailHost.send(email.encode('utf-8'))
+        # skintool = getToolByName(self, 'portal_skins')
+        # mailHost = getToolByName(self, 'MailHost')
+        # email = skintool.cedes_emails.crontasks_result(
+        #   request=self.REQUEST, out=out, startdate=now, enddate=DateTime())
+        # mailHost.send(email.encode('utf-8'))
 
-        return res
+        setattr(self.context, '_last_tasks_execution', now)
+
+        return out

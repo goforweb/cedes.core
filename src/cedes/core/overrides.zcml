@@ -11,4 +11,11 @@
             factory="cedes.core.memberdata.CedesMemberData" />
     </configure>
 
+    <!-- disable the @@z3cform_validate_field -->
+    <browser:page
+        name="z3cform_validate_field"
+        for="*"
+        class="cedes.core.browser.overrides.CeDESInlineValidationView"
+        permission="zope.Public" />
+
 </configure>

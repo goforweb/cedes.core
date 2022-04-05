@@ -25,4 +25,12 @@
     <subscriber for="Products.PlonePAS.interfaces.events.IUserInitialLoginInEvent"
                 handler=".events.onUserInitialLogin" />
 
+    <!-- cioppino.twothumbs -->
+    <subscriber for="cedes.core.interfaces.ICeDESLoveThumbsDontYou
+                    cioppino.twothumbs.event.ILikeEvent"
+                handler=".events.onRessourceLiked" />
+    <subscriber for="cedes.core.interfaces.ICeDESLoveThumbsDontYou
+                    cioppino.twothumbs.event.IUnlikeEvent"
+                handler=".events.onRessourceUnliked" />
+
 </configure>

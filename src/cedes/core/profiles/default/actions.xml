@@ -27,9 +27,9 @@
   <object name="undo" meta_type="CMF Action">
    <property name="visible">False</property>
   </object> 
-  <object name="logout" meta_type="CMF Action">
+  <!-- object name="logout" meta_type="CMF Action">
    <property name="visible">False</property>
-  </object>
+  </object-->
   <object name="print" meta_type="CMF Action" i18n:domain="cedes">
    <property name="title" i18n:translate="">Imprimer</property>
    <property name="description" i18n:translate=""></property>
@@ -52,22 +52,22 @@
    </property>
    <property name="visible">True</property>
   </object>
-  <object name="aide" meta_type="CMF Action" i18n:domain="cedes">
-   <property name="title" i18n:translate="">Aide</property>
+  <object name="mon_compte" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Mon compte</property>
    <property name="description" i18n:translate=""></property>
-   <property name="url_expr">string:${portal_url}/pages/aide</property>
-   <property name="icon_expr">string:$portal_url/help.png</property>
+   <property name="url_expr">string:${portal_url}/@@my-account</property>
+   <property name="icon_expr">string:$portal_url/account.png</property>
    <property name="available_expr">python:member is not None</property>
    <property name="permissions">
     <element value="View"/>
    </property>
    <property name="visible">True</property>
   </object>
-  <object name="mon_compte" meta_type="CMF Action" i18n:domain="cedes">
-   <property name="title" i18n:translate="">Mon compte</property>
+  <object name="aide" meta_type="CMF Action" i18n:domain="cedes">
+   <property name="title" i18n:translate="">Aide</property>
    <property name="description" i18n:translate=""></property>
-   <property name="url_expr">string:${portal_url}/plone_memberprefs_panel</property>
-   <property name="icon_expr">string:$portal_url/account.png</property>
+   <property name="url_expr">string:${portal_url}/pages/aide</property>
+   <property name="icon_expr">string:$portal_url/help.png</property>
    <property name="available_expr">python:member is not None</property>
    <property name="permissions">
     <element value="View"/>
@@ -94,7 +94,7 @@
    <property name="permissions">
     <element value="View"/>
    </property>
-   <property name="visible">True</property>
+   <property name="visible">False</property>
   </object>
  </object>
  <object name="object_buttons" meta_type="CMF Action Category">

@@ -126,3 +126,130 @@ def get_latest_entries(sort_limit=5):
         sort_order='reverse',
         sort_limit=sort_limit))
     return res
+
+
+def add_page_message(portal, page_id, type="warning"):
+    """ """
+    # do not add message when clicking on 'Cancel' button of a form
+    if 'form.buttons.cancel' in portal.REQUEST:
+        return
+    page = portal.pages.get(page_id)
+    if page:
+        msg = page.text.output
+    else:
+        msg = "Fichier '%s' manquant" % page_id
+    api.portal.show_message(msg, request=portal.REQUEST, type=type)
+
+def uuidsToCatalogBrains(uuids=[],
+                         ordered=False,
+                         query={},
+                         check_contained_uids=False,
+                         unrestricted=False):
+    """ Given a list of UUIDs, attempt to return catalog brains,
+        keeping original uuids list order if p_ordered=True.
+        If p_check_contained_uids=True, if we do not find brains using the UID
+        index, we will try to get it using the contained_uids index, used when
+        subelements are not indexed."""
+
+    catalog = api.portal.get_tool('portal_catalog')
+    searcher = catalog.searchResults
+    if unrestricted:
+        searcher = catalog.unrestrictedSearchResults
+
+    brains = searcher(UID=uuids, **query)
+
+    if not brains and check_contained_uids and 'contained_uids' in catalog.Indexes:
+        brains = searcher(contained_uids=uuids, **query)
+
+    if ordered:
+        # we need to sort found brains according to uuids
+        def getKey(item):
+            return uuids.index(item.UID)
+        brains = sorted(brains, key=getKey)
+
+    return brains
+
+
+def uuidToCatalogBrain(uuid,
+                       ordered=False,
+                       query={},
+                       check_contained_uids=False,
+                       unrestricted=False):
+    """Shortcut to call uuidsToCatalogBrains to get one single element."""
+    res = uuidsToCatalogBrains(
+        uuids=[uuid],
+        ordered=ordered,
+        query=query,
+        check_contained_uids=check_contained_uids,
+        unrestricted=unrestricted)
+    if res:
+        res = res[0]
+    return res
+
+
+def _contained_objects(obj, only_unindexed=False):
+    """Return every elements contained in p_obj, incuding sub_elements.
+       If p_only_unindexed=True, then we only return elements that are not indexed"""
+    if only_unindexed and not IContainerOfUnindexedElementsMarker.providedBy(obj):
+        return []
+
+    def get_objs(container, objs=[]):
+        for subcontainer in container.objectValues():
+            if not only_unindexed or \
+               (only_unindexed and subcontainer._getCatalogTool() is None):
+                objs.append(subcontainer)
+            get_objs(subcontainer, objs)
+        return objs
+    return get_objs(obj)
+
+
+def uuidsToObjects(uuids=[], ordered=False, query={}, check_contained_uids=False, unrestricted=False):
+    """ Given a list of UUIDs, attempt to return content objects,
+        keeping original uuids list order if p_ordered=True.
+        If p_check_contained_uids=True, if we do not find brains using the UID
+        index, we will try to get it using the contained_uids index, used when
+        subelements are not indexed. """
+
+    brains = uuidsToCatalogBrains(uuids,
+                                  ordered=not check_contained_uids and ordered or False,
+                                  query=query,
+                                  check_contained_uids=check_contained_uids,
+                                  unrestricted=unrestricted)
+    res = []
+    if check_contained_uids:
+        need_reorder = False
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            if obj.UID() not in uuids:
+                # it means we have a brain using a contained_uids
+                for contained in _contained_objects(obj):
+                    if contained.UID() in uuids:
+                        need_reorder = True
+                        res.append(contained)
+            else:
+                res.append(obj)
+        if ordered and need_reorder:
+            # need to sort here as disabled when calling uuidsToCatalogBrains
+            def getKey(item):
+                return uuids.index(item.UID())
+            res = sorted(res, key=getKey)
+    else:
+        res = [brain._unrestrictedGetObject() for brain in brains]
+    return res
+
+
+def uuidToObject(uuid,
+                 ordered=False,
+                 query={},
+                 check_contained_uids=False,
+                 unrestricted=False):
+    """Shortcut to call uuidsToObjects to get one single element."""
+    res = uuidsToObjects(
+        uuids=[uuid],
+        ordered=ordered,
+        query=query,
+        check_contained_uids=check_contained_uids,
+        unrestricted=unrestricted)
+    if res:
+        res = res[0]
+    return res

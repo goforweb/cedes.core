@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core.memberdata import ICeDESUserDataSchema
+from cedes.core.utils import add_page_message
 from plone import api
 from plone.app.users import schema as pau_schema
 from plone.app.users.browser.account import AccountPanelSchemaAdapter
@@ -76,3 +77,9 @@ class CeDESRegistrationForm(RegistrationForm):
             for w in self.widgets:
                 if w.startswith('bill'):
                     self.widgets[w].mode = HIDDEN_MODE
+
+        # display a message explaining what will happen
+        if self.widgets['member_type'].value == ["CeDES Free"]:
+            add_page_message(self.context, 'inscription-avertissement-cedesfree')
+        else:
+            add_page_message(self.context, 'inscription-avertissement-cedes100pc')

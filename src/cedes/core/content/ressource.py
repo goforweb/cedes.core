@@ -6,6 +6,7 @@
 #
 
 from AccessControl import ClassSecurityInfo
+from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from collective.dexteritytextindexer.directives import searchable
 from datetime import datetime
 from plone import api
@@ -73,7 +74,7 @@ class IRessource(model.Schema):
         required=False, )
 
 
-@implementer(IRessource)
+@implementer(IRessource, ICeDESLoveThumbsDontYou)
 class Ressource(object):
     """ """
 

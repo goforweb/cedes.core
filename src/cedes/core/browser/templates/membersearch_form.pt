@@ -41,7 +41,8 @@
                         </h3>
                     </div>
 
-                    <a href=".">Nouvelle recherche</a>
+                    <a href=".">Nouvelle recherche</a>&nbsp;&nbsp;&nbsp;
+                    <a href="">Actualiser les résultats</a>
 
                     <div metal:use-macro="here/batch_macros/macros/navigation"/>
 
@@ -66,7 +67,11 @@
                           </tr>
                           <tr tal:repeat="result batch" tal:attributes="class python:result['member_type'] == 'CeDES 100%' and 'cedes-100pc' or ''">
                             <tal:block define="userid python: result['login'];">
-                                <td><a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a></td>
+                                <td><span tal:condition="python: result['has_bill_waiting_payment']"
+                                          class="icon-one help"
+                                          title="Facture en attente de paiement" />
+                                    <a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a>
+                                </td>
                                 <td><span tal:replace="python:result['member_type'][5:]"/></td>
                                 <td><span tal:replace="result/email"/></td>
                                 <td><span tal:replace="result/fullname"/></td>
@@ -129,7 +134,7 @@
                             </tal:block>
                           </tr>
                         </table>
-
+                        <span class="icon-one help" title="Facture en attente de paiement">Facture en attente de paiement</span>
                     </div>
 
                     <div class="visualClear" id="clear-space-before-navigation"><!-- --></div>

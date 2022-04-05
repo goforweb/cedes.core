@@ -22,5 +22,6 @@
  <column value="cr_first_classification_date_index"/>
  <column value="cr_date_index"/>
  <column value="cr_comment_index"/>
+ <column value="user_ratings"/>
 
 </object>

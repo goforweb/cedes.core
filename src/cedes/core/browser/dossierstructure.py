@@ -195,7 +195,7 @@ class DossierStructureDefaultView(DefaultView):
         self.price = self.context.get_price()
 
     def may_access(self):
-        return (not self.is_cedes_free and self.has_credits and self.price == 0) \
+        return bool(not self.is_cedes_free and self.has_credits and self.price == 0) \
             or self.is_manager
 
 

@@ -118,7 +118,7 @@ class CedesMemberData(MemberData):
 
     def Title(self):
         """ """
-        return "{0} ({1})".format(deepcopy(self.getProperty('fullname')), self.getId())
+        return "{0} ({1})".format(self.getProperty('fullname'), self.getId())
 
     def get_account_bills(self):
         """ """
@@ -224,6 +224,12 @@ class CedesMemberData(MemberData):
                 self.send_credit_request_confirmation()
             return True
 
+    def request_100pc(self):
+        """ """
+        self.set_member_type("CeDES 100%")
+        self.bill_credits()
+        self.send_100pc_confirmation()
+
     def bill_credits(self, total="3000", mode="F"):
         """ """
         now = DateTime()
@@ -291,7 +297,9 @@ class CedesMemberData(MemberData):
         """ """
         now = now or DateTime()
         if self.get_bill_waiting_payment():
-            self.get_account_bills()[-1]['payment_date'] = now
+            account_bills = self.get_account_bills()
+            account_bills[-1]['payment_date'] = now
+            self.set_account_bills(account_bills)
             self.set_payment_notification_date(None)
             self.set_expiration_notification_date(None)
             self.set_has_bill_waiting_payment(False)
@@ -310,6 +318,12 @@ class CedesMemberData(MemberData):
                item['mode'] == 'F':
                 return item
         return None
+
+    def _compute_payment_dates(self):
+        """ """
+        last_payment_date = self.get_last_payment_date(
+            self.get_account_bills())
+        return last_payment_date, self.get_expiration_date(last_payment_date)
 
     @staticmethod
     def get_last_payment_date(account_bills):
@@ -394,6 +408,18 @@ class CedesMemberData(MemberData):
         # mailHost = getToolByName(self, 'MailHost')
         # email = skintool.cedes_emails.credit_request_confirmation(
         #    self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(), member_email=self.email)
+        # mailHost.send(email.encode('utf-8'))
+        return True
+
+    def send_100pc_confirmation(self):
+        '''
+          Sends an email to confirm Cedes100pc request accepted
+          Returns True if email has been sent
+        '''
+        # skintool = getToolByName(self, 'portal_skins')
+        # mailHost = getToolByName(self, 'MailHost')
+        # email = skintool.cedes_emails.cedes100pc_request_confirmation(
+        #     self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(), member_email=self.email)
         # mailHost.send(email.encode('utf-8'))
         return True
 

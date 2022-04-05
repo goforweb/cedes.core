@@ -1,3 +1,7 @@
+div.container {
+    max-width: 1600px;
+}
+
 form.gopress_import caption {
     caption-side: top;
 }
@@ -63,8 +67,16 @@ div.portletNavigationTree [class*="contenttype-"] {
     background: no-repeat transparent url("++plone++cedes.core/video.gif");
 }
 
-.state-private {
-    color: red;
+.state-private,
+a.state-private,
+/* folder_contents */
+div.pat-structure a.state-private {
+    color: red !important;
+}
+
+a.state-private.nav-link {
+    background-color: red !important;
+    color: white !important;
 }
 
 /* override faceted spinner */
@@ -86,10 +98,77 @@ body.userrole-manager li a#contentview-user_data-personal-preferences {
     max-width: inherit;
 }
 
+.icon-one::before {
+  content: '\e553';
+}
+
+.help {
+    cursor: help;
+}
+
 .glyphicon.disabled {
     color: lightgrey;
     cursor: help;
 }
 .bold {
     font-weight: bold;
+}
+
+/* EPC term next to title of resources linked to an EPC DS */
+span.ds-kw-epc {
+    color: &dtml-blueColor;;
+    font-size: 125%;
+    display: inline;
+    text-shadow: 2px 2px 4px grey;
+    font-weight: bold;
+    margin-left: 1em;
+}
+
+/* collapsible */
+.collapsible {
+    background-repeat: no-repeat;
+    padding-left: 14px;
+    background-position-y: center;
+    cursor: pointer;
+    margin-bottom: 0em;
+    margin-top: 0.5em;
+    margin-left: 0.5em;
+    font-weight: bold;
+}
+.collapsible-inner-content {
+    margin: 0.2em;
+    padding: 1em;
+    background-color: #FAFAFA;
+    border:1px solid #DDDDDD;
+}
+
+a:link {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* cioppino.twothumbs */
+.thumb-rating {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+span.thumbs-down {
+    display: none;
+}
+form.thumbs-up-readonly {
+    cursor: help;
+    float: right;
+    margin-top: -1em;
+}
+form.thumbs-up-readonly input {
+    cursor: help !important;
+}
+div.thumb-rating form input.like-button {
+    background-position: -44px -25px;
+    padding-left: 0;
+}
+div.thumb-rating form .selected input.like-button {
+    background-position: -44px 7px;
 }

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from AccessControl import Unauthorized
+from cedes.core.utils import add_page_message
 from collections import OrderedDict
 from DateTime import DateTime
 from io import BytesIO
@@ -39,6 +40,27 @@ def get_member(request):
     if userid and not current_user.has_role('Manager'):
         raise Unauthorized
     return userid and api.portal.get_tool('portal_membership').getMemberById(userid) or current_user
+
+
+class MyAccountView(BrowserView):
+    """ """
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
+
+    def _update(self):
+        self.catalog = self.portal.portal_catalog
+        self.member = get_member(self.request)
+        self.last_payment_date, self.expiration_date = self.member._compute_payment_dates()
+        self.plone_view = self.portal.unrestrictedTraverse('@@plone')
+
+    def __call__(self):
+        """ """
+        self._update()
+        return super(MyAccountView, self).__call__()
 
 
 class AccountDetailsView(BrowserView):
@@ -93,13 +115,11 @@ class MemberDebugView(BrowserView):
         self.computed = OrderedDict()
         # add bill_waiting_payment but remove pdf data for display
         bill_waiting_payment = self.member.get_bill_waiting_payment()
-        if bill_waiting_payment:
+        if bill_waiting_payment and 'pdf' in bill_waiting_payment:
             bill_waiting_payment.pop('pdf')
         self.computed['bill_waiting_payment'] = bill_waiting_payment
-        self.computed['last_payment_date'] = self.member.get_last_payment_date(
-            self.member.get_account_bills())
-        self.computed['expiration_date'] = self.member.get_expiration_date(
-            self.computed['last_payment_date'])
+        self.computed['last_payment_date'], self.computed['expiration_date'] = \
+            self.member._compute_payment_dates()
         self.computed = sorted(self.computed.items())
         return super(MemberDebugView, self).__call__()
 
@@ -334,11 +354,11 @@ class RenewAccountForm(UserDataPanel):
         current_user_id = api.user.get_current().getId()
         if self.member.getId() != current_user_id:
             # editing someone else's profile
-            title = "Renouveller l'abonnement de {0} ({1})".format(
+            title = "Renouveler l'abonnement de {0} ({1})".format(
                 self.member.getProperty('fullname'), self.member.getId())
         else:
             # editing my own profile
-            title = "Renouvelle mon abonnement"
+            title = self.form_name
 
         navigation_root_url = self.context.absolute_url()
         tabs = []
@@ -359,6 +379,8 @@ class RenewAccountForm(UserDataPanel):
         super(RenewAccountForm, self).update()
         # make renew button primary
         self.actions.get('renew').addClass('btn-primary')
+        # display a message explaining what will happen
+        add_page_message(self.context, 'inscription-member-renew-100')
 
     @button.buttonAndHandler(u'Renouveler mon abonnement', name='renew')
     def handleRenew(self, action):
@@ -382,7 +404,65 @@ class RenewAccountForm(UserDataPanel):
     def handle_cancel(self, action):
         # XXX redirect to user personal preferences
         api.portal.show_message('Demande de renouvellement annulée.', self.request)
+        return self.request.RESPONSE.redirect(self.context.absolute_url() + '/@@my-account')
+
+
+class Switch100Form(UserDataPanel):
+    """ """
+
+    form_name = "Devenir membre CeDES 100%"
+
+    def prepareObjectTabs(self,
+                          default_tab='view',
+                          sort_first=['folderContents']):
+        # hide other tabs
+        # tabs = super(Switch100Form, self).prepareObjectTabs(default_tab, sort_first)
+        # add the "member-switch100" tab
+        navigation_root_url = self.context.absolute_url()
+        tabs = []
+        tabs.append({
+            'title': self.form_name,
+            'url': navigation_root_url + '/@@member-switch100',
+            'selected': (self.__name__ == 'member-switch100'),
+            'id': 'user_data-member-switch100',
+        })
+        return tabs
+
+    @property
+    def description(self):
+        return "Vérifiez vos données et cliquez sur \"Devenir membre 100%\" au bas du formulaire"
+
+    def update(self):
+        """ """
+        super(Switch100Form, self).update()
+        # make switch100 button primary
+        self.actions.get('switch100').addClass('btn-primary')
+        # display a message explaining what will happen
+        add_page_message(self.context, 'inscription-member-switch-100')
+
+    @button.buttonAndHandler(u'Devenir membre 100%', name='switch100')
+    def handleSwitch100(self, action):
+        CheckAuthenticator(self.request)
+        data, errors = self.extractData()
+        if action.form.widgets.errors:
+            self.status = self.formErrorsMessage
+            return
+
+        # check again this even if it is checked in the template because a back
+        # in the brower + send info again could request credits again...
+        if not self.member.get_bill_waiting_payment():
+            self.member.request_100pc()
+            api.portal.show_message('Demande d\'abonnement acceptée.', self.request)
+        else:
+            api.portal.show_message(
+                'Vous avez déjà une facture en attente de paiement!', self.request, type='warning')
         return self.request.RESPONSE.redirect(self.context.absolute_url())
+
+    @button.buttonAndHandler("Annuler", name='cancel')
+    def handle_cancel(self, action):
+        # XXX redirect to user personal preferences
+        api.portal.show_message('Demande d\'abonnement annulée.', self.request)
+        return self.request.RESPONSE.redirect(self.context.absolute_url() + '/@@my-account')
 
 
 def came_from_default():
@@ -455,7 +535,7 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
     def update(self):
         """ """
         super(FixFailedAccountingForm, self).update()
-        # make renew button primary
+        # make send button primary
         self.actions.get('send').addClass('btn-primary')
 
     def updateWidgets(self):

@@ -9,20 +9,26 @@
   <body>
     <div metal:fill-slot="main">
       <h1 class="documentFirstHeading">
-        Historique des transactions de <span tal:replace="python: view.member.Title()"/>
+        <span tal:replace="python: view.member.Title()"/>
       </h1>
 
-      <h3 tal:define="bill python: view.member.get_bill_waiting_payment()"
-          tal:condition="python: bill and bill.get('pdf')">
-        Il y a une facture en attente de paiement!
+      <p class="lead">Historique des transactions</p>
+
+      <div class="portalMessage statusmessage statusmessage-warning alert alert-warning"
+           tal:define="bill python: view.member.get_bill_waiting_payment()"
+           tal:condition="python: bill and bill.get('pdf')">
+        <tal:icon tal:define="icons nocall: context/@@iconresolver""
+                  tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+        <strong>Attention</strong>
+        <span>Il y a une facture en attente de paiement!
+          <a target="_blank"
+             tal:attributes="href python: view.download_bill_url()">
+              <img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/pdf_icon.gif" />
+              &nbsp;Télécharger la facture au format PDF
+          </a>
         <br />
-        <a target="_blank"
-           tal:attributes="href python: view.download_bill_url()">
-            <img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/pdf_icon.gif" />
-            &nbsp;Télécharger la facture au format PDF
-        </a>
-        <br />
-      </h3>
+        </span>
+      </div>
 
       <table class="table table-striped"
              width="100%"

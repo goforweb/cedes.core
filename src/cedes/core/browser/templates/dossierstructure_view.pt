@@ -10,44 +10,44 @@
                                   dossier_is_free python: total_price == 0;
                                   is_cedes_free python: view.is_cedes_free;
                                   context_url python: context.absolute_url();
-                                  may_access python: view.may_access;
+                                  may_access python: view.may_access();
                                   is_manager python: view.is_manager;">
 
         <p tal:condition="not: dossier_is_free" class="description"><b>Coût total du dossier : <span tal:replace="total_price" /> points.  Coût réel du dossier (en fonction des articles qui ont déjà été débités de votre compte) : <span tal:replace="price" /> points.</b></p>
         <p tal:condition="dossier_is_free" class="description"><b>Dossier gratuit.</b></p>
-        <dl style="display:none;" class="error" id="credit-confirmation"
-            tal:attributes="class python: may_access and 'portalMessage info' or 'portalMessage warning';">
-              <dt tal:condition="not: may_access">Avertissement</dt>
-              <dt tal:condition="python: may_access">Info</dt>
-              <dd tal:condition="python: may_access and price == 0 and not dossier_is_free">Votre compte a déjà été débité pour ce dossier, vous pouvez donc y accéder librement. Cliquez sur 'Continuer' pour confirmer.
-                    <a href="" tal:attributes="href string:${context_url}/@@pdf;
-                                               title here/pretty_title_or_id;">
-                      Continuer...
-                    </a>
-              </dd>
-              <dd tal:condition="python: not is_cedes_free and dossier_is_free and view.has_credits">Le dossier est gratuit. Vous pouvez y accéder librement. Cliquez sur 'Continuer' pour confirmer.
-                    <a href="" tal:attributes="href string:${context_url}/@@pdf;
-                                               title here/pretty_title_or_id;">
-                      Continuer...
-                    </a>
-              </dd>
-              <dd tal:condition="python:member.check_balance(price) and not price == 0"> Vous êtes sur le point de télécharger le PDF de ce dossier. Votre compte sera débité de <span tal:condition="python:price<=1" tal:replace="string:$price point"/> <span tal:condition="python:price>1" tal:replace="string:$price points"/>. Cliquez sur 'Continuer' pour confirmer!
-                <a href="" onclick="document.getElementById('credit-confirmation').style.display='none';"
-                  tal:attributes="href string:${context_url}/@@pdf;
-                                  title here/pretty_title_or_id;">
-                  Continuer...
-                </a>
-              </dd>
-              <dd tal:condition="is_cedes_free"> Vous devez être membre CeDES 100% pour pouvoir télécharger le PDF d'un dossier. Allez dans <a tal:attributes="href string:${portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
-              <dd tal:condition="python: not is_cedes_free and not member.get_account_balance()">L'acc&egrave;s aux dossiers est conditionn&eacute; par un solde de points cr&eacute;diteur (voir "Mon compte" en caract&egrave;res blancs au-dessus de l'&eacute;cran).  Pour recevoir des crédits:<br />
-                a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
-                b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien bris&eacute;, partagez une ressource int&eacute;ressante, ....). Saisissez la zone commentaire disponible au bas de chaque ressource ou utilisez le formulaire mis &agrave; votre disposition sous "Contact" au-dessus de l'&eacute;cran
-              </dd>
-              <dd tal:condition="python: not is_cedes_free and not member.check_balance(price)">Vous n'avez pas suffisamment de crédits pour télécharger ce dossier.  (voir "Mon compte" en caract&egrave;res blancs au-dessus de l'&eacute;cran).  Pour recevoir des crédits:<br />
-                a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
-                b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien
-              </dd>
-        </dl>
+
+        <div style="display:none" id="credit-confirmation"
+            class="portalMessage statusmessage statusmessage-warning alert alert-warning"
+            tal:attributes="class python: 'portalMessage statusmessage statusmessage-info alert alert-info' if may_access else 'portalMessage statusmessage statusmessage-warning alert alert-warning';"
+            tal:define="icons nocall: context/@@iconresolver">
+          <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-info' if may_access else 'plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+          <strong tal:condition="not: may_access">Avertissement</strong>
+          <strong tal:condition="may_access">Info</strong>
+          <span tal:condition="python: may_access and price == 0 and not dossier_is_free">
+            Votre compte a déjà été débité pour ce dossier, vous pouvez donc y accéder librement.
+            <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">Continuer...</a>' pour confirmer.
+          </span>
+          <span tal:condition="python: not is_cedes_free and dossier_is_free and view.has_credits">
+            Le dossier est gratuit. Vous pouvez y accéder librement.
+            <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">Continuer...</a>' pour confirmer.
+          </span>
+          <span tal:condition="python:member.check_balance(price) and not price == 0"> Vous êtes sur le point de télécharger le PDF de ce dossier. Votre compte sera débité de <span tal:condition="python:price<=1" tal:replace="string:$price point"/> <span tal:condition="python:price>1" tal:replace="string:$price points"/>.
+          <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';"
+              tal:attributes="href string:${context_url}/@@pdf;
+                              title here/pretty_title_or_id;">
+              Continuer...
+            </a>' pour confirmer!
+          </span>
+          <span tal:condition="is_cedes_free"> Vous devez être membre CeDES 100% pour pouvoir télécharger le PDF d'un dossier. Allez dans <a tal:attributes="href string:${portal_url}/@@my-account">'Mon compte'</a> pour modifier votre abonnement.</span>
+          <span tal:condition="python: not is_cedes_free and not member.get_account_balance()">L'acc&egrave;s aux dossiers est conditionn&eacute; par un solde de points cr&eacute;diteur (voir "Mon compte" en caract&egrave;res blancs au-dessus de l'&eacute;cran).  Pour recevoir des crédits:<br />
+            a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
+            b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien bris&eacute;, partagez une ressource int&eacute;ressante, ....). Saisissez la zone commentaire disponible au bas de chaque ressource ou utilisez le formulaire mis &agrave; votre disposition sous "Contact" au-dessus de l'&eacute;cran
+          </span>
+          <span tal:condition="python: not is_cedes_free and member.get_account_balance() and not member.check_balance(price)">Vous n'avez pas suffisamment de crédits pour télécharger ce dossier.  (voir "Mon compte" en caract&egrave;res blancs au-dessus de l'&eacute;cran).  Pour recevoir des crédits:<br />
+            a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
+            b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien
+          </span>
+        </div>
 
         <div>
           <a tal:attributes="href context_url; title here/pretty_title_or_id;"

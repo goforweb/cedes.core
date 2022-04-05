@@ -7,6 +7,7 @@
 
 from AccessControl import ClassSecurityInfo
 from cedes.core.config import CEDES_DS_KW_PREFIX
+from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from cedes.core.pisa import _get_pdf_file_path
 from plone import api
 from plone.app.contenttypes.content import Folder
@@ -89,7 +90,7 @@ class Base(object):
         return catalog(UID=uids)
 
 
-@implementer(IDossierStructure)
+@implementer(IDossierStructure, ICeDESLoveThumbsDontYou)
 class DossierStructure(Folder, Base):
     """Dossier structuré """
 
@@ -185,7 +186,7 @@ class Point(Folder, Base):
 
     def get_all_ressource_uids(self):
         """
-          Returns the list of all ressources referenced in this file (uid list)
+          Returns the list of all ressources referenced in this Point (uid list)
         """
         res = []
         if self.cf_resources:
@@ -200,7 +201,7 @@ class Point(Folder, Base):
         if not the_objects:
             return self.cf_resources
         else:
-            return [ress.to_object for ress in self.cf_resources]
+            return [ressource.to_object for ressource in self.cf_resources]
 
     def setCf_resources(self, value, **kwargs):
         """

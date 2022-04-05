@@ -51,7 +51,7 @@
           <div tal:condition="not:layout/may_search">
             <dl class="portalMessage warning">
               <dd>L'accès au moteur de recherche est réservé aux abonnés CeDES 100%. Il est gracieusement mis à la disposition des abonnés CeDES Free durant une semaine.
-              Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${layout/portal_url}/plone_memberprefs_panel">'Mon compte'</a> pour modifier votre abonnement.</dd>
+              Allez dans <a style="color:#555555;font-weight:bold;text-decoration:underline;" tal:attributes="href string:${layout/portal_url}/@@my-account">'Mon compte'</a> pour modifier votre abonnement.</dd>
             </dl>
           </div>
         </tal:faceted_search>

@@ -12,7 +12,6 @@
  <property name="school_country" type="string"></property>
  <property name="school_phone" type="string"></property>
 
- <property name="bill_use_tva" type="boolean"></property>
  <property name="bill_tva" type="string"></property>
  <property name="bill_name" type="string"></property>
  <property name="bill_email" type="string"></property>
@@ -20,6 +19,9 @@
  <property name="bill_postal_code" type="string"></property>
  <property name="bill_locality" type="string"></property>
  <property name="bill_country" type="string"></property>
+
+ <!-- fight against robots, field must exist and will always be empty>
+ <property name="extra_field" type="string"></property -->
 
  <!-- account properties, not editable thru UI -->
  <property name="account_balance" type="int">0</property>

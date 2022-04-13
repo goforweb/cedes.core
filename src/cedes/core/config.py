@@ -20,6 +20,7 @@ CEDES_RESSOURCE_TYPES = ('ArticleGratuit',
 
 CEDES_DS_KW_PREFIX = "ds-kw-"
 
+EXTRA_MAIL_TO = ['cedes@unamur.be', 'log@goforweb.be']
 setDefaultRoles(DEFAULT_ADD_CONTENT_PERMISSION, ('Manager', 'Owner',))
 
 # DEFAULT_PRESSBANKING_ID = '55634' # id compte go4web

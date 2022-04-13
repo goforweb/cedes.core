@@ -165,10 +165,20 @@ form.thumbs-up-readonly {
 form.thumbs-up-readonly input {
     cursor: help !important;
 }
-div.thumb-rating form input.like-button {
+div.thumb-rating form input.like-button,
+form.thumbs-up-readonly input.like-button {
     background-position: -44px -25px;
     padding-left: 0;
 }
-div.thumb-rating form .selected input.like-button {
+div.thumb-rating form .selected input.like-button,
+form.thumbs-up-readonly .selected input.like-button {
     background-position: -44px 7px;
+}
+/* less space under portal message */
+div.alert {
+    margin-bottom: 1rem;
+}
+/* hide the extra_field on register form, used to fight against robots */
+div#formfield-form-widgets-extra_field {
+    display: none;
 }

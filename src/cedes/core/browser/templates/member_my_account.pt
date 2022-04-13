@@ -16,9 +16,29 @@
 
     <p class="lead">Paramètres de mon compte</p>
 
+    <div class="portalMessage statusmessage statusmessage-warning alert alert-warning"
+         tal:define="bill python: view.member.get_bill_waiting_payment()"
+         tal:condition="python: bill and bill.get('pdf')">
+      <tal:icon tal:define="icons nocall: context/@@iconresolver""
+                tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+      <strong>Attention</strong>
+      <span>Il y a une facture en attente de paiement!
+        <a target="_blank"
+           tal:attributes="href python: view.download_bill_url()">
+            <img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/pdf_icon.gif" />
+            &nbsp;Télécharger la facture au format PDF
+        </a>
+      <br />
+      </span>
+    </div>
+
     <p tal:condition="python: not view.member.is_cedes_free()">
+      <b>Votre compte "CeDES 100%" est activé.</b>
       Le solde de votre compte est de <b tal:content="python: view.member.get_account_balance()"/> points.
       Vos points sont valides jusqu'au <b tal:content="python:view.plone_view.toLocalizedTime(view.expiration_date)"/>.
+    </p>
+    <p tal:condition="python: view.member.is_cedes_free()">
+      <b>Vous disposez d'un compte "CeDES Free".</b>
     </p>
 
     <ul>

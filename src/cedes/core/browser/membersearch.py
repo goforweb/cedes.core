@@ -10,9 +10,12 @@ from plone.app.users.browser.membersearch import MemberSearchForm
 from plone.supermodel import model
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.PlonePAS.plugins.property import ZODBMutablePropertyProvider
+from Products.PlonePAS.plugins.property import isStringType
 from z3c.form import button
 from zope import schema
 from zope.component import getMultiAdapter
+from Products.PlonePAS.utils import safe_unicode
 
 
 # monkey patch the extractCriteriaFromRequest to manage our usecases
@@ -36,12 +39,56 @@ def extractCriteriaFromRequest(criteria):
                 value = value[0]
             criteria[new_key] = value
             del criteria[key]
-
+    # manage dates
+    for key in criteria:
+        if key.endswith('_time'):
+            criteria[key] = (DateTime(criteria[key]), DateTime())
     return criteria
 
 
 membersearch.extractCriteriaFromRequest = extractCriteriaFromRequest
 logger.info("Monkey patching plone.app.users.membersearch (extractCriteriaFromRequest)")
+
+
+# monkey patch the testMemberData to manage search on DateTime
+ZODBMutablePropertyProvider.__old__testMemberData = ZODBMutablePropertyProvider.testMemberData
+
+
+def testMemberData(self, memberdata, criteria, exact_match=False):
+    """Test if a memberdata matches the search criteria.
+    """
+    from DateTime import DateTime
+    for (key, value) in criteria.items():
+        testvalue = memberdata.get(key, None)
+        if testvalue is None:
+            return False
+
+        if isStringType(testvalue):
+            testvalue = safe_unicode(testvalue.lower())
+        if isStringType(value):
+            value = safe_unicode(value.lower())
+
+        if exact_match:
+            if value != testvalue:
+                return False
+        else:
+            try:
+                # XXX begin changes by CeDES
+                if isinstance(testvalue, DateTime) and isinstance(value, tuple):
+                    return testvalue > value[0] and testvalue < value[1]
+                # XXX end changes by CeDES
+                if value not in testvalue:
+                    return False
+            except TypeError:
+                # Fall back to exact match if we can check for
+                # sub-component
+                if value != testvalue:
+                    return False
+    return True
+
+
+ZODBMutablePropertyProvider.testMemberData = testMemberData
+logger.info("Monkey patching Products.PlonePAS.plugins.property.ZODBMutablePropertyProvider (testMemberData)")
 
 
 class ICeDESMemberSearchSchema(IMemberSearchSchema):
@@ -55,6 +102,7 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
                 'school_name',
                 'school_postal_code',
                 'bill_name',
+                'last_login_time',
                 'has_failed_accounting_f',
                 'has_failed_accounting_n',
                 'has_bill_waiting_payment'])
@@ -81,6 +129,9 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
         required=False)
     bill_name = schema.TextLine(
         title=_(u'label_bill_name', default=u'Bill name'),
+        required=False)
+    last_login_time = schema.Date(
+        title=_(u'label_last_login', default=u'Last login'),
         required=False)
     has_failed_accounting_f = schema.Bool(
         title=_(u'label_has_failed_accounting_f', default=u'Has failed accounting f'),

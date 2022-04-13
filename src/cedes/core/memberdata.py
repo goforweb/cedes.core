@@ -16,6 +16,10 @@ from Products.PlonePAS.tools.memberdata import MemberData
 from zope import schema
 from zope.interface import Interface
 from zope.interface import Invalid
+from zope.interface import invariant
+from zope.globalrequest import getRequest
+
+import re
 
 
 def legal_validation_constraint(value):
@@ -23,6 +27,79 @@ def legal_validation_constraint(value):
     if value is not True:
         raise Invalid('Vous devez accepter la charte afin de pouvoir vous inscrire comme membre.')
     return True
+
+
+def check_email_unicity(email):
+    """Make sure an e-mail address is only used one time."""
+    email = email.strip()
+    # some domains may create several accounts
+    BYPASSED_DOMAINS = ['@unamur.be', '@goforweb.be', '@fundp.ac.be']
+    for domain in BYPASSED_DOMAINS:
+        if domain in email:
+            return True
+    mTool = api.portal.get_tool('portal_membership')
+    return bool(mTool.searchForMembers(email=email))
+
+
+def check_tva_number(full_tva_num):
+    """ """
+
+    if len(full_tva_num) > 16:
+        return False
+
+    european_vat =  {
+        "AT": "AT U?\d{8}",
+        "BE": "BE 0?\d{3}\.?\d{3}\.?\d{3}",
+        "BG": "BG \d{9,10}",
+        "CY": "CY \d{8}[A-Z0-9]",
+        "CZ": "CZ \d{8,10}",
+        "DE": "DE \d{9}",
+        "DK": "DK \d\d \d\d \d\d \d\d",
+        "EE": "EE \d{9}",
+        "ES": "ES [A-Z0-9]\d{7}[A-Z0-9]",
+        "FI": "FI \d{8}",
+        "FR": "FR [A-Z0-9]{2}\d{9}",
+        "GB": "GB \d{3} \d{4} \d{2}|GB \d{3} \d{4} \d{2} \d{3}|GB GD\d{3}|GB HA\d{3}",
+        "GR": "EL \d{9}",
+        "HU": "HU \d{8}",
+        "IE": "IE \d[A-Z0-9+*]\d{5}[A-Z]",
+        "IT": "IT \d{11}",
+        "LT": "LT \d{9}|LT \d{12}",
+        "LU": "LU \d{8}",
+        "LV": "LV \d{11}",
+        "MT": "MT \d{8}",
+        "NL": "NL \d{9}B\d\d",
+        "PL": "PL \d{10}",
+        "PT": "PT \d{9}",
+        "RO": "RO \d{2,10}",
+        "SE": "SE \d{12}",
+        "SI": "SI \d{8}",
+        "SK": "SK \d{10}", }
+
+    # Returns true if we dont have validator for this country
+    country = full_tva_num[0:2]
+    country_check = european_vat.get(country)
+    if not(country_check):
+        return True
+
+    # checks vat according to regexpr
+    match = re.search(country_check, full_tva_num, re.VERBOSE)
+    if match is None:
+        return False
+    else:
+        if country != "BE":
+            return True
+        else:
+            # If belgian Number validates check digit
+            full_tva_num = full_tva_num.replace(".", "").replace(" ", "")
+            try:
+                tva_num = int(full_tva_num[2:-2])
+                check_digit = int(full_tva_num[-2:])
+            except Exception:
+                return False
+            if 97 - (tva_num % 97) == check_digit:
+                return True
+    return False
 
 
 class ICeDESUserDataSchema(Interface):
@@ -80,11 +157,9 @@ class ICeDESUserDataSchema(Interface):
         required=False)
 
     # bill
-    bill_use_tva = schema.Bool(
-        title=_(u'label_bill_use_tva', default=u'Bill use tva'),
-        required=False)
     bill_tva = schema.TextLine(
         title=_(u'label_bill_tva', default=u'Bill tva'),
+        description=('Encodez votre numéro de TVA seulement si vous êtes assujetti'),
         required=False)
     bill_name = schema.TextLine(
         title=_(u'label_bill_name', default=u'Bill name'),
@@ -92,7 +167,8 @@ class ICeDESUserDataSchema(Interface):
     bill_email = schema.TextLine(
         title=_(u'label_bill_email', default=u'Bill email'),
         constraint=pau_schema.checkEmailAddress,
-        required=True)
+        # managed using a validator because we use same form to manage Free account
+        required=False)
     bill_address = schema.TextLine(
         title=_(u'label_bill_address', default=u'Bill address'),
         required=False)
@@ -107,6 +183,74 @@ class ICeDESUserDataSchema(Interface):
         vocabulary='cedes.core.vocabularies.countriesvocabulary',
         default='BE',
         required=True)
+
+
+    @invariant
+    def validate_data(data):
+        ''' '''
+        # username is only available when registrating
+        if len(getattr(data, 'username', '')) > 32:
+            raise Invalid('L\'identifiant ne peut dépasser 32 caractères.')
+
+        # if request.get("email")!= None and request.get("email").find("hotmail") > 1:
+        #   state.setError('email', 'Pour des raisons techniques, nous ne pouvons actuellement
+        # pas accepter les boites hotmail. Veuillez entrez une autre adresse email.')
+
+        # check email unicity, 2 cases:
+        # registering, then we can not found an email
+        # editing personnal preferences ou changing existing email, we may only find current member
+        is_registering = getattr(data, 'username', False)
+        if is_registering:
+            if check_email_unicity(data.email):
+                raise Invalid('Un compte est déjà lié à l\'adresse courriel "{0}". '
+                              'Utilisez les procédures "Obtenir votre nom d\'utilisateur" et '
+                              '"Réinitialiser votre mot de passe" disponible via le lien '
+                              '"Se connecter" pour récupérer votre identifiant et '
+                              'votre mot de passe.'.format(data.email))
+        else:
+            # editing email, only one may be found (myself) if not changing
+            # and none may be found if changing
+            req = getRequest()
+            current_email = req.get('PUBLISHED').member.getProperty('email')
+            if current_email.strip() != data.email.strip() and check_email_unicity:
+                # changing email and reusing an existing one
+                raise Invalid("L'adresse courriel \"{0}\" est déjà utilisée.".format(data.email))
+
+        # if this is a CeDES 100% inscription, make sure bill info is entered
+        if not data.member_type == 'CeDES Free':
+            if not data.bill_name or \
+               not data.bill_email or \
+               not data.bill_country or \
+               not data.bill_address or \
+               not data.bill_address or \
+               not data.bill_postal_code or \
+               not data.bill_locality or \
+               not data.bill_locality:
+                raise Invalid('Veuillez encoder tous les champs dans la zone "Facturation" au bas du formulaire.')
+
+            if len(data.bill_name) > 64:
+                raise Invalid('La champ "Nom pour facturation" ne peut dépasser 64 caractères.')
+
+            if len(data.bill_address) > 64:
+                raise Invalid('La champ "Adresse pour facturation" ne peut dépasser 64 caractères.')
+
+            if len(data.bill_postal_code) > 64:
+                raise Invalid('La champ "Code postal" ne peut dépasser 64 caractères.')
+
+            if len(data.bill_locality) > 64:
+                raise Invalid('La champ "Localité" ne peut dépasser 64 caractères.')
+
+            # TVA validity
+            if data.bill_tva:
+                # Grèce is an exception to this rule
+                if data.bill_tva[0:2] != data.bill_country and data.bill_tva[0:2] != 'GR':
+                    raise Invalid('Votre numéro de TVA ne correspond pas au pays de l\'adresse de facturation. '
+                                  'Veuillez entrer le numéro au complet en commençant par le code pays. '
+                                  'Exemple pour la Belgique: BE0888923935.')
+                elif check_tva_number(data.bill_tva) is not True:
+                    raise Invalid('Votre numéro de TVA n\'est pas valide. '
+                                  'Veuillez entrer votre numéro sans espace en commençant par le code pays. '
+                                  'Exemple pour la Belgique: BE0888923935.')
 
 
 pau_schema.IUserDataSchema = ICeDESUserDataSchema
@@ -255,10 +399,6 @@ class CedesMemberData(MemberData):
                 if tr_uid == article_uid:
                     res = True
         return res
-
-    def get_first_login_time(self):
-        """ """
-        return DateTime()
 
     def is_cedes_free(self):
         """ """

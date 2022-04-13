@@ -1,0 +1,8 @@
+Identifiant : <span tal:replace="options/username" />
+
+Nom : <span tal:replace="options/fullname" />
+Email : mailto:<span tal:replace="options/email" />
+Institution : <span tal:replace="options/school_name" />
+Téléphone de l'institution : <span tal:replace="options/school_phone" />
+
+<span tal:replace="string:${context/absolute_url}/@@personal-information?userid=${options/username}" />

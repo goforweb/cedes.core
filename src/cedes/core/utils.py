@@ -6,12 +6,19 @@
 #
 
 from cedes.core import logger
+from cedes.core.config import EXTRA_MAIL_TO
 from collections import OrderedDict
 from DateTime import DateTime
 from plone import api
 from plone.app.textfield.value import RichTextValue
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
+from Products.CMFPlone.interfaces.controlpanel import IMailSchema
+from Products.MailHost.interfaces import IMailHost
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Five import BrowserView
 
 import string
 import unicodedata
@@ -140,6 +147,7 @@ def add_page_message(portal, page_id, type="warning"):
         msg = "Fichier '%s' manquant" % page_id
     api.portal.show_message(msg, request=portal.REQUEST, type=type)
 
+
 def uuidsToCatalogBrains(uuids=[],
                          ordered=False,
                          query={},
@@ -253,3 +261,30 @@ def uuidToObject(uuid,
     if res:
         res = res[0]
     return res
+
+
+def send_mail(context,
+              request,
+              subject,
+              template_name,
+              options={},
+              mto=None,
+              mfrom=None,
+              include_extra_mto=False):
+    """ """
+    registry = getUtility(IRegistry)
+    mail_settings = registry.forInterface(IMailSchema, prefix='plone')
+    mfrom = mfrom or mail_settings.email_from_address
+    mto = mto or mfrom
+    if include_extra_mto:
+        if not isinstance(mto, (tuple, list)):
+            mto = [mto]
+        mto += EXTRA_MAIL_TO
+    host = getUtility(IMailHost)
+    encoding = registry.get('plone.email_charset', 'utf-8')
+    view = BrowserView(api.portal.get(), request)
+    email = ViewPageTemplateFile('browser/templates/{0}.pt'.format(template_name))
+    message = email(view, **options).encode(encoding)
+    # send email
+    host.send(message, mto=mto, mfrom=mfrom,
+              subject='Cedes - Nouvelle inscription', charset='utf-8')

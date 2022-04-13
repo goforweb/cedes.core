@@ -42,27 +42,6 @@ def get_member(request):
     return userid and api.portal.get_tool('portal_membership').getMemberById(userid) or current_user
 
 
-class MyAccountView(BrowserView):
-    """ """
-
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
-        self.portal = api.portal.get()
-        self.portal_url = self.portal.absolute_url()
-
-    def _update(self):
-        self.catalog = self.portal.portal_catalog
-        self.member = get_member(self.request)
-        self.last_payment_date, self.expiration_date = self.member._compute_payment_dates()
-        self.plone_view = self.portal.unrestrictedTraverse('@@plone')
-
-    def __call__(self):
-        """ """
-        self._update()
-        return super(MyAccountView, self).__call__()
-
-
 class AccountDetailsView(BrowserView):
     """ """
 
@@ -88,6 +67,27 @@ class AccountDetailsView(BrowserView):
         """ """
         self._update()
         return super(AccountDetailsView, self).__call__()
+
+
+class MyAccountView(AccountDetailsView):
+    """ """
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
+
+    def _update(self):
+        self.catalog = self.portal.portal_catalog
+        self.member = get_member(self.request)
+        self.last_payment_date, self.expiration_date = self.member._compute_payment_dates()
+        self.plone_view = self.portal.unrestrictedTraverse('@@plone')
+
+    def __call__(self):
+        """ """
+        self._update()
+        return super(MyAccountView, self).__call__()
 
 
 class MemberDebugView(BrowserView):

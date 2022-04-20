@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from AccessControl import Unauthorized
+from cedes.core.browser.overrides import CeDESUserDataPanel
 from cedes.core.utils import add_page_message
+from cedes.core.utils import create_attachment
+from cedes.core.utils import get_member
+from cedes.core.utils import send_mail
 from collections import OrderedDict
 from DateTime import DateTime
 from io import BytesIO
 from plone import api
-from plone.app.users.browser.userdatapanel import UserDataPanel
 from plone.autoform import directives
 from plone.autoform.form import AutoExtensibleForm
 from plone.namedfile.field import NamedFile
 from plone.protect import CheckAuthenticator
 from plone.supermodel import model
 from plone.z3cform.layout import wrap_form
-from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.CMFPlone.utils import safe_unicode
 from Products.Five import BrowserView
-from Products.statusmessages.interfaces import IStatusMessage
 from PyPDF2.pdf import PdfFileReader
 from z3c.form import button
 from z3c.form import field
@@ -31,15 +32,6 @@ from zope.globalrequest import getRequest
 
 import mimetypes
 import z3c.form.button
-
-
-def get_member(request):
-    """ """
-    userid = request.get('userid', None)
-    current_user = api.user.get_current()
-    if userid and not current_user.has_role('Manager'):
-        raise Unauthorized
-    return userid and api.portal.get_tool('portal_membership').getMemberById(userid) or current_user
 
 
 class AccountDetailsView(BrowserView):
@@ -59,7 +51,7 @@ class AccountDetailsView(BrowserView):
     def download_bill_url(self):
         """ """
         url = "{0}/@@download-bill-waiting-payment".format(self.portal_url)
-        if api.user.get_current().has_role("Manager"):
+        if api.user.get_current().is_manager():
             url += "?userid={0}".format(self.member.getId())
         return url
 
@@ -216,7 +208,7 @@ class MemberCreditForm(form.Form):
     def _check_auth(self):
         """Raise Unauthorized if current user can use form."""
         member = api.user.get_current()
-        if not member.has_role("Manager"):
+        if not member.is_manager():
             raise Unauthorized
 
     @property
@@ -250,7 +242,7 @@ class MemberCreditForm(form.Form):
                 self.actions.get('credit_and_validate_payment').addClass('btn-primary')
 
     def updateWidgets(self):
-        # XXX manipulate self.fields BEFORE doing form.Form.updateWidgets
+        # manipulate self.fields BEFORE doing form.Form.updateWidgets
         self.fields['member_id'].mode = HIDDEN_MODE
         self.fields['member_type'].mode = DISPLAY_MODE
         self.fields['account_balance'].mode = DISPLAY_MODE
@@ -340,7 +332,7 @@ class MemberCreditForm(form.Form):
                 member.getProperty('fullname'), member.getId(), str(data['credit'])))
 
 
-class RenewAccountForm(UserDataPanel):
+class RenewAccountForm(CeDESUserDataPanel):
     """ """
 
     form_name = "Renouveler mon abonnement"
@@ -402,15 +394,19 @@ class RenewAccountForm(UserDataPanel):
 
     @button.buttonAndHandler("Annuler", name='cancel')
     def handle_cancel(self, action):
-        # XXX redirect to user personal preferences
+        # redirect to user personal preferences
         api.portal.show_message('Demande de renouvellement annulée.', self.request)
         return self.request.RESPONSE.redirect(self.context.absolute_url() + '/@@my-account')
 
 
-class Switch100Form(UserDataPanel):
+class Switch100Form(CeDESUserDataPanel):
     """ """
 
     form_name = "Devenir membre CeDES 100%"
+
+    def _hide_bill_fields(self):
+        """Member is switching to CeDES 100%, show bill fields."""
+        return False
 
     def prepareObjectTabs(self,
                           default_tab='view',
@@ -460,7 +456,7 @@ class Switch100Form(UserDataPanel):
 
     @button.buttonAndHandler("Annuler", name='cancel')
     def handle_cancel(self, action):
-        # XXX redirect to user personal preferences
+        # redirect to user personal preferences
         api.portal.show_message('Demande d\'abonnement annulée.', self.request)
         return self.request.RESPONSE.redirect(self.context.absolute_url() + '/@@my-account')
 
@@ -495,9 +491,9 @@ class IFixFailedAccountingSchema(model.Schema):
     accounting_mode_validation = schema.Choice(
         title=u"Validation du type de fichier joint",
         description=u"Par défaut, laissez la valeur sélectionnée par l'application "
-                    u"('F' pour 'Facture' et 'N' pour 'Note de crédit'), "
+                    u"(\"F\" pour \"Facture\" et \"N\" pour \"Note de crédit\"), "
                     u"ceci vérifiera que le fichier PDF joint est correct. "
-                    u"Si la validation ne passe pas, sélectionnez 'NoValidation'",
+                    u"Si la validation ne passe pas, sélectionnez \"NoValidation\"",
         defaultFactory=accounting_mode_default,
         values=(u'NoValidation', u'F', u'N'),
         required=True,
@@ -539,9 +535,10 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
         self.actions.get('send').addClass('btn-primary')
 
     def updateWidgets(self):
-        # XXX manipulate self.fields BEFORE doing form.Form.updateWidgets
+        # manipulate self.fields BEFORE doing form.Form.updateWidgets
         self.fields['member_id'].mode = HIDDEN_MODE
         form.Form.updateWidgets(self)
+        self.member = self._member
 
     @z3c.form.button.buttonAndHandler(_(u'Envoyer'), name='send')
     def fix_failed_accounting_and_send_bill(self, action):
@@ -562,74 +559,58 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
                 file_accounting_mode = None
                 file_accounting_mode = self._extract_accounting_mode_from_pdf(file_data)
             except Exception as exc:
-                IStatusMessage(
-                    self.request
-                ).addStatusMessage(
-                    _(u"Error trying to extract accounting_mode from PDF file, raised error was {0}".format(exc)),
-                    "error"
-                )
+                api.portal.show_message(
+                    _(u"Error trying to extract accounting_mode from PDF file, "
+                      u"raised error was {0}".format(exc)),
+                    request=self.request, type="error")
         else:
             file_accounting_mode = 'NoValidation'
 
         if file_accounting_mode and file_accounting_mode != data['accounting_mode_validation']:
             file_accounting_mode = None
-            IStatusMessage(
-                self.request
-            ).addStatusMessage(
+            api.portal.show_message(
                 _(u"La validation du type de fichier joint a échoué!"),
-                "error"
-            )
+                request=self.request, type="error")
 
         # fix failed accounting
         if file_accounting_mode and not bill_id:
             try:
                 bill_id = self._extract_bill_id_from_pdf(file_data)
             except Exception as exc:
-                IStatusMessage(
-                    self.request
-                ).addStatusMessage(
+                api.portal.show_message(
                     _(u"Error trying to extract bill_id from PDF file, raised error was {0}".format(exc)),
-                    "error"
-                )
+                    request=self.request, type="error")
         # proceed only if accounting_mode and bill_id are valid
-        member = self._member
         if file_accounting_mode and bill_id:
             # send bill by email
             self._send_bill_email(file_data, file_accounting_mode)
             # store bill PDF file_data into last accounting infos
-            member.fix_failed_accounting(bill_id=bill_id)
-            account_bills = member.get_account_bills()
+            self.member.fix_failed_accounting(bill_id=bill_id)
+            account_bills = self.member.get_account_bills()
             account_bills[-1]['pdf'] = file_data
-            member.set_account_bills(account_bills)
+            self.member.set_account_bills(account_bills)
 
             if file_accounting_mode == 'F':
-                IStatusMessage(
-                    self.request
-                ).addStatusMessage(
-                    _(u"La facture problématique de '{0}' a été annulée et un e-mail "
+                api.portal.show_message(
+                    _(u"La facture problématique de \"{0}\" a été annulée et un e-mail "
                       u"avec la facture en pièce jointe lui a été envoyé.  "
-                      u"La référence utilisée est '{1}'.".format(
-                          member.Title(), bill_id)),
-                    "info")
+                      u"La référence utilisée est \"{1}\".".format(
+                          self.member.Title(), bill_id)),
+                    request=self.request)
             else:
-                IStatusMessage(
-                    self.request
-                ).addStatusMessage(
-                    _(u"La facture en attente de paiement de '{0}' a été annulée et un e-mail "
+                api.portal.show_message(
+                    _(u"La facture en attente de paiement de \"{0}\" a été annulée et un e-mail "
                       u"avec la note de crédit en pièce jointe lui a été envoyé.  "
-                      u"La référence utilisée est '{1}'.".format(
-                          member.Title(), bill_id)),
-                    "info")
+                      u"La référence utilisée est \"{1}\".".format(
+                          self.member.Title(), bill_id)),
+                    request=self.request)
         else:
-            IStatusMessage(
-                self.request
-            ).addStatusMessage(
+            api.portal.show_message(
                 _(u"Impossible d'extraire la référence ou le type de document depuis le fichier PDF... "
                   u"Le document n'a pas été envoyé, encodez un numéro de référence manuellement, "
-                  u"choisissez un type de document (champ 'Validation du type de fichier joint') "
+                  u"choisissez un type de document (champ \"Validation du type de fichier joint\") "
                   u"et contactez votre administrateur système."),
-                "warning"
-            )
+                request=self.request, type="warning")
         # redirect to members search
         self.request.RESPONSE.redirect(data['came_from'])
 
@@ -640,7 +621,12 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
         """
         # Extract form field values and errors from HTTP request
         data, errors = self.extractData()
-        self.context.removeFailedAccounting()
+        self.member.remove_failed_accounting()
+        api.portal.show_message(
+            u"La facture problématique de \"{0}\" a été annulée sans envoi d'e-mail.".format(
+                self.member.Title()),
+            request=self.request)
+
         # redirect to members search
         self.request.RESPONSE.redirect(data['came_from'])
 
@@ -651,52 +637,30 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
         # Extract form field values and errors from HTTP request
         data, errors = self.extractData()
         self.request.RESPONSE.redirect(data['came_from'])
-        IStatusMessage(
-            self.request
-        ).addStatusMessage(
-            _(u'Action annulée.'),
-            'info'
-        )
+        api.portal.show_message(_(u'Action annulée.'), request=self.request)
 
     def _send_bill_email(self, bill, accounting_mode):
         """ """
-        # XXX to be fixed
-        return
-        skintool = getToolByName(self.context, 'portal_skins')
-        mailHost = getToolByName(self.context, 'MailHost')
-        from email.mime.multipart import MIMEMultipart
-        from email.mime.base import MIMEBase
-        from email.mime.text import MIMEText
-        from email import Encoders
-        msg = MIMEMultipart()
-        msg['From'] = '%s <%s>' % (skintool.email_from_address, skintool.email_from_name)
-        msg['To'] = '%s %s <%s>' % (self.context.fullname, self.context.firstname, self.context.email)
         if accounting_mode == 'F':
-            msg['Subject'] = 'CeDES - Facture'
-            body = MIMEText(
-                skintool.cedes_emails.credit_bill_notification(
-                    self.request,
-                    firstname=self.context.firstname).encode('utf-8'),
-                'plain', 'utf-8')
+            subject = 'CeDES - Facture'
+            template_name = 'mail_credit_bill_notification'
+            options = {'title': self.member.Title()}
             filename = 'facture.pdf'
         else:
             # 'N'
-            msg['Subject'] = 'CeDES - Note de crédit'
-            bill_waiting_payment = self.context.getBillWaitingPayment()
-            body = MIMEText(
-                skintool.cedes_emails.credit_note_notification(
-                    self.request,
-                    firstname=self.context.firstname,
-                    bill_date=bill_waiting_payment['date'].strftime('%d/%m/%Y')).encode('utf-8'),
-                'plain', 'utf-8')
+            subject = 'CeDES - Note de crédit'
+            template_name = 'mail_credit_note_notification'
+            ploneview = self.context.unrestrictedTraverse("@@plone")
+            bill_date = ploneview.toLocalizedTime(
+                self.member.get_bill_waiting_payment()['date'])
+            options = {'title': self.member.Title(), 'bill_date': bill_date}
             filename = 'note_de_credit.pdf'
-        attachment = MIMEBase('application', 'pdf')
-        attachment.set_payload(bill)
-        Encoders.encode_base64(attachment)
-        attachment.add_header('Content-Disposition', 'attachment', filename=filename)
-        msg.attach(body)
-        msg.attach(attachment)
-        mailHost.send(msg)
+        attachment = create_attachment('application/pdf', bill, filename)
+        send_mail(subject=subject,
+                  template_name=template_name,
+                  options=options,
+                  mto=self.member.get_email(),
+                  attachments=[attachment])
 
     def _extract_bill_id_from_pdf(self, pdf_data):
         """ """
@@ -704,7 +668,9 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
         pdf_file = BytesIO(pdf_data)
         pdf = PdfFileReader(pdf_file)
         page = pdf.getPage(0)
-        text = page.extractText()
+        # make sure we do not get "\n" between "Date" and the begin of the
+        # bill_id that starts with "VE..."
+        text = page.extractText().replace("\n", "")
         start_index = text.find('DateV')
         if start_index != -1:
             # bypass 'Date' part

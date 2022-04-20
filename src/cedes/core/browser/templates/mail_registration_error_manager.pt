@@ -1,0 +1,3 @@
+Une erreur de l'application comptable est survenue lors de l'inscription du membre "<span tal:replace="options/member_id"/>":
+
+<span tal:replace="options/error_text"/>

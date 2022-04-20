@@ -73,10 +73,10 @@ def testMemberData(self, memberdata, criteria, exact_match=False):
                 return False
         else:
             try:
-                # XXX begin changes by CeDES
+                # begin changes by cedes.core
                 if isinstance(testvalue, DateTime) and isinstance(value, tuple):
                     return testvalue > value[0] and testvalue < value[1]
-                # XXX end changes by CeDES
+                # end changes by cedes.core
                 if value not in testvalue:
                     return False
             except TypeError:
@@ -134,13 +134,19 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
         title=_(u'label_last_login', default=u'Last login'),
         required=False)
     has_failed_accounting_f = schema.Bool(
-        title=_(u'label_has_failed_accounting_f', default=u'Has failed accounting f'),
+        title=_(u'label_has_failed_accounting_f',
+                default=u'Facture échouée'),
+        description='Recherche les membres qui ont une facture échouée',
         required=False)
     has_failed_accounting_n = schema.Bool(
-        title=_(u'label_has_failed_accounting_n', default=u'Has failed accounting n'),
+        title=_(u'label_has_failed_accounting_n',
+                default=u'Note de crédit échouée'),
+        description='Recherche les membres qui ont une note de crédit échouée',
         required=False)
     has_bill_waiting_payment = schema.Bool(
-        title=_(u'label_has_bill_waiting_payment', default=u'Has bill waiting payment'),
+        title=_(u'label_has_bill_waiting_payment',
+                default=u'Facture en attente de paiement'),
+        description='Recherche les membres qui ont une facture en attente de paiement',
         required=False)
 
 
@@ -176,3 +182,23 @@ class CeDESMemberSearchForm(MemberSearchForm):
                     CedesMemberData.get_expiration_date(
                         CedesMemberData.get_last_payment_date(
                             user_info['account_bills']))
+                user_info['credit_expiration_warning'] = False
+                user_info['credit_expired_warning'] = False
+                if user_info['expiration_date']:
+                    if user_info['expiration_date'] > self.now and \
+                       user_info['expiration_date'] - self.now < 30:
+                        user_info['credit_expiration_warning'] = True
+                    if user_info['expiration_date'] <= self.now:
+                        user_info['credit_expired_warning'] = True
+                # bill waiting payment date
+                user_info['payment_expiration_date'] = None
+                bill_waiting_payment = CedesMemberData._bill_waiting_payment(user_info['account_bills'])
+                user_info['payment_expiration_warning'] = False
+                user_info['payment_expired_warning'] = False
+                if bill_waiting_payment:
+                    user_info['payment_expiration_date'] = bill_waiting_payment['date'] + 30
+                    if user_info['payment_expiration_date'] > self.now and \
+                       user_info['payment_expiration_date'] - self.now < 10:
+                        user_info['payment_expiration_warning'] = True
+                    if user_info['payment_expiration_date'] <= self.now:
+                        user_info['payment_expired_warning'] = True

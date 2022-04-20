@@ -3,7 +3,6 @@
 from AccessControl import Unauthorized
 from Acquisition import aq_inner
 from DateTime import DateTime
-from io import StringIO
 from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
 from plone.app.layout.navigation.navtree import buildFolderTree
@@ -15,6 +14,7 @@ from Products.CMFPlone.browser.navtree import SitemapQueryBuilder
 from Products.CMFPlone.browser.sitemap import SitemapView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
+from cedes.core.utils import send_mail
 
 
 class CommonResultListingView(BrowserView):
@@ -123,13 +123,13 @@ class ContextCatalogSiteMap(CatalogSiteMap):
 
         strategy = getMultiAdapter((context, self), INavtreeStrategy)
 
-        # XXX begin changes by cedes.core
+        # begin changes by cedes.core
         query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 3}
         query['portal_type'] = ['Theme']
         query['exclude_from_nav'] = False
         # path to 'plan'
         strategy.rootPath = '/'.join(context.aq_parent.getPhysicalPath())
-        # XXX end changes
+        # end changes by cedes.core
 
         return buildFolderTree(context, obj=context,
                                query=query, strategy=strategy)
@@ -146,9 +146,9 @@ class ContextSitemapView(SitemapView):
         self.portal_url = self.portal.absolute_url()
 
     def createSiteMap(self, context):
-        # XXX begin changes by cedes.core
+        # begin changes by cedes.core
         # context = aq_inner(self.context)
-        # XXX end changes
+        # end changes by cedes.core
 
         view = getMultiAdapter((context, self.request),
                                name='sitemap_builder_view')
@@ -178,6 +178,10 @@ class CeDESNightTasks(BrowserView):
         """Return the last time check was executed."""
         last_tasks_execution = getattr(self.context, '_last_tasks_execution', DateTime('1950/01/01'))
         return last_tasks_execution
+
+    def _set_last_execution(self, now):
+        """Set the last time check was executed."""
+        setattr(self.context, '_last_tasks_execution', now)
 
     def __call__(self, check_period=True, force_execution=False):
         """ """
@@ -227,12 +231,13 @@ class CeDESNightTasks(BrowserView):
             out = "Aucune action à effectuer"
         out = "\n".join(out)
 
-        # skintool = getToolByName(self, 'portal_skins')
-        # mailHost = getToolByName(self, 'MailHost')
-        # email = skintool.cedes_emails.crontasks_result(
-        #   request=self.REQUEST, out=out, startdate=now, enddate=DateTime())
-        # mailHost.send(email.encode('utf-8'))
+        # email notification for Managers
+        send_mail(subject='CeDES - Résultat des tâches lancées la nuit',
+                  template_name='mail_crontasks_result',
+                  options={'out': out,
+                           'startdate': now,
+                           'enddate': DateTime()})
 
-        setattr(self.context, '_last_tasks_execution', now)
+        self._set_last_execution(now)
 
-        return out
+        return out.replace('\n', '<br>')

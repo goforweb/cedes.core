@@ -1,0 +1,11 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Vous vous êtes inscrit(e) sur le site https://www.cedes.be il y a dix jours. Vous avez dû recevoir une facture dans les minutes qui ont suivi votre inscription.
+
+A ce jour, sauf erreur de notre part, nous n'avons pas reçu votre virement. Si vous n'effectuez pas le paiement endéans les 15 jours, votre compte CeDES 100% ne sera pas activé (pas de possibilité de consulter les séquences d'apprentissage identifiables par l’icône du « Graduate » ni de télécharger les dossiers, pas d'accès aux articles soumis aux droits d'auteur, plus d’accès au moteur de recherche).
+
+Si vous pensez avoir effectué le paiement, voulez-vous avoir l’amabilité de nous faire parvenir une preuve de paiement afin que nous régularisions votre situation ?
+
+A toutes fins utiles, nous joignons à ce courriel un double de la facture qui a été émise le jour de votre abonnement.
+
+Avec les sincères salutations de l'Equipe du CeDES

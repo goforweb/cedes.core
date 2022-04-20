@@ -1,0 +1,21 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Vous avez souscrit un abonnement à notre service, le CeDES, le <span tal:replace="options/bill_date"/> et, sauf erreur de notre service comptable, nous constatons qu'à ce jour, la facture n'a pas été honorée (cf. la note de crédit en fichier joint).
+
+Vous retrouverez d'ici peu le statut d'un abonné CeDES free.
+
+Pour des raisons liées au versement forfaitaire, sur base annuelle, de droits d'auteur PressBanking, l'abonnement CEDES 100% est valable un an.
+
+Outre l'accès à 200 articles de presse protégés par le droit d'auteur, il donne droit:
+
+- au téléchargement des dossiers payants et gratuits,
+- aux séquences d'apprentissages (béret du graduate),
+- à l'utilisation du moteur de recherche.
+
+En cas de renouvellement d'abonnement, le solde des points des années précédentes est ajouté au nouveau solde.
+
+Nous restons à votre disposition pour toute autre question.
+
+Bien à vous,
+
+Avec les sincères salutations de l'équipe du CeDES

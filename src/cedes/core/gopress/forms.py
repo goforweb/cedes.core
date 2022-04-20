@@ -78,7 +78,7 @@ class GopressImportForm(form.Form):
     def _check_auth(self):
         """Raise Unauthorized if current user can not use gopress."""
         member = api.user.get_current()
-        if not member.has_role("Manager"):
+        if not member.is_manager():
             raise Unauthorized
 
     def update(self):
@@ -96,7 +96,7 @@ class GopressImportForm(form.Form):
         self.actions.get('group_html_pdf_import').addClass('btn-primary')
 
     def updateWidgets(self):
-        # XXX manipulate self.fields BEFORE doing form.Form.updateWidgets
+        # manipulate self.fields BEFORE doing form.Form.updateWidgets
         form.Form.updateWidgets(self)
 
     def render(self):

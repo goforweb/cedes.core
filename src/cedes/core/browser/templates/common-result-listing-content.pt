@@ -9,7 +9,7 @@
                    normalizeString nocall:ploneview/normalizeString;
                    portal_state context/@@plone_portal_state;
                    member portal_state/member;
-                   isManager python: member.has_role('Manager');
+                   isManager python: member.is_manager();
                    isAnon portal_state/anonymous;
                    askConnection python: isAnon and context.doProvokeUnauthorized() or '';
                    portal portal_state/portal;
@@ -40,7 +40,7 @@
             <a style="border-color: white;"
                tal:attributes="href  item_url;
                                title desc;
-                               onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or '';">
+                               onclick python:((item_type == 'ArticlePayant' and not isManager) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or '';">
               <img tal:attributes="src item_big_icon; title item_type_title" i18n:domain="plone" i18n:attributes="title" style="padding-top:3px;" />
             </a>
           </td>
@@ -82,7 +82,7 @@
               tal:attributes="href python: item_type == 'Link' and item.getRemoteUrl() or item_url;
                               title python: not item_type == 'DossierStructure' and desc or '';
                               class string:visualIconPadding state-${item_state};
-                              onclick python:((item_type == 'ArticlePayant' and not(member.has_role('Manager'))) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or ''">
+                              onclick python:((item_type == 'ArticlePayant' and not isManager) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or ''">
               <span tal:content="item/Title">Ressource title</span>
               <span class="ds-kw-epc"
                     tal:condition="python: 'ds-kw-epc' in item.Subject">EPC</span>

@@ -1,0 +1,9 @@
+Cher(e) <span tal:replace="options/title"/>,
+
+Le CeDES a bien enregistré votre inscription. Toutefois, depuis 3 jours, aucune connexion au site n'a été constatée.
+Pour des raisons techniques, il est nécessaire:
+
+    * de définir votre mot de passe en utilisant le lien qui vous a été envoyé par courrier électronique dans les minutes qui ont suivi votre inscription; à cet égard, consultez régulièrement vos spams car certaines boîtes y dirigent automatiquement les emails qui contiennent un lien;
+    * de vous connecter ensuite une première fois au site en introduisant votre identifiant et votre mot de passe.
+
+L'équipe du CeDES vous remercie de votre collaboration.

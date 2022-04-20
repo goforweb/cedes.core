@@ -21,7 +21,7 @@
                tal:define="listing_allowed python: checkPermission('List portal members', here);
                            results python:listing_allowed and view.results;
                            Batch python:modules['Products.CMFPlone'].Batch;
-                           b_size python:12;b_start python:0;b_start request/b_start | b_start;">
+                           b_size python:20;b_start python:0;b_start request/b_start | b_start;">
             <h1 class="documentFirstHeading"
                 i18n:translate="heading_search_results">Search results</h1>
 
@@ -33,7 +33,7 @@
 
                 <tal:block condition="python: results and listing_allowed">
                   <div tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1);
-                                   batch_length python: len(batch);">
+                                   batch_length python: len(results);">
 
                     <div>
                         <h3 class="search-results-number">
@@ -57,6 +57,7 @@
                             <th>Nom complet</th>
                             <th>Dernière connexion</th>
                             <th>Expire le</th>
+                            <th>Paiement expire le</th>
                             <th>Crédits</th>
                             <th></th>
                             <th></th>
@@ -69,14 +70,25 @@
                             <tal:block define="userid python: result['login'];">
                                 <td><span tal:condition="python: result['has_bill_waiting_payment']"
                                           class="icon-one help"
-                                          title="Facture en attente de paiement" />
+                                          title="Facture en attente de paiement" /><span
+                                          tal:condition="python: result['credit_expiration_warning']"
+                                          class="icon-two help"
+                                          title="Crédits expirent dans moins de 30 jours" /><span
+                                          tal:condition="python: result['credit_expired_warning']"
+                                          class="icon-three help"
+                                          title="Crédits expirés" />
                                     <a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a>
                                 </td>
                                 <td><span tal:replace="python:result['member_type'][5:]"/></td>
                                 <td><span tal:replace="result/email"/></td>
                                 <td><span tal:replace="result/fullname"/></td>
                                 <td><span tal:replace="python:view.toLocalizedTime(result['login_time'], long_format=True)"/></td>
-                                <td><span tal:attributes="class python: result['expiration_date'] < view.now and 'higlight-red' or ''" tal:replace="python:result['expiration_date'] and view.toLocalizedTime(result['expiration_date']) or '-'"/></td>
+                                <td><span tal:attributes="class python: (result['credit_expiration_warning'] and 'highlight-orange') or (result['credit_expired_warning'] and 'highlight-red') or ''"
+                                          tal:content="python:result['expiration_date'] and view.toLocalizedTime(result['expiration_date']) or '-'"/>
+                                </td>
+                                <td><span tal:attributes="class python: (result['payment_expiration_warning'] and 'highlight-orange') or (result['payment_expired_warning'] and 'highlight-red') or ''"
+                                          tal:content="python:result['payment_expiration_date'] and view.toLocalizedTime(result['payment_expiration_date']) or '-'"/>
+                                </td>
                                 <td tal:content="python: result['account_balance']">Account balance</td>
                                 <td>
                                     <a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;">
@@ -135,6 +147,8 @@
                           </tr>
                         </table>
                         <span class="icon-one help" title="Facture en attente de paiement">Facture en attente de paiement</span>
+                        <span class="icon-two help" title="Crédits expirent dans moins de 30 jours">Crédits expirent dans moins de 30 jours</span>
+                        <span class="icon-three help" title="Crédits expirés">Crédits expirés</span>
                     </div>
 
                     <div class="visualClear" id="clear-space-before-navigation"><!-- --></div>

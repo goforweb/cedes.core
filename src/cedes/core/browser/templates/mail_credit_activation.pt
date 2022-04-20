@@ -1,0 +1,7 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Rendez-vous dès aujourd'hui sur CeDES 100% à l'adresse suivante : https://www.cedes.be
+
+Votre compte a été crédité de <span tal:replace="options/credit"/> points.
+
+Bonne visite et bon travail de la part de l'Equipe du CeDES

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core import logger
-from cedes.core.browser.member import get_member
 from cedes.core.browser.register import BillLabelProvider
+from cedes.core.utils import get_member
 from plone import api
 from plone.app.contenttypes.browser.folder import FolderView
 from plone.app.users.browser.account import AccountPanelForm
@@ -45,16 +45,20 @@ class CeDESUserDataPanel(UserDataPanel):
 
     def _update(self):
         self.member = get_member(self.request)
+        self.is_manager = self.member.is_manager()
 
     def __call__(self):
         """ """
         self._update()
         return super(CeDESUserDataPanel, self).__call__()
 
+    def _hide_bill_fields(self):
+        """Hide if member_type is "Free", and user is not Manager."""
+        return not self.is_manager and self.member.get_member_type() == "CeDES Free"
+
     def updateWidgets(self):
         """Hide "bill" fields to member if it is "CeDES Free"."""
-        is_manager = api.user.get_current().has_role("Manager")
-        if is_manager:
+        if self.is_manager:
             # move bill_label one position down because field member_type
             # is displayed for Manager
             self.contentProviders['bill_label'].position = 11
@@ -62,9 +66,7 @@ class CeDESUserDataPanel(UserDataPanel):
             self.contentProviders['bill_label'].position = 10
 
         super(CeDESUserDataPanel, self).updateWidgets()
-        # if member_type is "Free", hide the bill_* fields excepted for Managers
-        if not is_manager and \
-           self.member.get_member_type() == "CeDES Free":
+        if self._hide_bill_fields():
             for w in self.widgets:
                 if w.startswith('bill'):
                     self.widgets[w].mode = HIDDEN_MODE

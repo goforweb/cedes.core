@@ -5,10 +5,13 @@
 # GNU General Public License (GPL)
 #
 
+from AccessControl import Unauthorized
 from cedes.core import logger
 from cedes.core.config import EXTRA_MAIL_TO
 from collections import OrderedDict
 from DateTime import DateTime
+from email.encoders import encode_base64
+from email.mime.base import MIMEBase
 from plone import api
 from plone.app.textfield.value import RichTextValue
 from Products.CMFCore.utils import getToolByName
@@ -19,6 +22,10 @@ from Products.CMFPlone.interfaces.controlpanel import IMailSchema
 from Products.MailHost.interfaces import IMailHost
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.Five import BrowserView
+from zope.globalrequest import getRequest
+from email.header import Header
+from zc.relation.interfaces import ICatalog
+from zope.intid.interfaces import IIntIds
 
 import string
 import unicodedata
@@ -263,28 +270,109 @@ def uuidToObject(uuid,
     return res
 
 
-def send_mail(context,
-              request,
-              subject,
+def get_member(request):
+    """ """
+    userid = request.get('userid', None)
+    current_user = api.user.get_current()
+    if userid and not current_user.is_manager():
+        raise Unauthorized
+    return userid and api.portal.get_tool('portal_membership').getMemberById(userid) or current_user
+
+
+def send_mail(subject,
               template_name,
               options={},
-              mto=None,
+              mto=[],
               mfrom=None,
-              include_extra_mto=False):
+              attachments=[]):
     """ """
     registry = getUtility(IRegistry)
     mail_settings = registry.forInterface(IMailSchema, prefix='plone')
-    mfrom = mfrom or mail_settings.email_from_address
-    mto = mto or mfrom
-    if include_extra_mto:
+
+    def encode_mail_header(text):
+        """ Encodes text into correctly encoded email header """
+        return Header(safe_unicode(text), 'utf-8')
+
+    def encoded_mail_sender():
+        """ returns encoded version of Portal name <portal_email> """
+        from_ = mail_settings.email_from_name
+        mail = mail_settings.email_from_address
+        return '"{}" <{}>'.format(encode_mail_header(from_), mail)
+
+    mfrom = mfrom or encoded_mail_sender()
+    # send to CeDES Managers when no mto given
+    if not mto:
         if not isinstance(mto, (tuple, list)):
             mto = [mto]
         mto += EXTRA_MAIL_TO
     host = getUtility(IMailHost)
     encoding = registry.get('plone.email_charset', 'utf-8')
-    view = BrowserView(api.portal.get(), request)
+    view = BrowserView(api.portal.get(), getRequest())
     email = ViewPageTemplateFile('browser/templates/{0}.pt'.format(template_name))
-    message = email(view, **options).encode(encoding)
+    text = email(view, **options).encode(encoding)
+    payload = text
+    if attachments:
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.base import MIMEBase
+        from email.mime.text import MIMEText
+        msg = MIMEMultipart()
+        body = MIMEText(text, _charset=encoding)
+        msg.attach(body)
+        for attachment in attachments:
+            if not isinstance(attachment, MIMEBase):
+                raise Exception("utils.send_mail attachments must be MIMEBase instances")
+            msg.attach(attachment)
+        payload = msg
     # send email
-    host.send(message, mto=mto, mfrom=mfrom,
-              subject='Cedes - Nouvelle inscription', charset='utf-8')
+    host.send(payload,
+              mto=mto,
+              mfrom=mfrom,
+              subject='Cedes - Nouvelle inscription',
+              charset=encoding)
+
+
+def create_attachment(filetype, payload, filename):
+    """ """
+    # filetype is like "application/pdf"
+    _maintype, _subtype = filetype.split('/')
+    attachment = MIMEBase(_maintype, _subtype)
+    attachment.set_payload(payload)
+    encode_base64(attachment)
+    attachment.add_header('Content-Disposition', 'attachment', filename=filename)
+    return attachment
+
+
+def get_intid(obj):
+    """Return the intid of an object from the intid-catalog"""
+    intids = getUtility(IIntIds)
+    if intids is None:
+        return
+    # check that the object has an intid, otherwise there's nothing to be done
+    try:
+        return intids.getId(obj)
+    except KeyError:
+        # The object has not been added to the ZODB yet
+        return
+
+
+def get_relations(obj, attribute=None, backrefs=False):
+    """Get any kind of references and backreferences"""
+    int_id = get_intid(obj)
+    if not int_id:
+        return
+
+    relation_catalog = getUtility(ICatalog)
+    if not relation_catalog:
+        return
+
+    query = {}
+    if attribute:
+        # Constrain the search for certain relation-types.
+        query['from_attribute'] = attribute
+
+    if backrefs:
+        query['to_id'] = int_id
+    else:
+        query['from_id'] = int_id
+
+    return relation_catalog.findRelations(query)

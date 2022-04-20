@@ -16,9 +16,6 @@ from zope.interface import implementer
 ##
 # Calculate breadcrumbs based on classification scheme instead of physical folders
 ##
-
-
-
 def get_url(item):
     if hasattr(aq_base(item), 'getURL'):
         # Looks like a brain
@@ -58,7 +55,7 @@ class ClassificationBreadcrumbs(BrowserView):
         context = aq_inner(self.context)
         request = aq_inner(self.request)
 
-        # XXX begin changes by cedes.core
+        # begin changes by cedes.core
         ct_uid = request.get('bc', None)
         if ct_uid:  # if we provide an uid of the container in the request object
             container = uuidToObject(ct_uid, unrestricted=True)
@@ -70,7 +67,7 @@ class ClassificationBreadcrumbs(BrowserView):
                 container = utils.parent(context)
         else:  # we get the REAL parent of the object
             container = utils.parent(context)
-        # XXX end changes
+        # end changes by cedes.core
 
         try:
             name, item_url = get_view_url(context)

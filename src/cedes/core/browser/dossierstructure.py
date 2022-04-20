@@ -96,7 +96,7 @@ def get_html_toc(context, data=None, prefix=''):
     """ """
     portal_url = api.portal.get().absolute_url()
     member = api.user.get_current()
-    is_manager = member.has_role('Manager')
+    is_manager = member.is_manager()
     res = data or OrderedDict()
     subitems = [obj for obj in context.objectValues()
                 if obj.portal_type in ['Point', 'Link']]
@@ -189,7 +189,7 @@ class DossierStructureDefaultView(DefaultView):
     def _update(self):
         super(DossierStructureDefaultView, self)._update()
         self.member = api.user.get_current()
-        self.is_manager = self.member.has_role('Manager')
+        self.is_manager = self.member.is_manager()
         self.is_cedes_free = self.member.is_cedes_free()
         self.has_credits = self.member.get_account_balance() > 0
         self.price = self.context.get_price()

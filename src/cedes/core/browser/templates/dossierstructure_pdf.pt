@@ -209,7 +209,7 @@ padding-left:0.5em;
                   toc_view python: context.restrictedTraverse('@@html-toc');
                   wf_tool python: view.wf_tool;">
 
-<div tal:omit-tag="" tal:condition="python:member.has_role('Manager')">
+<div tal:omit-tag="" tal:condition="python:member.is_manager()">
 
         <div tal:content="here/pretty_title_or_id" class="documentPageHeading">
           Title or id

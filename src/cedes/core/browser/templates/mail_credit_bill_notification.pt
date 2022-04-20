@@ -1,0 +1,9 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Veuillez trouver ci-joint la facture propre à votre demande d'abonnement, à notre service, le CeDES.
+
+Dès que nous recevrons votre paiement sur notre compte, nous créditerons votre compte.
+
+Bien à vous,
+
+Avec les sincères salutations de l'équipe du CeDES

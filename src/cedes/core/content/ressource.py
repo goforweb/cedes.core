@@ -7,6 +7,8 @@
 
 from AccessControl import ClassSecurityInfo
 from cedes.core.interfaces import ICeDESLoveThumbsDontYou
+from cedes.core.utils import get_intid
+from cedes.core.utils import get_relations
 from collective.dexteritytextindexer.directives import searchable
 from datetime import datetime
 from plone import api
@@ -17,6 +19,9 @@ from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
 from zope.interface import implementer
+from z3c.relationfield.relation import RelationValue
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
 
 
 class IRessource(model.Schema):
@@ -122,6 +127,7 @@ class Ressource(object):
         """
           When associated Theme changes, adds Title and Keywords to this ressource
         """
+        # XXX to be fixed
         # if old value is empty, we init the cr_first_classification_date field
         old_value = self.getField('cr_classification').getAccessor(self)()
         if not old_value:
@@ -130,16 +136,6 @@ class Ressource(object):
         if not value or value == ['']:
             self.setCr_first_classification_date(None)
         self.getField('cr_classification').set(self, value, **kwargs)
-        self.setCached_searchable()
-
-    def setCached_searchable(self):
-        """
-          Set the Title and the Keywords of the associated theme in the cached_searchable variable
-        """
-        new_words = ''
-        for item in self.cr_classification:
-            new_words += ' ' + item.Title()
-        self.cr_cached_searchable = new_words
 
     security.declarePublic('getCr_points_base_query')
 
@@ -147,6 +143,7 @@ class Ressource(object):
         """
           Hack for sorting first level on 'getObjPositionInParent' or first shown elements are not sorted
         """
+        # XXX to be fixed
         dict = {}
         dict['sort_on'] = 'getObjPositionInParent'
         return dict
@@ -157,13 +154,46 @@ class Ressource(object):
         """
           Hack for sorting first level on 'getObjPositionInParent' or first shown elements are not sorted
         """
+        # XXX to be fixed
         dict = {}
         dict['sort_on'] = 'getObjPositionInParent'
         return dict
 
+    def get_cr_points(self):
+        """Field "cr_points" stores nothing but will just be used to show back relations."""
+        return [RelationValue(get_intid(rel.from_object))
+                for rel in get_relations(self, attribute='cf_resources', backrefs=True)]
+
+    def set_cr_points(self, values):
+        '''Override 'cr_points' mutator so we can manage resource insertion
+           into a 'Point' or resource removal from a 'Point'.
+           Actually nothing is stored, but we check compared to what we receive in
+           p_value and what we have as back references (by calling self.getCr_points)
+           and we know where we need to add the resource and where we need to remove it.
+           If a resource is already linked to a 'Point', we do nothing.'''
+        current_rels = self.get_cr_points()
+        current_points = [rel.to_object for rel in current_rels]
+        new_points = [rel.to_object for rel in values]
+
+        # manage removal
+        # collect Point no more selected
+        removed_points = [point for point in current_points if point not in new_points]
+        for point in removed_points:
+            new_cf_resources = [rel for rel in point.cf_resources
+                                if rel.to_object.UID() != self.UID()]
+            point.cf_resources = new_cf_resources
+            # notify modified so catalog is updated
+            notify(ObjectModifiedEvent(point))
+
+        # we store nothing
+        return
+
+    cr_points = property(get_cr_points, set_cr_points)
+
     def getCr_points(self, **kwargs):
         """Override get() methods, we do not store anything in this field,
            but we show back references of 'Point' that are referencing this element."""
+        # XXX to be fixed
         # remove empty refs, make sure we have no None
         refs = [ref for ref in self.getBRefs(relationship='cf_resources') if ref is not None]
         return refs
@@ -171,6 +201,7 @@ class Ressource(object):
     def getRawCr_points(self, **kwargs):
         """Override getRaw() methods, we do not store anything in this field,
            but we show back references of 'Point' that are referencing this element."""
+        # XXX to be fixed
         refs = [ref.UID() for ref in self.getBRefs(relationship='cf_resources') if ref is not None]
         return refs
 
@@ -183,6 +214,7 @@ class Ressource(object):
            p_value and what we have as back references (by calling self.getCr_points)
            and we know where we need to add the resource and where we need to remove it.
            If a resource is already linked to a 'Point', we do nothing.'''
+        # XXX to be fixed
         current_ref_uids = self.getRawCr_points()
         catalog = api.portal.get_tool('portal_catalog')
 
@@ -222,6 +254,7 @@ class Ressource(object):
         """
           Hack for sorting first level on 'getObjPositionInParent' or first shown elements are not sorted
         """
+        # XXX to be fixed
         dict = {}
         dict['sort_on'] = 'getObjPositionInParent'
         return dict

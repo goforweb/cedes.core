@@ -1,0 +1,17 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Dans deux semaines (le <span tal:replace="options/expiration_date" />), votre abonnement à CeDES 100 % arrive à expiration.
+
+La gestion des abonnements étant automatisée, votre statut retrouvera alors celui d'un abonnement CeDES Free (pas de possibilité de consulter les séquences d'apprentissage identifiables par l’icône du « Graduate », pas de moteur de recherche ni d'accès aux articles soumis aux droits d'auteur).
+
+Pour vous éviter toute période durant laquelle les fonctionnalités de votre abonnement sont restreintes, nous vous conseillons de renouveler votre abonnement en procédant comme suit:
+  - connectez-vous au site à l'adresse http://www.cedes.be,
+  - cliquez sur "Mon compte", à droite au-dessus de l’écran,
+  - choisissez  l'option "Renouveler mon abonnement",
+  - vérifiez scrupuleusement vos données personnelles,
+  - cliquez sur "Renouveler mon abonnement",
+  - honorez la facture qui vous parviendra par courriel dans un délai de 3 jours ouvrables (vérifiez également votre dossier des indésirables/spams).
+
+Dès réception du paiement, votre compte sera crédité de 200 nouveaux points ainsi que du solde créditeur de l'année précédente.
+
+L’Equipe du CeDES

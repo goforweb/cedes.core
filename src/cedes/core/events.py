@@ -66,23 +66,20 @@ def onRessourceUnliked(obj, event):
 
 def onPrincipalCreated(event):
     """Setup new member."""
-    request = getRequest()
     # set registration_date (used as a "created" attribute)
     member = api.user.get(event.object.getId())
     member.set_registration_date(DateTime())
 
     # send email to administrator
+    request = getRequest()
     form = request.form
-    send_mail(api.portal.get(),
-              request,
-              subject='Cedes - Nouvelle inscription',
+    send_mail(subject='Cedes - Nouvelle inscription',
               template_name='mail_newmember_template',
               options={'username': form['form.widgets.username'],
                        'fullname': form['form.widgets.fullname'],
                        'email': form['form.widgets.email'],
                        'school_name': form['form.widgets.school_name'],
-                       'school_phone': form['form.widgets.school_phone'], },
-              include_extra_mto=True)
+                       'school_phone': form['form.widgets.school_phone'], })
 
     # asks for a bill if member is "CeDES 100%"
     # here member properties are still not set so get member_type from request

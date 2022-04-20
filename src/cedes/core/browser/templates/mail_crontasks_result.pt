@@ -1,0 +1,10 @@
+Résumé :
+========
+- script exécuté: @@cedes-night-tasks
+- Début de la tâche: <span tal:replace="options/startdate" />
+- Fin de la tâche: <span tal:replace="options/enddate" />
+
+Résultat :
+==========
+<span tal:replace="options/out" />
+

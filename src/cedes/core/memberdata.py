@@ -6,6 +6,8 @@
 #
 
 from cedes.core import logger
+from cedes.core.utils import create_attachment
+from cedes.core.utils import send_mail
 from copy import deepcopy
 from DateTime import DateTime
 from plone import api
@@ -47,7 +49,7 @@ def check_tva_number(full_tva_num):
     if len(full_tva_num) > 16:
         return False
 
-    european_vat =  {
+    european_vat = {
         "AT": "AT U?\d{8}",
         "BE": "BE 0?\d{3}\.?\d{3}\.?\d{3}",
         "BG": "BG \d{9,10}",
@@ -104,7 +106,7 @@ def check_tva_number(full_tva_num):
 
 class ICeDESUserDataSchema(Interface):
     """Need to monkey patch user schemas because it is not overridable as is."""
-    # XXX original values of IUserDataSchema
+    # original values of IUserDataSchema
     fullname = pau_schema.ProtectedTextLine(
         title=_(u'label_full_name', default=u'Full Name'),
         description=_(u'help_full_name_creation',
@@ -184,7 +186,6 @@ class ICeDESUserDataSchema(Interface):
         default='BE',
         required=True)
 
-
     @invariant
     def validate_data(data):
         ''' '''
@@ -198,7 +199,7 @@ class ICeDESUserDataSchema(Interface):
 
         # check email unicity, 2 cases:
         # registering, then we can not found an email
-        # editing personnal preferences ou changing existing email, we may only find current member
+        # editing personnal preferences or changing existing email, we may only find current member
         is_registering = getattr(data, 'username', False)
         if is_registering:
             if check_email_unicity(data.email):
@@ -216,8 +217,8 @@ class ICeDESUserDataSchema(Interface):
                 # changing email and reusing an existing one
                 raise Invalid("L'adresse courriel \"{0}\" est déjà utilisée.".format(data.email))
 
-        # if this is a CeDES 100% inscription, make sure bill info is entered
-        if not data.member_type == 'CeDES Free':
+        # if bill_... fields are shown and current member is not a Manager, it must be filled
+        if not api.user.get_current().is_manager() and hasattr(data, 'bill_name'):
             if not data.bill_name or \
                not data.bill_email or \
                not data.bill_country or \
@@ -264,6 +265,14 @@ class CedesMemberData(MemberData):
         """ """
         return "{0} ({1})".format(self.getProperty('fullname'), self.getId())
 
+    def get_fullname(self):
+        """ """
+        return deepcopy(self.getProperty('fullname'))
+
+    def get_email(self):
+        """ """
+        return deepcopy(self.getProperty('email'))
+
     def get_account_bills(self):
         """ """
         return deepcopy(self.getProperty('account_bills'))
@@ -282,7 +291,7 @@ class CedesMemberData(MemberData):
 
     def get_account_balance(self):
         """ """
-        if "Manager" in self.getRoles():
+        if self.is_manager():
             return 1000
         else:
             return deepcopy(self.getProperty('account_balance'))
@@ -336,7 +345,7 @@ class CedesMemberData(MemberData):
           Checks if we can afford a purchase's price
           Returns True if balance > price, False otherwise
         """
-        if "Manager" in self.getRoles():
+        if self.is_manager():
             return True
         if self.get_account_balance() - price >= 0:
             return True
@@ -349,11 +358,11 @@ class CedesMemberData(MemberData):
         self.set_account_transactions(self.get_account_transactions() +
                                       (('Crédit', value, DateTime()),))
         # email notification
-        # skintool = getToolByName(self, 'portal_skins')
-        # mailHost = getToolByName(self, 'MailHost')
-        # email = skintool.cedes_emails.credit_activation_notification(
-        #    self.REQUEST, member_email=self.email, firstname=self.firstname, credit=value)
-        # mailHost.send(email.encode('utf-8'))
+        send_mail(subject='CeDES - Vos crédits ont été activés',
+                  template_name='mail_credit_activation',
+                  options={'title': self.Title(),
+                           'credit': value, },
+                  mto=self.get_email())
 
     def request_credit(self):
         """ """
@@ -378,21 +387,25 @@ class CedesMemberData(MemberData):
         """ """
         now = DateTime()
         self.set_bill_accounting_failed(total, mode, now)
-        # skinTool = getToolByName(self, 'portal_skins')
-        # mailHost = getToolByName(self, 'MailHost')
-        # error_text = "SERVEUR INDISPONIBLE, L'application Cedes tentera de se " \
-        #     "reconnecter à l'application comptable plus tard."
-        # email = skinTool.cedes_emails.registration_error_manager(
-        #     self.REQUEST, member_id=bill_id, error_text=error_text)
-        # mailHost.send(email.encode('utf-8'))
+        # email notification for Managers
+        send_mail(
+            subject="CeDES - Erreur de l'application comptable",
+            template_name='mail_registration_error_manager',
+            options={'member_id': self.getId(),
+                     'error_text': "SERVEUR INDISPONIBLE, L'application CeDES tentera de se "
+                     "reconnecter à l'application comptable plus tard.", })
         return False
+
+    def is_manager(self):
+        """ """
+        return "Manager" in self.getRoles()
 
     def check_viewable(self, article_uid):
         """
           Check if the article can still be viewed.
           An element is viewable when his UID is found in member transactions
         """
-        res = "Manager" in self.getRoles()
+        res = self.is_manager()
         if not res:
             inversed_transactions = tuple(reversed(self.get_account_transactions()))
             for tr_uid, tr_price, tr_date in inversed_transactions:
@@ -418,7 +431,7 @@ class CedesMemberData(MemberData):
 
     def add_transaction(self, article_uid, article_price=1, is_dossier_structure=False):
         """ """
-        if "Manager" not in self.getRoles():
+        if not self.is_manager():
             # an article is payed one time then accessed
             # but for DossierStructure, if it has been updated, the price is adapted and
             # the pdf is no more accessible
@@ -446,24 +459,34 @@ class CedesMemberData(MemberData):
             return True
         return False
 
-    def get_bill_waiting_payment(self):
-        '''
-          Returns bill_id of the bill waiting for a payment
-          Returns None if no bill is waiting for payment
-        '''
-        if len(self.get_account_bills()) > 0:
-            item = self.get_account_bills()[-1]
+    @staticmethod
+    def _bill_waiting_payment(account_bills):
+        ''' '''
+        if len(account_bills) > 0:
+            item = account_bills[-1]
             if item['payment_date'] is None and \
                item['date'] is not None and \
                item['mode'] == 'F':
                 return item
         return None
 
-    def _compute_payment_dates(self):
+    def get_bill_waiting_payment(self):
+        '''
+          Returns bill_id of the bill waiting for a payment
+          Returns None if no bill is waiting for payment
+        '''
+        return CedesMemberData._bill_waiting_payment(self.get_account_bills())
+
+    def _compute_payment_dates(self, formatted=False):
         """ """
         last_payment_date = self.get_last_payment_date(
             self.get_account_bills())
-        return last_payment_date, self.get_expiration_date(last_payment_date)
+        expiration_date = self.get_expiration_date(last_payment_date)
+        if formatted:
+            ploneview = api.portal.get().unrestrictedTraverse('@@plone')
+            return ploneview.toLocalizedTime(last_payment_date), \
+                ploneview.toLocalizedTime(expiration_date),
+        return last_payment_date, expiration_date
 
     @staticmethod
     def get_last_payment_date(account_bills):
@@ -512,6 +535,13 @@ class CedesMemberData(MemberData):
         """ """
         self.setMemberProperties({'no_login_notification_date': date})
 
+    def remove_failed_accounting(self):
+        """ """
+        self.setMemberProperties({'bill_accounting_failed': (),
+                                  'has_failed_accounting_f': False,
+                                  'has_failed_accounting_n': False,
+                                  'has_bill_waiting_payment': False})
+
     def fix_failed_accounting(self, bill_id):
         '''
           Fix a failed accounting, turn the failed bill into a correct bill
@@ -525,30 +555,26 @@ class CedesMemberData(MemberData):
                           bill_accounting_failed[0],
                           bill_accounting_failed[1],
                           bill_accounting_failed[2], )
-            self.setMemberProperties({'bill_accounting_failed': ()})
-            self.setMemberProperties({'has_failed_accounting_f': False})
-            self.setMemberProperties({'has_failed_accounting_n': False})
+            self.setMemberProperties({'bill_accounting_failed': (),
+                                      'has_failed_accounting_f': False,
+                                      'has_failed_accounting_n': False,
+                                      'has_bill_waiting_payment': False})
 
     def send_low_reminder(self):
         """ """
-        # skintool = getToolByName(self, 'portal_skins')
-        # mailHost = getToolByName(self, 'MailHost')
-        # email = skintool.cedes_emails.credit_low_notification(
-        #    self.REQUEST,
-        #    fullname=self.fullname,
-        #    firstname=self.firstname,
-        #    member_email=self.email,
-        #    balance=self.getBalance())
-        # mailHost.send(email.encode('utf-8'))
+        send_mail("CeDES - Le solde de votre compte est bientôt épuisé",
+                  template_name='mail_credit_low_notification',
+                  options={'title': self.Title(),
+                           'balance': self.get_account_balance(), },
+                  mto=self.get_email())
         return True
 
     def send_credit_request_confirmation(self):
         """ """
-        # skintool = getToolByName(self, 'portal_skins')
-        # mailHost = getToolByName(self, 'MailHost')
-        # email = skintool.cedes_emails.credit_request_confirmation(
-        #    self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(), member_email=self.email)
-        # mailHost.send(email.encode('utf-8'))
+        send_mail("CeDES - Votre demande de crédits a été acceptée",
+                  template_name='mail_credit_request_confirmation',
+                  options={'title': self.Title()},
+                  mto=self.get_email())
         return True
 
     def send_100pc_confirmation(self):
@@ -556,11 +582,10 @@ class CedesMemberData(MemberData):
           Sends an email to confirm Cedes100pc request accepted
           Returns True if email has been sent
         '''
-        # skintool = getToolByName(self, 'portal_skins')
-        # mailHost = getToolByName(self, 'MailHost')
-        # email = skintool.cedes_emails.cedes100pc_request_confirmation(
-        #     self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(), member_email=self.email)
-        # mailHost.send(email.encode('utf-8'))
+        send_mail("CeDES - Votre demande d'abonnement à CeDES 100% a été acceptée",
+                  template_name='mail_cedes100pc_request_confirmation',
+                  options={'title': self.Title()},
+                  mto=self.get_email())
         return True
 
     def send_no_login_notification(self, now, days=3):
@@ -570,19 +595,17 @@ class CedesMemberData(MemberData):
         '''
         # dont send notification if we have already send it within last d days
         # if a user has never logged in, the login time is set to 2000/01/01
+        # the no_login_notification_date is set to 1950/01/01 by default
         no_login_notification_date = self.get_no_login_notification_date()
-        if not no_login_notification_date and \
+        if no_login_notification_date.year() == 1950 and \
            deepcopy(self.getProperty('last_login_time', '')).year() == 2000:
             registration_date = self.get_registration_date()
-            # sends an email d days after registration
+            # sends an email p_days after registration
             if registration_date + days < now:
-                # sends email
-                # skintool = getToolByName(self, 'portal_skins')
-                # mailHost = getToolByName(self, 'MailHost')
-                # email = skintool.cedes_emails.registration_nologin_notification(
-                #   self.REQUEST, fullname=self.fullname, firstname=self.getFirstname(),
-                #   member_email=self.email)
-                # mailHost.send(email.encode('utf-8'))
+                send_mail("CeDES - Votre inscription au site cedes",
+                          template_name='mail_registration_nologin_notification',
+                          options={'title': self.Title()},
+                          mto=self.get_email())
                 # marks member that notification has been sent
                 self.set_no_login_notification_date(now)
                 return True
@@ -595,12 +618,37 @@ class CedesMemberData(MemberData):
             ('expiration du crédit', self.get_account_balance(), DateTime()),)
         self.set_account_balance(0)
 
+    def send_expiration_reminder(self, now, days=14):
+        '''
+          Sends expiration email reminder if credit expires in 14 days
+          Returns True if email sent, False otherwise
+        '''
+        if not self.is_cedes_free() and not self.is_manager():
+            last_payment_date = self.get_last_payment_date(self.get_account_bills())
+            expiration_date = self.get_expiration_date(last_payment_date)
+            # sends an email d days before only if the credits are not already expired!!!
+            if expiration_date and expiration_date - days < now and not expiration_date < now:
+                # dont send notification if we have already send it within last d days
+                expiration_notification_date = self.get_expiration_notification_date()
+                # the expiration_notification_date is set to 1950/01/01 by default
+                if expiration_notification_date.year() == 1950:
+                    # send a mail to the member to warn him...
+                    last_payment_date, expiration_date = self._compute_payment_dates(formatted=True)
+                    send_mail("CeDES - Vos crédits expirent bientôt",
+                              template_name='mail_credit_expiration_notification',
+                              options={'title': self.Title(),
+                                       'expiration_date': expiration_date},
+                              mto=self.get_email())
+                    self.set_expiration_notification_date(now)
+                    return True
+        return False
+
     def reset_expired_credit(self, now):
         '''
           Reset credit of member if it has expired
           Returns 2 if credit was reset, 1 if credits reset and member set to "CeDES Free" and 0 if nothing is done...
         '''
-        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+        if not self.is_cedes_free() and not self.is_manager():
             last_payment_date = self.get_last_payment_date(self.get_account_bills())
             if last_payment_date and self.get_expiration_date(last_payment_date) < now:
                 self.reset_credit()
@@ -608,40 +656,15 @@ class CedesMemberData(MemberData):
                 if not self.get_bill_waiting_payment():
                     self.set_member_type("CeDES Free")
                     # send a mail to the member to warn him...
-                    # skintool = getToolByName(self, 'portal_skins')
-                    # mailHost = getToolByName(self, 'MailHost')
-                    # email = skintool.cedes_emails.credit_expired_notification(
-                    #   self.REQUEST, fullname=self.fullname, firstname=self.firstname,
-                    #   member_email=self.email, expiration_date = self.getExpirationDate())
-                    # mailHost.send(email.encode('utf-8'))
+                    last_payment_date, expiration_date = self._compute_payment_dates(formatted=True)
+                    send_mail("CeDES - Vos crédits sont expirés",
+                              template_name='mail_credit_expired_notification',
+                              options={'title': self.Title(),
+                                       'expiration_date': expiration_date},
+                              mto=self.get_email())
                     return 1
                 return 2
         return 0
-
-    def send_expiration_reminder(self, now, days=14):
-        '''
-          Sends expiration email reminder if credit expires in 14 days
-          Returns True if email sent, False otherwise
-        '''
-        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
-            last_payment_date = self.get_last_payment_date(self.get_account_bills())
-            expiration_date = self.get_expiration_date(last_payment_date)
-            # sends an email d days before only if the credits are not already expired!!!
-            if expiration_date and expiration_date - days < now and not expiration_date < now:
-                # dont send notification if we have already send it within last d days
-                expiration_notification_date = self.get_expiration_notification_date()
-                if not expiration_notification_date:
-                    # sends email
-                    # skintool = getToolByName(self, 'portal_skins')
-                    # mailHost = getToolByName(self, 'MailHost')
-                    # email = skintool.cedes_emails.credit_expiration_notification(
-                    #    self.REQUEST, fullname=self.fullname, firstname=self.firstname,
-                    #    member_email=self.email, expiration_date = expiration_date)
-                    # mailHost.send(email.encode('utf-8'))
-                    # marks member that notification has been sent
-                    self.set_expiration_notification_date(now)
-                    return True
-        return False
 
     def send_payment_reminder(self, now, days=10):
         '''
@@ -649,38 +672,26 @@ class CedesMemberData(MemberData):
           Returns True if email sent, False if there was an error getting the bill
           in the accounting application or None if nothing to do
         '''
-        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+        if not self.is_cedes_free() and not self.is_manager():
             bill_waiting_payment = self.get_bill_waiting_payment()
             if bill_waiting_payment:
                 waiting_payment_date = bill_waiting_payment['date']
-                # sends an email d days after
+                # sends an email p_days after
                 if now > waiting_payment_date + days:
                     # dont send notification if we have already sent
-                    if not(self.get_payment_notification_date()):
+                    # the payment_notification_date is set to 1950/01/01 by default
+                    payment_notification_date = self.get_payment_notification_date()
+                    if payment_notification_date.year() == 1950:
                         # sends email with bill duplicata as attachment
                         bill = bill_waiting_payment.get('pdf', None)
                         if not bill:
                             return False
-                        # skintool = getToolByName(self, 'portal_skins')
-                        # mailHost = getToolByName(self, 'MailHost')
-                        # from email.mime.multipart import MIMEMultipart
-                        # from email.mime.base import MIMEBase
-                        # from email.mime.text import MIMEText
-                        # from email import Encoders
-                        # msg = MIMEMultipart()
-                        # msg['Subject'] = 'CeDES - Votre paiement en attente'
-                        # msg['From'] = '%s <%s>' % (skintool.email_from_address, skintool.email_from_name)
-                        # msg['To'] = '%s %s <%s>' % (self.fullname, self.firstname, self.email)
-                        # body = MIMEText(skintool.cedes_emails.credit_payment_notification(self.REQUEST,
-                        #                                                                   firstname=self.firstname).encode('utf-8'),
-                        #                 'plain', 'utf-8')
-                        # attachment = MIMEBase('application', 'pdf')
-                        # attachment.set_payload(bill)
-                        # Encoders.encode_base64(attachment)
-                        # attachment.add_header('Content-Disposition', 'attachment', filename='facture.pdf')
-                        # msg.attach(body)
-                        # msg.attach(attachment)
-                        # mailHost.send(msg)
+                        attachment = create_attachment('application/pdf', bill, 'facture.pdf')
+                        send_mail(subject='CeDES - Votre paiement en attente',
+                                  template_name='mail_credit_payment_notification',
+                                  options={'title': self.Title()},
+                                  mto=self.get_email(),
+                                  attachments=[attachment])
                         # marks member that notification has been sent
                         self.set_payment_notification_date(now)
                         return True
@@ -705,7 +716,7 @@ class CedesMemberData(MemberData):
           Sends a credit note to accounting
           Returns True if credit note was sent, False otherwise
         '''
-        if not(self.is_cedes_free()) and not("Manager" in self.getRoles()):
+        if not self.is_cedes_free() and not self.is_manager():
             bill_waiting_payment = self.get_bill_waiting_payment()
             if bill_waiting_payment:
                 waiting_payment_date = bill_waiting_payment['date']

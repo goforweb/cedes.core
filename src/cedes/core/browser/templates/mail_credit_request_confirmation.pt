@@ -1,0 +1,5 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Votre demande de renouvellement d’abonnement a bien été enregistrée. Consultez rapidement votre messagerie électronique (y compris votre dossier des indésirables/spams) : une facture spécifiera les modalités de paiement. Dès réception du montant requis, le CeDES créditera votre compte de 200 nouveaux points ainsi que du solde créditeur des années précédentes.
+
+Bon travail de la part de l'Equipe du CeDES

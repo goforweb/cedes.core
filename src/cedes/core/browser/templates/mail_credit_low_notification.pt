@@ -1,0 +1,18 @@
+Bonjour <span tal:replace="options/title"/>,
+
+Le solde de votre compte sur CeDES.be atteint aujourd'hui <span tal:replace="options/balance"/> points.
+
+L'Equipe du CeDES vous invite à le consulter régulièrement:
+  - identifiez-vous à l’adresse https://www.cedes.be,
+  - cliquez sur "Mon compte", à droite au-dessus de l’écran,
+  - choisissez l'option  "Consulter le solde de mon compte et mes transactions".
+
+Pour vous permettre de continuer à utiliser le site, nous vous conseillons de renouveler votre abonnement avant que le solde ne soit épuisé :
+  - connectez-vous au site du CeDES, à l’adresse https://www.cedes.be,
+  - cliquez sur "Mon compte", à droite au-dessus de l’écran,
+  - choisissez  l'option "Renouveler mon abonnement",
+  - vérifiez scrupuleusement vos données personnelles,
+  - cliquez sur "Renouveler",
+  - honorez la facture qui vous parviendra par courriel dans un délai de 3 jours ouvrables (vérifiez également votre dossier des indésirables/spams)
+
+Avec les sincères salutations de l'Equipe du CeDES

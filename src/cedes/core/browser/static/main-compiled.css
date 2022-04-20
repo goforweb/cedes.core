@@ -98,8 +98,28 @@ body.userrole-manager li a#contentview-user_data-personal-preferences {
     max-width: inherit;
 }
 
-.icon-one::before {
+span.icon-one::before {
   content: '\e553';
+  font-size: 120%;
+  margin-right: 0.1em;
+}
+span.icon-two::before {
+  content: '\e554';
+  font-size: 120%;
+  margin-right: 0.1em;
+}
+span.icon-three::before {
+  content: '\e555';
+  font-size: 120%;
+  margin-right: 0.1em;
+}
+
+.highlight-orange,
+.mode-n {
+    color: orange;
+}
+.highlight-red {
+    color: red;
 }
 
 .help {

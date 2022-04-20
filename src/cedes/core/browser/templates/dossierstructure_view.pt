@@ -55,7 +55,7 @@
             <img tal:attributes="src string:${portal_url}/++plone++cedes.core/pdf_icon.gif;" alt="PDF" align="absmiddle"/>
           </a>
           <form style="display: inline;"
-                tal:condition="python:member.has_role('Manager')"
+                tal:condition="python:member.is_manager()"
                 tal:define="is_pdf_generated python: context.is_pdf_generated()"
                 tal:attributes="action string:${context_url}/@@generate_pdf">
            &nbsp;&nbsp;&nbsp;

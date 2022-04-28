@@ -6,7 +6,7 @@
 #
 
 from cedes.core import logger
-from cedes.core.content.ressource import IRessource
+from cedes.core.content.resource import IResource
 from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from cedes.core.utils import normalize_data
 from cioppino.twothumbs.rate import yays
@@ -24,77 +24,77 @@ from zope.interface import implementer
 
 @indexer(ICeDESLoveThumbsDontYou)
 def user_ratings(obj, **kw):
-    """Index users that loved a ressource."""
+    """Index users that loved a resource."""
     ann = IAnnotations(obj)
     return list(ann.get(yays, {}))
 
 
-@indexer(IRessource)
-def has_cr_points(ressource):
-    """Is ressource linked to some Points?"""
-    cr_points = ressource.cr_points
+@indexer(IResource)
+def has_cr_points(resource):
+    """Is resource linked to some Points?"""
+    cr_points = resource.cr_points
     # remove 'None' from the cr_points
     return bool([point for point in cr_points if point])
 
 
-@indexer(IRessource)
-def associated_theme_uids(ressource):
+@indexer(IResource)
+def associated_theme_uids(resource):
     """
     """
-    return ressource.get_associated_themes(as_uids=True)
+    return resource.get_associated_themes(as_uids=True)
 
 
-@indexer(IRessource)
-def all_associated_theme_uids(ressource):
+@indexer(IResource)
+def all_associated_theme_uids(resource):
     """
     """
-    return ressource.get_all_associated_themes(as_uids=True)
+    return resource.get_all_associated_themes(as_uids=True)
 
 
-@indexer(IRessource)
-def associated_themes_title_and_path(ressource):
+@indexer(IResource)
+def associated_themes_title_and_path(resource):
     """
     """
-    return ressource.get_associated_themes_title_and_path()
+    return resource.get_associated_themes_title_and_path()
 
 
-@indexer(IRessource)
-def cr_date_index(ressource):
+@indexer(IResource)
+def cr_date_index(resource):
     """
     """
-    return ressource.cr_date
+    return resource.cr_date
 
 
-@indexer(IRessource)
-def cr_first_classification_date_index(ressource):
+@indexer(IResource)
+def cr_first_classification_date_index(resource):
     """
     """
-    return ressource.cr_first_classification_date
+    return resource.cr_first_classification_date
 
 
-@indexer(IRessource)
-def title_path(ressource):
+@indexer(IResource)
+def title_path(resource):
     """
     """
-    return ressource.get_title_path()
+    return resource.get_title_path()
 
 
-@indexer(IRessource)
-def colophon_with_author(ressource):
+@indexer(IResource)
+def colophon_with_author(resource):
     """
     """
-    return ressource.get_colophon_with_author()
+    return resource.get_colophon_with_author()
 
 
 @implementer(IDexterityTextIndexFieldConverter)
-@adapter(IRessource, IRichText, IWidget)
-class RessourceRichTextIndexFieldConverter(DexterityRichTextIndexFieldConverter):
+@adapter(IResource, IRichText, IWidget)
+class ResourceRichTextIndexFieldConverter(DexterityRichTextIndexFieldConverter):
     """ """
 
     def convert(self):
         """After RichText has been converted to text/plain,
            normalize the result."""
-        data = super(RessourceRichTextIndexFieldConverter, self).convert()
+        data = super(ResourceRichTextIndexFieldConverter, self).convert()
         try:
             data = normalize_data(data)
         except Exception:
@@ -105,9 +105,9 @@ class RessourceRichTextIndexFieldConverter(DexterityRichTextIndexFieldConverter)
 
 
 @implementer(IDynamicTextIndexExtender)
-class RessourceSearchableTextExtender(object):
+class ResourceSearchableTextExtender(object):
 
-    adapts(IRessource)
+    adapts(IResource)
 
     def __init__(self, context):
         self.context = context

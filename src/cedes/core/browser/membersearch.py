@@ -109,7 +109,7 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
 
     # override login for now to change label from u'Name' to u'User Name'
     login = schema.TextLine(
-        title=_(u'label_user_name', default=u'User Name'),
+        title=_(u'title_user_name', default=u'User Name'),
         description=_(
             u'help_search_name',
             default=u'Find users whose login name contain'),
@@ -117,34 +117,34 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
     )
 
     member_type = schema.Choice(
-        title=_(u'label_member_type', default=u'Member type'),
+        title=_(u'title_member_type', default=u'Member type'),
         values=["", "CeDES Free", "CeDES 100%"],
         default='',
         required=True)
     school_name = schema.TextLine(
-        title=_(u'label_school_name', default=u'School name'),
+        title=_(u'title_school_name', default=u'School name'),
         required=False)
     school_postal_code = schema.TextLine(
-        title=_(u'label_school_postal_code', default=u'School postal code'),
+        title=_(u'title_school_postal_code', default=u'School postal code'),
         required=False)
     bill_name = schema.TextLine(
-        title=_(u'label_bill_name', default=u'Bill name'),
+        title=_(u'title_bill_name', default=u'Bill name'),
         required=False)
     last_login_time = schema.Date(
-        title=_(u'label_last_login', default=u'Last login'),
+        title=_(u'title_last_login', default=u'Last login'),
         required=False)
     has_failed_accounting_f = schema.Bool(
-        title=_(u'label_has_failed_accounting_f',
+        title=_(u'title_has_failed_accounting_f',
                 default=u'Facture échouée'),
         description='Recherche les membres qui ont une facture échouée',
         required=False)
     has_failed_accounting_n = schema.Bool(
-        title=_(u'label_has_failed_accounting_n',
+        title=_(u'title_has_failed_accounting_n',
                 default=u'Note de crédit échouée'),
         description='Recherche les membres qui ont une note de crédit échouée',
         required=False)
     has_bill_waiting_payment = schema.Bool(
-        title=_(u'label_has_bill_waiting_payment',
+        title=_(u'title_has_bill_waiting_payment',
                 default=u'Facture en attente de paiement'),
         description='Recherche les membres qui ont une facture en attente de paiement',
         required=False)
@@ -162,7 +162,7 @@ class CeDESMemberSearchForm(MemberSearchForm):
     schema = ICeDESMemberSearchSchema
     template = ViewPageTemplateFile('templates/membersearch_form.pt')
 
-    @button.buttonAndHandler(_(u'label_search', default=u'Search'),
+    @button.buttonAndHandler(_(u'title_search', default=u'Search'),
                              name='search')
     def handleApply(self, action):
         """ """

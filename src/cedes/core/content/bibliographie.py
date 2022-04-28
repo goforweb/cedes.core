@@ -6,8 +6,8 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from cedes.core.content.ressource import IRessource
-from cedes.core.content.ressource import Ressource
+from cedes.core.content.resource import IResource
+from cedes.core.content.resource import Resource
 from collective.dexteritytextindexer.directives import searchable
 from plone.app.contenttypes.content import Document
 from plone.app.contenttypes.interfaces import IDocument
@@ -19,7 +19,7 @@ from zope import schema
 from zope.interface import implementer
 
 
-class IBibliographie(IRessource, IDocument):
+class IBibliographie(IResource, IDocument):
     """ """
 
     searchable("cr_subtitle")
@@ -55,7 +55,7 @@ class IBibliographie(IRessource, IDocument):
 
 
 @implementer(IBibliographie)
-class Bibliographie(Document, Ressource):
+class Bibliographie(Document, Resource):
     """ """
     security = ClassSecurityInfo()
 

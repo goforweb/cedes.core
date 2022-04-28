@@ -5,7 +5,7 @@
 # GNU General Public License (GPL)
 #
 
-from cedes.core.config import CEDES_RESSOURCE_TYPES
+from cedes.core.config import CEDES_RESOURCE_TYPES
 from cedes.core.config import COUNTRIES
 from Products.CMFCore.utils import getToolByName
 from zope.interface import implementer
@@ -22,7 +22,7 @@ class SearchableTypesVocabulary(object):
         res = []
         plone_utils = getToolByName(context, 'plone_utils')
         portal_types = getToolByName(context, 'portal_types')
-        for portal_type_name in CEDES_RESSOURCE_TYPES:
+        for portal_type_name in CEDES_RESOURCE_TYPES:
             type_info = portal_types.get(portal_type_name)
             if type_info:
                 res.append(
@@ -44,7 +44,7 @@ class FacetedSortingVocabulary(object):
                               u'Date de parution (pour les articles)'))
         res.append(SimpleTerm('cr_first_classification_date_index',
                               'cr_first_classification_date_index',
-                              u'Date d\'encodage sur le CeDES (toutes ressources)'))
+                              u'Date d\'encodage sur le CeDES (toutes resources)'))
         res.append(SimpleTerm('positive_ratings', 'positive_ratings', u'Les plus aimées'))
         return SimpleVocabulary(res)
 

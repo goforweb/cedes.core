@@ -1,0 +1,248 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2022-04-28 14:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+
+#: ../browser/member.py:640
+msgid "Action annulée."
+msgstr "Action annulée."
+
+#: ../profiles/default/actions.xml
+msgid "Broken links"
+msgstr "Liens brisés"
+
+#: ../browser/member.py:633
+msgid "Cancel"
+msgstr "Annuler"
+
+#: ../browser/member.py:563
+msgid "Error trying to extract accounting_mode from PDF file, raised error was {0}"
+msgstr "Error trying to extract accounting_mode from PDF file, raised error was {0}"
+
+#: ../browser/member.py:581
+msgid "Error trying to extract bill_id from PDF file, raised error was {0}"
+msgstr "Error trying to extract bill_id from PDF file, raised error was {0}"
+
+#: ../browser/member.py:486
+msgid "Facture/Note de crédit au format PDF"
+msgstr "Facture/Note de crédit au format PDF"
+
+#: ../browser/member.py:518
+msgid "Gérer la facture/note de crédit échouée"
+msgstr "Gérer la facture/note de crédit échouée"
+
+#: ../browser/member.py:609
+msgid "Impossible d'extraire la référence ou le type de document depuis le fichier PDF... Le document n'a pas été envoyé, encodez un numéro de référence manuellement, choisissez un type de document (champ \"Validation du type de fichier joint\") et contactez votre administrateur système."
+msgstr "Impossible d'extraire la référence ou le type de document depuis le fichier PDF... Le document n'a pas été envoyé, encodez un numéro de référence manuellement, choisissez un type de document (champ \"Validation du type de fichier joint\") et contactez votre administrateur système."
+
+#: ../browser/member.py:602
+msgid "La facture en attente de paiement de \"{0}\" a été annulée et un e-mail avec la note de crédit en pièce jointe lui a été envoyé.  La référence utilisée est \"{1}\"."
+msgstr "La facture en attente de paiement de \"{0}\" a été annulée et un e-mail avec la note de crédit en pièce jointe lui a été envoyé.  La référence utilisée est \"{1}\"."
+
+#: ../browser/member.py:595
+msgid "La facture problématique de \"{0}\" a été annulée et un e-mail avec la facture en pièce jointe lui a été envoyé.  La référence utilisée est \"{1}\"."
+msgstr "La facture problématique de \"{0}\" a été annulée et un e-mail avec la facture en pièce jointe lui a été envoyé.  La référence utilisée est \"{1}\"."
+
+#: ../browser/member.py:572
+msgid "La validation du type de fichier joint a échoué!"
+msgstr "La validation du type de fichier joint a échoué!"
+
+#: ../browser/member.py:543
+msgid "Send"
+msgstr "Envoyer"
+
+#. Default: "No items changed yet."
+#: ../browser/templates/portlet_recent.pt:73
+msgid "box_recent_no_items"
+msgstr ""
+
+#. Default: "Legal validation descr"
+#: ../memberdata.py:133
+msgid "descr_legal_validation"
+msgstr "Vous pouvez <a href='./pages/charte'>consulter la charte du CeDES ici</a>."
+
+#. Default: "No results were found."
+#: ../browser/templates/membersearch_form.pt:164
+msgid "description_no_results_found"
+msgstr ""
+
+#. Default: "Aller au niveau supérieur"
+#: ../browser/templates/folder-listing.pt:10
+msgid "go_to_parent_url"
+msgstr "Aller au niveau supérieur"
+
+#. Default: "Search results"
+#: ../browser/templates/membersearch_form.pt:25
+msgid "heading_search_results"
+msgstr ""
+
+#. Default: "Welcome!"
+#: ../browser/templates/registered.pt:13
+msgid "heading_welcome"
+msgstr ""
+
+#. Default: "Enter full name, e.g. John Smith."
+#: ../memberdata.py:112
+msgid "help_full_name_creation"
+msgstr ""
+
+#. Default: "Find users whose login name contain"
+#: ../browser/membersearch.py:113
+msgid "help_search_name"
+msgstr ""
+
+#. Default: "User Search Criteria"
+#: ../browser/membersearch.py:99
+msgid "legend_member_search_criteria"
+msgstr ""
+
+#. Default: "You are not allowed to list portal members."
+#: ../browser/templates/membersearch_form.pt:29
+msgid "member_listing_not_allowed"
+msgstr ""
+
+#. Default: "Bill address"
+#: ../memberdata.py:178
+msgid "title_bill_address"
+msgstr "Adresse de facturation"
+
+#. Default: "Bill country"
+#: ../memberdata.py:187
+msgid "title_bill_country"
+msgstr "Pays"
+
+#. Default: "Bill email"
+#: ../memberdata.py:173
+msgid "title_bill_email"
+msgstr "E-mail pour facturation"
+
+#. Default: "Bill locality"
+#: ../memberdata.py:184
+msgid "title_bill_locality"
+msgstr "Localité"
+
+#. Default: "Bill name"
+#: ../browser/membersearch.py:131
+#: ../memberdata.py:170
+msgid "title_bill_name"
+msgstr "Nom pour facturation"
+
+#. Default: "Bill postal code"
+#: ../memberdata.py:181
+msgid "title_bill_postal_code"
+msgstr "Code Postal"
+
+#. Default: "Bill tva"
+#: ../memberdata.py:166
+msgid "title_bill_tva"
+msgstr "TVA"
+
+#. Default: "Combien font trois fois quatre?"
+#: ../browser/register.py:74
+msgid "title_compute"
+msgstr "Combien font trois fois quatre?"
+
+#. Default: "Email"
+#: ../memberdata.py:116
+msgid "title_email"
+msgstr "Adresse e-mail"
+
+#. Default: "Extra field"
+#: ../browser/register.py:80
+msgid "title_extra_field"
+msgstr "Champ supplémentaire"
+
+#. Default: "Full Name"
+#: ../memberdata.py:111
+msgid "title_full_name"
+msgstr "Nom complet (Prénom et Nom)"
+
+#. Default: "Facture en attente de paiement"
+#: ../browser/membersearch.py:147
+msgid "title_has_bill_waiting_payment"
+msgstr "Facture en attente de paiement"
+
+#. Default: "Facture échouée"
+#: ../browser/membersearch.py:137
+msgid "title_has_failed_accounting_f"
+msgstr "Facture échouée"
+
+#. Default: "Note de crédit échouée"
+#: ../browser/membersearch.py:142
+msgid "title_has_failed_accounting_n"
+msgstr "Note de crédit échouée"
+
+#. Default: "Last login"
+#: ../browser/membersearch.py:134
+msgid "title_last_login"
+msgstr "Dernière connexion"
+
+#. Default: "Legal validation"
+#: ../memberdata.py:131
+msgid "title_legal_validation"
+msgstr "Cochez la case pour confirmer que vous respecterez la charte du CeDES."
+
+#. Default: "Member type"
+#: ../browser/membersearch.py:120
+#: ../browser/register.py:67
+#: ../memberdata.py:126
+msgid "title_member_type"
+msgstr "Type de membre"
+
+#. Default: "School address"
+#: ../memberdata.py:147
+msgid "title_school_address"
+msgstr "Adresse"
+
+#. Default: "School country"
+#: ../memberdata.py:156
+msgid "title_school_country"
+msgstr "Pays"
+
+#. Default: "School email"
+#: ../memberdata.py:143
+msgid "title_school_email"
+msgstr "E-mail de l'institution"
+
+#. Default: "School locality"
+#: ../memberdata.py:153
+msgid "title_school_locality"
+msgstr "Localité"
+
+#. Default: "School name"
+#: ../browser/membersearch.py:125
+#: ../memberdata.py:140
+msgid "title_school_name"
+msgstr "Nom de l'institution"
+
+#. Default: "School phone"
+#: ../memberdata.py:161
+msgid "title_school_phone"
+msgstr "Téléphone"
+
+#. Default: "School postal code"
+#: ../browser/membersearch.py:128
+#: ../memberdata.py:150
+msgid "title_school_postal_code"
+msgstr "Code Postal"
+
+#. Default: "Search"
+#: ../browser/membersearch.py:165
+msgid "title_search"
+msgstr "Rechercher"
+
+#. Default: "User Name"
+#: ../browser/membersearch.py:112
+msgid "title_user_name"
+msgstr "Identifiant"

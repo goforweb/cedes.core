@@ -232,7 +232,7 @@ padding-left:0.5em;
 
 
         <p class="documentHeading">
-          B. Ressources
+          B. Resources
         </p>
 
        <div tal:repeat="subitem python:[elt for elt in here.objectValues() if wf_tool.getInfoFor(elt, 'review_state') != 'private']" tal:omit-tag="">

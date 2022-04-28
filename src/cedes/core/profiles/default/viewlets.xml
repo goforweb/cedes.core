@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<object>
+  <!-- Hide original contentleadimage that is moved -->
+  <hidden manager="plone.abovecontenttitle" skinname="Plone Default">
+    <viewlet name="contentleadimage" />
+  </hidden>
+</object>

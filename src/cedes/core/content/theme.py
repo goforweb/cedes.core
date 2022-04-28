@@ -6,7 +6,7 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from cedes.core.config import CEDES_RESSOURCE_TYPES
+from cedes.core.config import CEDES_RESOURCE_TYPES
 from plone import api
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
@@ -73,13 +73,13 @@ class Theme(Container):
 
     def get_associated_resources(self, sorted=True, summary=False):
         """
-          List of ressources classified under this theme
-          @param sorted if True, return ressources sorted by order of importance
+          List of resources classified under this theme
+          @param sorted if True, return resources sorted by order of importance
           @param summary if True, only return resource type details as dictionary (sorted must be True)
-          @return List of ressources classified under this theme
+          @return List of resources classified under this theme
         """
         catalog = api.portal.get_tool('portal_catalog')
-        res = catalog(portal_type=CEDES_RESSOURCE_TYPES, associated_theme_uids=self.UID())
+        res = catalog(portal_type=CEDES_RESOURCE_TYPES, associated_theme_uids=self.UID())
 
         if not sorted:
             return res
@@ -108,7 +108,7 @@ class Theme(Container):
 
     def get_nb_associated_resources(self):
         """
-          returns The number of associated ressources
+          returns The number of associated resources
         """
         res = self.get_associated_resources(sorted=False)
         return len(res)

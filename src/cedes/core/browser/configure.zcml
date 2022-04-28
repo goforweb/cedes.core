@@ -30,6 +30,19 @@
         permission="zope2.View" />
     </configure>
 
+    <!-- Move contentleadimage viewlet under the descripiton -->
+    <configure package="plone.app.contenttypes.behaviors">
+        <browser:viewlet
+          name="contentleadimage"
+          for=".leadimage.ILeadImage"
+          view="plone.app.layout.globals.interfaces.IViewView"
+          class=".viewlets.LeadImageViewlet"
+          manager="plone.app.layout.viewlets.interfaces.IAboveContentBody"
+          layer="cedes.core.interfaces.ICedesCoreLayer"
+          template="leadimage.pt"
+          permission="zope2.View" />
+    </configure>
+
     <!-- content_types default view -->
     <!-- Theme -->
     <browser:page
@@ -82,9 +95,9 @@
         permission="zope.Public"
         allowed_interface="Products.CMFPlone.browser.interfaces.ISitemapView" />
 
-    <!-- breadcrumbs for ressources -->
+    <!-- breadcrumbs for resources -->
       <browser:page
-        for="cedes.core.content.ressource.IRessource"
+        for="cedes.core.content.resource.IResource"
         name="breadcrumbs_view"
         class=".breadcrumbs.ClassificationBreadcrumbs"
         layer="cedes.core.interfaces.ICedesCoreLayer"

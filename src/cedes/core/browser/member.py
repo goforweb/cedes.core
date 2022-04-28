@@ -540,7 +540,7 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
         form.Form.updateWidgets(self)
         self.member = self._member
 
-    @z3c.form.button.buttonAndHandler(_(u'Envoyer'), name='send')
+    @z3c.form.button.buttonAndHandler(_(u'Send'), name='send')
     def fix_failed_accounting_and_send_bill(self, action):
         """ Create and handle form button
         """

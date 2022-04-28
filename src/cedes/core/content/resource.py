@@ -7,10 +7,10 @@
 
 from AccessControl import ClassSecurityInfo
 from cedes.core.interfaces import ICeDESLoveThumbsDontYou
+from cedes.core.config import CEDES_RESOURCE_TYPES
 from cedes.core.utils import get_intid
 from cedes.core.utils import get_relations
 from collective.dexteritytextindexer.directives import searchable
-from datetime import datetime
 from plone import api
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
@@ -24,7 +24,7 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 
 
-class IRessource(model.Schema):
+class IResource(model.Schema):
     """ """
 
     searchable("cr_comment")
@@ -36,7 +36,7 @@ class IRessource(model.Schema):
         'cr_classification',
         RelatedItemsFieldWidget,
         pattern_options={
-            'basPath': '/plan',
+            'basePath': '/sitecedes/plan',
             'selectableTypes': ['Theme'],
             'mode': 'auto', }, )
     cr_classification = RelationList(
@@ -56,11 +56,10 @@ class IRessource(model.Schema):
         'cr_points',
         RelatedItemsFieldWidget,
         pattern_options={
-            'basPath': '/dossiers-structures',
+            'basePath': '/sitecedes/dossiers-structures',
             'selectableTypes': ['Point'], }, )
-
     cr_points = RelationList(
-        title='Points auxquels la ressource est liée',
+        title='Points auxquels la resource est liée',
         value_type=RelationChoice(
             vocabulary='plone.app.vocabularies.Catalog',
         ),
@@ -69,8 +68,9 @@ class IRessource(model.Schema):
     directives.widget(
         'related_items',
         RelatedItemsFieldWidget,
-        pattern_options={}, )
-
+        pattern_options={
+            'basePath': '/sitecedes/ressources',
+            'selectableTypes': CEDES_RESOURCE_TYPES, }, )
     related_items = RelationList(
         title='Ressources liées',
         value_type=RelationChoice(
@@ -79,8 +79,8 @@ class IRessource(model.Schema):
         required=False, )
 
 
-@implementer(IRessource, ICeDESLoveThumbsDontYou)
-class Ressource(object):
+@implementer(IResource, ICeDESLoveThumbsDontYou)
+class Resource(object):
     """ """
 
     security = ClassSecurityInfo()
@@ -123,46 +123,16 @@ class Ressource(object):
                 portal_url.getRelativeContentPath(theme))))
         return res
 
-    def setCr_classification(self, value, **kwargs):
-        """
-          When associated Theme changes, adds Title and Keywords to this ressource
-        """
-        # XXX to be fixed
-        # if old value is empty, we init the cr_first_classification_date field
-        old_value = self.getField('cr_classification').getAccessor(self)()
-        if not old_value:
-            self.setCr_first_classification_date(datetime.now())
-        # remove cr_first_classification_date if removing classification
-        if not value or value == ['']:
-            self.setCr_first_classification_date(None)
-        self.getField('cr_classification').set(self, value, **kwargs)
-
-    security.declarePublic('getCr_points_base_query')
-
-    def getCr_points_base_query(self):
-        """
-          Hack for sorting first level on 'getObjPositionInParent' or first shown elements are not sorted
-        """
-        # XXX to be fixed
-        dict = {}
-        dict['sort_on'] = 'getObjPositionInParent'
-        return dict
-
-    security.declarePublic('getCr_classification_base_query')
-
-    def getCr_classification_base_query(self):
-        """
-          Hack for sorting first level on 'getObjPositionInParent' or first shown elements are not sorted
-        """
-        # XXX to be fixed
-        dict = {}
-        dict['sort_on'] = 'getObjPositionInParent'
-        return dict
-
-    def get_cr_points(self):
+    def get_cr_points(self, the_objects=False):
         """Field "cr_points" stores nothing but will just be used to show back relations."""
-        return [RelationValue(get_intid(rel.from_object))
-                for rel in get_relations(self, attribute='cf_resources', backrefs=True)]
+        back_relations = get_relations(self, attribute='cf_resources', backrefs=True)
+        res = []
+        if the_objects:
+            res = [back_rel.from_object for back_rel in back_relations]
+        else:
+            res = [RelationValue(get_intid(back_rel.from_object))
+                   for back_rel in back_relations]
+        return res
 
     def set_cr_points(self, values):
         '''Override 'cr_points' mutator so we can manage resource insertion
@@ -185,57 +155,16 @@ class Ressource(object):
             # notify modified so catalog is updated
             notify(ObjectModifiedEvent(point))
 
-        # we store nothing
-        return
-
-    cr_points = property(get_cr_points, set_cr_points)
-
-    def getCr_points(self, **kwargs):
-        """Override get() methods, we do not store anything in this field,
-           but we show back references of 'Point' that are referencing this element."""
-        # XXX to be fixed
-        # remove empty refs, make sure we have no None
-        refs = [ref for ref in self.getBRefs(relationship='cf_resources') if ref is not None]
-        return refs
-
-    def getRawCr_points(self, **kwargs):
-        """Override getRaw() methods, we do not store anything in this field,
-           but we show back references of 'Point' that are referencing this element."""
-        # XXX to be fixed
-        refs = [ref.UID() for ref in self.getBRefs(relationship='cf_resources') if ref is not None]
-        return refs
-
-    security.declareProtected('Modify portal content', 'setCr_points')
-
-    def setCr_points(self, value, **kwargs):
-        '''Override 'cr_points' mutator so we can manage resource insertion
-           into a 'Point' or resource removal from a 'Point'.
-           Actually nothing is stored, but we check compared to what we receive in
-           p_value and what we have as back references (by calling self.getCr_points)
-           and we know where we need to add the resource and where we need to remove it.
-           If a resource is already linked to a 'Point', we do nothing.'''
-        # XXX to be fixed
-        current_ref_uids = self.getRawCr_points()
-        catalog = api.portal.get_tool('portal_catalog')
-
-        # manage removal
-        for to_remove in current_ref_uids:
-            point = catalog(UID=to_remove)[0].getObject()
-            if self.UID() in point.getRawCf_resources():
-                resource_uids = point.getRawCf_resources()
-                resource_uids.remove(self.UID())
-                point.setCf_resources(resource_uids)
-                point._p_changed = True
-
         # manage addition
-        for to_add in value:
-            if not to_add:
-                continue
-            point = catalog(UID=to_add)[0].getObject()
-            if not self.UID() in point.getRawCf_resources():
-                point.setCf_resources([self.UID()] + point.getRawCf_resources())
-                point._p_changed = True
+        added_points = [point for point in new_points if point not in current_points]
+        for point in added_points:
+            # resource is insterted at the beginning of Point cf_resources
+            new_cf_resources = [RelationValue(get_intid(self))] + point.cf_resources
+            point.cf_resources = new_cf_resources
+            # notify modified so catalog is updated
+            notify(ObjectModifiedEvent(point))
 
+        # XXX to be fixed !!!
         # manage DS Subject
         # DS related kw Subject are added automatically
         # when editing Points from resource, make sure it is not in request.form.Subject
@@ -244,17 +173,8 @@ class Ressource(object):
         if subject_existing_keywords is not None:
             self.REQUEST.form['subject_existing_keywords'] = list(self.Subject())
 
-        # force set nothing
-        self.getField('cr_points').set(self, [], **kwargs)
-        self._p_changed = True
+        # we store nothing
+        return
 
-    security.declarePublic('getRelatedItems_base_query')
-
-    def getRelatedItems_base_query(self):
-        """
-          Hack for sorting first level on 'getObjPositionInParent' or first shown elements are not sorted
-        """
-        # XXX to be fixed
-        dict = {}
-        dict['sort_on'] = 'getObjPositionInParent'
-        return dict
+    # accessor/mutator for field "cr_points"
+    cr_points = property(get_cr_points, set_cr_points)

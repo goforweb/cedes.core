@@ -2,8 +2,8 @@
 
 from cedes.core import logger
 from cedes.core.browser.register import BillLabelProvider
+from cedes.core.browser.register import SchoolLabelProvider
 from cedes.core.utils import get_member
-from plone import api
 from plone.app.contenttypes.browser.folder import FolderView
 from plone.app.users.browser.account import AccountPanelForm
 from plone.app.users.browser.userdatapanel import UserDataPanel
@@ -40,8 +40,10 @@ logger.info("Monkey patching plone.app.users.account.AccountPanelForm (label)")
 class CeDESUserDataPanel(UserDataPanel):
     """ """
     contentProviders = ContentProviders()
+    contentProviders['school_label'] = SchoolLabelProvider
+    contentProviders['school_label'].position = 0
     contentProviders['bill_label'] = BillLabelProvider
-    contentProviders['bill_label'].position = 10
+    contentProviders['bill_label'].position = 0
 
     def _update(self):
         self.member = get_member(self.request)
@@ -58,12 +60,12 @@ class CeDESUserDataPanel(UserDataPanel):
 
     def updateWidgets(self):
         """Hide "bill" fields to member if it is "CeDES Free"."""
-        if self.is_manager:
-            # move bill_label one position down because field member_type
-            # is displayed for Manager
-            self.contentProviders['bill_label'].position = 11
-        else:
-            self.contentProviders['bill_label'].position = 10
+
+        # move ContentProviders at correct position
+        # number of fields may vary depending on fact that user is Manager, ...
+        self.contentProviders['school_label'].position = self.fields.keys().index('school_name')
+        # + 1 is because we inserted the 'school_label' ContentProvider before
+        self.contentProviders['bill_label'].position = self.fields.keys().index('bill_tva') + 1
 
         super(CeDESUserDataPanel, self).updateWidgets()
         if self._hide_bill_fields():

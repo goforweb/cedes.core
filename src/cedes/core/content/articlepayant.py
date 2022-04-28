@@ -9,8 +9,6 @@ from AccessControl import ClassSecurityInfo
 from cedes.core.content.article import Article
 from cedes.core.content.article import IArticle
 from plone.dexterity.schema import DexteritySchemaPolicy
-from plone.supermodel import model
-from zope import schema
 from zope.interface import implementer
 
 

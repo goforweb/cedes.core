@@ -15,10 +15,12 @@ from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
 from plone.dexterity.schema import DexteritySchemaPolicy
 from plone.supermodel import model
+from z3c.relationfield.event import updateRelations
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
 from zope.interface import implementer
+from zope.interface.interfaces import ObjectEvent
 
 import os
 
@@ -39,7 +41,7 @@ class IPoint(model.Schema):
         'cf_resources',
         RelatedItemsFieldWidget,
         pattern_options={
-            'basPath': '/dossiers-structures',
+            'basePath': '/sitecedes/ressources',
             'selectableTypes': ['ArticleGratuit', 'ArticlePayant',
                                 'SiteInternet', 'Statistiques', 'Audio',
                                 'Video', 'Cederom', 'Bibliographie',
@@ -72,19 +74,19 @@ class Base(object):
           member has not already payed
           If total is True, return the total price no matter the member already payed
         """
-        ressource_uids = self.get_all_ressource_uids()
+        resource_uids = self.get_all_resource_uids()
         if not total:
             # remove already payed ArticlePayant
             member = api.user.get_current()
             already_payed_uids = [elt[0] for elt in member.get_account_transactions()]
-            ressource_uids = set(ressource_uids).difference(set(already_payed_uids))
-        return len(self.get_paying_ressources(tuple(ressource_uids)))
+            resource_uids = set(resource_uids).difference(set(already_payed_uids))
+        return len(self.get_paying_resources(tuple(resource_uids)))
 
-    security.declarePrivate('get_paying_ressources')
+    security.declarePrivate('get_paying_resources')
 
-    def get_paying_ressources(self, uids):
+    def get_paying_resources(self, uids):
         """
-        Returns brains of paying ressources (ArticlePayant)
+        Returns brains of paying resources (ArticlePayant)
         """
         catalog = api.portal.get_tool('portal_catalog')
         return catalog(UID=uids)
@@ -112,16 +114,16 @@ class DossierStructure(Folder, Base):
         """
         return self
 
-    security.declarePrivate('get_all_ressource_uids')
+    security.declarePrivate('get_all_resource_uids')
 
-    def get_all_ressource_uids(self):
+    def get_all_resource_uids(self):
         """
-          returns Returns the list of all ressources referenced in this file (uid list)
+          returns Returns the list of all resources referenced in this file (uid list)
         """
         res = []
         subitems = self.get_sub_points()
         for item in subitems:
-            res = res + item.get_all_ressource_uids()
+            res = res + item.get_all_resource_uids()
         return res
 
     def is_pdf_generated(self):
@@ -147,14 +149,15 @@ def _compute_ds_subject(resource):
                if not subject.startswith(CEDES_DS_KW_PREFIX)]
     # compute ds related kw
     ds_subject = []
-    for cr_point in resource.getCr_points():
-        ds_subject.append(cr_point.getDossierStructure().get_container_kw_marker())
+    for point in resource.get_cr_points(the_objects=True):
+        kw = point.get_dossier_structure().get_container_kw_marker()
+        if kw is not None:
+            ds_subject.append(kw)
     # remove duplicates, it is the case if linked to several Point of different
     # DS using same container with ds kw
     ds_subject = list(set(ds_subject))
     # set Subject
     resource.setSubject(subject + ds_subject)
-    resource.reindexObject(idxs=['Subject'])
 
 
 @implementer(IPoint)
@@ -182,28 +185,28 @@ class Point(Folder, Base):
             return parent
         return parent.get_dossier_structure()
 
-    security.declarePrivate('get_all_ressource_uids')
+    security.declarePrivate('get_all_resource_uids')
 
-    def get_all_ressource_uids(self):
+    def get_all_resource_uids(self):
         """
-          Returns the list of all ressources referenced in this Point (uid list)
+          Returns the list of all resources referenced in this Point (uid list)
         """
         res = []
         if self.cf_resources:
             res = res + [ress.to_object.UID() for ress in self.cf_resources]
         subitems = self.get_sub_points()
         for item in subitems:
-            res = res + item.get_all_ressource_uids()
+            res = res + item.get_all_resource_uids()
         return res
 
     def get_cf_resources(self, the_objects=False):
         """ """
         if not the_objects:
-            return self.cf_resources
+            return self.__dict__['cf_resources']
         else:
-            return [ressource.to_object for ressource in self.cf_resources]
+            return [resource.to_object for resource in self.cf_resources]
 
-    def setCf_resources(self, value, **kwargs):
+    def set_cf_resources(self, values, **kwargs):
         """
           Override mutator to :
           - reindex 'has_cr_points' index on added/removed resources;
@@ -211,19 +214,23 @@ class Point(Folder, Base):
             then we will add this keyword to every resources linked to a Point of a DS of this
             Folder and reindex the 'Subject' index for it.
         """
-        # XXX to be fixed !!!
-        # remove empty values
-        value = [v for v in value if v]
-        stored = self.getRawCf_resources()
-        added_or_removed = list(set(stored).symmetric_difference(set(value)))
-        self.getField('cf_resources').set(self, value, **kwargs)
+        new = [rel.to_object for rel in values]
+        stored = self.get_cf_resources(True)
+        added = [resource for resource in new if resource not in stored]
+        removed = [resource for resource in stored if resource not in new]
+
+        # store value and update relations because we need it now
+        self.__dict__['cf_resources'] = values
+        updateRelations(self, ObjectEvent(self))
+
         # now that references are added/removed, we can update has_cr_points
         # and if kw_marker, manage 'Subject'
-        catalog = api.portal.get_tool('portal_catalog')
-        added_or_removed_objs = [brain.getObject() for brain in catalog(UID=added_or_removed)]
-        for resource in added_or_removed_objs:
+        for resource in added + removed:
             _compute_ds_subject(resource)
-            resource.reindexObject(idxs=['has_cr_points'])
+            resource.reindexObject(idxs=['Subject', 'has_cr_points'], update_metadata=1)
+
+    # accessor/mutator for field "cf_resources"
+    cf_resources = property(get_cf_resources, set_cf_resources)
 
 
 class DossierStructureSchemaPolicy(DexteritySchemaPolicy):

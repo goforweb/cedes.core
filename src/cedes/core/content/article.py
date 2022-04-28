@@ -6,8 +6,8 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from cedes.core.content.ressource import IRessource
-from cedes.core.content.ressource import Ressource
+from cedes.core.content.resource import IResource
+from cedes.core.content.resource import Resource
 from collective.dexteritytextindexer.directives import searchable
 from plone.app.contenttypes.content import File
 from plone.app.contenttypes.interfaces import IFile
@@ -17,7 +17,7 @@ from plone.supermodel import model
 from zope import schema
 
 
-class IArticle(IRessource, IFile):
+class IArticle(IResource, IFile):
     """ """
 
     cr_date = schema.Datetime(
@@ -58,7 +58,7 @@ class IArticle(IRessource, IFile):
         required=False, )
 
 
-class Article(File, Ressource):
+class Article(File, Resource):
 
     security = ClassSecurityInfo()
 

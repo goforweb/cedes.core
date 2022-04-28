@@ -12,10 +12,10 @@
                      zope.lifecycleevent.interfaces.IObjectModifiedEvent"
                 handler="cedes.core.events.onThemeModified" />
 
-    <!-- Ressource -->
-    <subscriber for="cedes.core.content.ressource.IRessource
+    <!-- Resource -->
+    <subscriber for="cedes.core.content.resource.IResource
                      zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-                handler="cedes.core.events.onRessourceModified" />
+                handler="cedes.core.events.onResourceModified" />
 
     <!-- Principal -->
     <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
@@ -28,9 +28,9 @@
     <!-- cioppino.twothumbs -->
     <subscriber for="cedes.core.interfaces.ICeDESLoveThumbsDontYou
                     cioppino.twothumbs.event.ILikeEvent"
-                handler=".events.onRessourceLiked" />
+                handler=".events.onResourceLiked" />
     <subscriber for="cedes.core.interfaces.ICeDESLoveThumbsDontYou
                     cioppino.twothumbs.event.IUnlikeEvent"
-                handler=".events.onRessourceUnliked" />
+                handler=".events.onResourceUnliked" />
 
 </configure>

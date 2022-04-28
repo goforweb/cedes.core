@@ -36,16 +36,16 @@ def onThemeModified(theme, event):
     """Called when existing theme modified."""
     mod_attrs = get_modified_attrs(event)
     if 'title' in mod_attrs or 'IDublinCore.subjects' in mod_attrs:
-        # reindex associated ressources as theme title and description
-        # is indexed in ressources SearchableText
+        # reindex associated resources as theme title and description
+        # is indexed in resources SearchableText
         associated = theme.get_associated_resources(sorted=False)
         for item in associated:
             item = item.getObject()
             item.reindexObject(idxs=['SearchableText'])
 
 
-def onRessourceModified(obj, event):
-    """Called when existing ressource modified."""
+def onResourceModified(obj, event):
+    """Called when existing resource modified."""
     # set a first classification date if empty and a classification is defined
     if not obj.cr_first_classification_date and obj.cr_classification:
         obj.cr_first_classification_date = datetime.now()
@@ -54,12 +54,12 @@ def onRessourceModified(obj, event):
         obj.cr_first_classification_date = None
 
 
-def onRessourceLiked(obj, event):
+def onResourceLiked(obj, event):
     """ """
     obj.reindexObject(idxs=['user_ratings'])
 
 
-def onRessourceUnliked(obj, event):
+def onResourceUnliked(obj, event):
     """ """
     obj.reindexObject(idxs=['user_ratings'])
 

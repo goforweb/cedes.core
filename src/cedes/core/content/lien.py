@@ -5,8 +5,8 @@
 # GNU General Public License (GPL)
 #
 
-from cedes.core.content.ressource import IRessource
-from cedes.core.content.ressource import Ressource
+from cedes.core.content.resource import IResource
+from cedes.core.content.resource import Resource
 from plone.app.contenttypes.content import Link
 from plone.app.contenttypes.interfaces import ILink
 from plone.app.z3cform.widget import LinkFieldWidget
@@ -15,7 +15,7 @@ from zope import schema
 from zope.interface import implementer
 
 
-class ILien(IRessource, ILink):
+class ILien(IResource, ILink):
     """ """
 
     directives.widget("remoteUrl", LinkFieldWidget)
@@ -25,5 +25,5 @@ class ILien(IRessource, ILink):
 
 
 @implementer(ILien)
-class Lien(Link, Ressource):
+class Lien(Link, Resource):
     """ """

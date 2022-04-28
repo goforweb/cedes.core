@@ -41,11 +41,11 @@
           <span tal:condition="is_cedes_free"> Vous devez être membre CeDES 100% pour pouvoir télécharger le PDF d'un dossier.<br>Allez dans <a tal:attributes="href string:${portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.</span>
           <span tal:condition="python: not is_cedes_free and not member.get_account_balance()">L'acc&egrave;s aux dossiers est conditionn&eacute; par un solde de points cr&eacute;diteur (voir <a tal:attributes="href string:${portal_url}/@@my-account">"Mon compte"</a>).  Pour recevoir des crédits:<br />
             a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
-            b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien bris&eacute;, partagez une ressource int&eacute;ressante, ....). Saisissez la zone commentaire disponible au bas de chaque ressource ou utilisez le formulaire mis &agrave; votre disposition sous "Contact" au-dessus de l'&eacute;cran
+            b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une resource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien bris&eacute;, partagez une resource int&eacute;ressante, ....). Saisissez la zone commentaire disponible au bas de chaque resource ou utilisez le formulaire mis &agrave; votre disposition sous "Contact" au-dessus de l'&eacute;cran
           </span>
           <span tal:condition="python: not is_cedes_free and member.get_account_balance() and not member.check_balance(price)">Vous n'avez pas suffisamment de crédits pour télécharger ce dossier.  (voir <a tal:attributes="href string:${portal_url}/@@my-account">"Mon compte"</a>).  Pour recevoir des crédits:<br />
             a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a été) envoyée par e-mail (v&eacute;rifiez &eacute;galement votre courrier ind&eacute;sirable) OU<br />
-            b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien
+            b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une resource du site &agrave; la suite de sa validation en classe ou de l'existence d'un lien
           </span>
         </div>
 

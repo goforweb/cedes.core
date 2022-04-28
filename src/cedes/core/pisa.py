@@ -38,9 +38,9 @@ def pdf(self):
        member.get_account_balance():
         member.add_transaction(self.UID(), self.get_price(), is_dossier_structure=True)
         # remember access to sub ArticlePayant
-        all_ressource_uids = self.get_all_ressource_uids()
+        all_resource_uids = self.get_all_resource_uids()
         already_payed_uids = [elt[0] for elt in member.get_account_transactions()]
-        for paying in self.get_paying_ressources(all_ressource_uids):
+        for paying in self.get_paying_resources(all_resource_uids):
             # as already payed here above by the DossierStructure price
             # just remember the access to the ArticlePayant but with a price of 0
             paying_uid = paying.UID

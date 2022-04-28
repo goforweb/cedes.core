@@ -17,7 +17,7 @@
                    is_cedes_free python: member.is_cedes_free();">
 
     <h3 tal:condition="python: not request.get('folderContents') and context.portal_type in ('Theme', 'PlanClassement') and not '@@updated_search' in context.REQUEST['URL']">
-      <span tal:replace="python:(batch.sequence_length>1) and 'Ressources class&eacute;es' or 'Ressource class&eacute;e'"/> : <span tal:replace="python:batch.sequence_length"/>
+      <span tal:replace="python:(batch.sequence_length>1) and 'Resources class&eacute;es' or 'Resource class&eacute;e'"/> : <span tal:replace="python:batch.sequence_length"/>
     </h3>
 
     <!-- Search results -->
@@ -83,7 +83,7 @@
                               title python: not item_type == 'DossierStructure' and desc or '';
                               class string:visualIconPadding state-${item_state};
                               onclick python:((item_type == 'ArticlePayant' and not isManager) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or ''">
-              <span tal:content="item/Title">Ressource title</span>
+              <span tal:content="item/Title">Resource title</span>
               <span class="ds-kw-epc"
                     tal:condition="python: 'ds-kw-epc' in item.Subject">EPC</span>
             </a>
@@ -92,7 +92,7 @@
             <form tal:condition="item/positive_ratings" class="thumbs-up-readonly" onclick="event.preventDefault();">
               <span tal:define="myVote python:item.user_ratings and member.id in item.user_ratings" tal:attributes="class python:'readonly thumbs-up' + (myVote==1 and ' selected' or '')">
                 <input type="submit" name="form.lovinit" value="J'aime"
-                    class="allowMultiSubmit like-button" title="Accédez à la ressource pour gérer le &laquo;J'aime&raquo;" />
+                    class="allowMultiSubmit like-button" title="Accédez à la resource pour gérer le &laquo;J'aime&raquo;" />
                 <span class="total-thumbs-up">
                     <span class="tally-total" tal:content="item/positive_ratings" />
                 </span>

@@ -43,7 +43,7 @@
   </criterion>
   <criterion name="c1">
    <property name="widget">checkbox</property>
-   <property name="title">Type de ressource</property>
+   <property name="title">Type de resource</property>
    <property name="index">portal_type</property>
    <property name="operator">or</property>
    <property name="operator_visible">False</property>

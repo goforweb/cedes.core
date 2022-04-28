@@ -52,11 +52,11 @@
     <!-- collective.dexteritytextindexer RichText converter -->
     <adapter
         zcml:condition="installed plone.app.textfield"
-        factory="cedes.core.indexes.RessourceRichTextIndexFieldConverter" />
+        factory="cedes.core.indexes.ResourceRichTextIndexFieldConverter" />
 
     <!-- collective.dexteritytextindexer extender -->
-    <adapter factory="cedes.core.indexes.RessourceSearchableTextExtender"
-             name="RessourceSearchableTextExtender" />
+    <adapter factory="cedes.core.indexes.ResourceSearchableTextExtender"
+             name="ResourceSearchableTextExtender" />
 
     <!-- CedesMemberData -->
     <adapter

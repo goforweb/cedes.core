@@ -108,12 +108,12 @@ class ICeDESUserDataSchema(Interface):
     """Need to monkey patch user schemas because it is not overridable as is."""
     # original values of IUserDataSchema
     fullname = pau_schema.ProtectedTextLine(
-        title=_(u'label_full_name', default=u'Full Name'),
+        title=_(u'title_full_name', default=u'Full Name'),
         description=_(u'help_full_name_creation',
                       default=u"Enter full name, e.g. John Smith."),
         required=False)
     email = pau_schema.ProtectedEmail(
-        title=_(u'label_email', default=u'Email'),
+        title=_(u'title_email', default=u'Email'),
         description=u'We will use this address if you need to recover your '
                     u'password',
         required=True,
@@ -123,65 +123,68 @@ class ICeDESUserDataSchema(Interface):
     # member type and legal validation
     directives.write_permission(member_type="cmf.ManagePortal")
     member_type = schema.Choice(
-        title=_(u'label_member_type', default=u'Member type'),
+        title=_(u'title_member_type', default=u'Member type'),
         values=["CeDES Free", "CeDES 100%"],
         default='CeDES Free',
         required=True)
     legal_validation = schema.Bool(
-        title=_(u'label_legal_validation', default=u'Legal validation'),
+        title=_(u'title_legal_validation',
+                default=u'Legal validation'),
+        description=_(u'descr_legal_validation',
+                default=u'Legal validation descr'),
         required=True,
         constraint=legal_validation_constraint)
 
     # school
     school_name = schema.TextLine(
-        title=_(u'label_school_name', default=u'School name'),
+        title=_(u'title_school_name', default=u'School name'),
         required=False)
     school_email = schema.TextLine(
-        title=_(u'label_school_email', default=u'School email'),
+        title=_(u'title_school_email', default=u'School email'),
         constraint=pau_schema.checkEmailAddress,
         required=True)
     school_address = schema.TextLine(
-        title=_(u'label_school_address', default=u'School address'),
+        title=_(u'title_school_address', default=u'School address'),
         required=False)
     school_postal_code = schema.TextLine(
-        title=_(u'label_school_postal_code', default=u'School postal code'),
+        title=_(u'title_school_postal_code', default=u'School postal code'),
         required=False)
     school_locality = schema.TextLine(
-        title=_(u'label_school_locality', default=u'School locality'),
+        title=_(u'title_school_locality', default=u'School locality'),
         required=False)
     school_country = schema.Choice(
-        title=_(u'label_school_locality', default=u'School locality'),
+        title=_(u'title_school_country', default=u'School country'),
         vocabulary='cedes.core.vocabularies.countriesvocabulary',
         default='BE',
         required=True)
     school_phone = schema.TextLine(
-        title=_(u'label_school_phone', default=u'School phone'),
+        title=_(u'title_school_phone', default=u'School phone'),
         required=False)
 
     # bill
     bill_tva = schema.TextLine(
-        title=_(u'label_bill_tva', default=u'Bill tva'),
+        title=_(u'title_bill_tva', default=u'Bill tva'),
         description=('Encodez votre numéro de TVA seulement si vous êtes assujetti'),
         required=False)
     bill_name = schema.TextLine(
-        title=_(u'label_bill_name', default=u'Bill name'),
+        title=_(u'title_bill_name', default=u'Bill name'),
         required=False)
     bill_email = schema.TextLine(
-        title=_(u'label_bill_email', default=u'Bill email'),
+        title=_(u'title_bill_email', default=u'Bill email'),
         constraint=pau_schema.checkEmailAddress,
         # managed using a validator because we use same form to manage Free account
         required=False)
     bill_address = schema.TextLine(
-        title=_(u'label_bill_address', default=u'Bill address'),
+        title=_(u'title_bill_address', default=u'Bill address'),
         required=False)
     bill_postal_code = schema.TextLine(
-        title=_(u'label_bill_postal_code', default=u'Bill postal code'),
+        title=_(u'title_bill_postal_code', default=u'Bill postal code'),
         required=False)
     bill_locality = schema.TextLine(
-        title=_(u'label_bill_locality', default=u'Bill locality'),
+        title=_(u'title_bill_locality', default=u'Bill locality'),
         required=False)
     bill_country = schema.Choice(
-        title=_(u'label_bill_locality', default=u'Bill locality'),
+        title=_(u'title_bill_country', default=u'Bill country'),
         vocabulary='cedes.core.vocabularies.countriesvocabulary',
         default='BE',
         required=True)

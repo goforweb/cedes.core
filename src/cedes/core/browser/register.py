@@ -21,6 +21,17 @@ from zope.interface import implementer
 from zope.interface import Invalid
 
 
+class SchoolLabelProvider(ContentProviderBase):
+    """ """
+
+    def __init__(self, context, request, view):
+        super(SchoolLabelProvider, self).__init__(context, request, view)
+        self.__parent__ = view
+
+    def render(self):
+        return "<h3>Coordonnées de l'institution</h3>"
+
+
 class BillLabelProvider(ContentProviderBase):
     """ """
 
@@ -53,20 +64,20 @@ class ICeDESCombinedRegisterSchema(pau_schema.IRegisterSchema, ICeDESUserDataSch
     # and by default it is protected by the "Manage portal" permission
     directives.write_permission(member_type="cmf.AddPortalMember")
     member_type = schema.Choice(
-        title=_(u'label_member_type', default=u'Member type'),
+        title=_(u'title_member_type', default=u'Member type'),
         values=['CeDES Free', 'CeDES 100%', '_no_set_'],
         default='_no_set_',
         required=True)
 
     # add extra fields to fight against robots
     compute = schema.Int(
-        title=_('label_compute', default='Combien font trois fois quatre?'),
+        title=_('title_compute', default='Combien font trois fois quatre?'),
         description="Ceci nous permet de vérifier que vous n'êtes pas un robot",
         constraint=compute_constraint,
         required=True)
     # will be hidden using CSS
     extra_field = schema.TextLine(
-        title=_('label_extra_field', default='Extra field'),
+        title=_('title_extra_field', default='Extra field'),
         constraint=compute_constraint,
         required=False)
 
@@ -75,8 +86,10 @@ class ICeDESCombinedRegisterSchema(pau_schema.IRegisterSchema, ICeDESUserDataSch
 class CeDESRegistrationForm(RegistrationForm):
     """ """
     contentProviders = ContentProviders()
+    contentProviders['school_label'] = SchoolLabelProvider
+    contentProviders['school_label'].position = 5
     contentProviders['bill_label'] = BillLabelProvider
-    contentProviders['bill_label'].position = 12
+    contentProviders['bill_label'].position = 13
 
     @property
     def schema(self):

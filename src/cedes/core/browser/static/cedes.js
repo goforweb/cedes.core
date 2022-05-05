@@ -105,3 +105,8 @@ initListingNavigation = function () {
 };
 
 jQuery(document).ready(initListingNavigation);
+
+
+$("input#form-buttons-synchronize").click(function() {
+    document.getElementById('patience').style.display='block';
+});

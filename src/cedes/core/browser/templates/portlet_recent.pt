@@ -62,7 +62,7 @@
                         Continuer...
                       </a>
                     </dd>
-                    <dd tal:condition="python: view.is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/@@my-account">'Mon compte'</a> pour modifier votre abonnement.</dd>
+                    <dd tal:condition="python: view.is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.</dd>
                     <dd tal:condition="python:not view.is_cedes_free and not member.check_balance(1) and not viewable"> <strong>Solde Insuffisant</strong> : Pour recevoir des cr&eacute;dits, veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (a &eacute;t&eacute;) envoy&eacute;e </dd>
                    </dl>
                   </tal:warningMessage>
@@ -89,4 +89,3 @@
     </tal:defines>
   </body>
 </html>
-

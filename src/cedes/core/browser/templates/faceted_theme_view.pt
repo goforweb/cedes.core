@@ -23,7 +23,7 @@
             <div class="portalMessage statusmessage statusmessage-info alert alert-info"
                  tal:condition="python: batch_length <= 5">
               <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-info', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
-              <strong>Info</strong>
+              <strong>Info:</strong>
               <span>Votre recherche n'affiche aucun ou trop peu de résultats?
                       <a href="#"
                          tal:attributes="href string:$portal_url/pages/aide#S9">Cliquez ici</a>
@@ -34,7 +34,7 @@
             <div class="portalMessage statusmessage statusmessage-info alert alert-info"
                  tal:condition="python: batch_length >= 50">
               <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-info', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
-              <strong>Info</strong>
+              <strong>Info:</strong>
               <span>Votre recherche affiche trop de résultats?
                 <a href="#" tal:attributes="href string:$portal_url/pages/aide#S8">Cliquez ici</a> pour savoir comment en améliorer la pertinence.
               </span>
@@ -58,7 +58,7 @@
           <div tal:condition="not:layout/may_search">
             <div class="portalMessage statusmessage statusmessage-warning alert alert-warning">
               <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
-              <strong>Avertissement</strong>
+              <strong>Avertissement:</strong>
               <span>L'accès au moteur de recherche est réservé aux abonnés CeDES 100%. Il est gracieusement mis à la disposition des abonnés CeDES Free durant une semaine.
               Allez dans <a tal:attributes="href string:${layout/portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.
               </span>

@@ -43,8 +43,10 @@ function toggleDoc(tag, toggle_parent_active=true) {
 }
 
 $(document).ready(function () {
-  Faceted.Options.FADE_SPEED=0;
-  Faceted.Options.SHOW_SPINNER=true;
+    Faceted.Options.FADE_SPEED=0;
+    Faceted.Options.SHOW_SPINNER=true;
+
+    $("button#form-buttons-synchronize").click(function() {document.getElementById('patience').style.display='block';});
 })
 
 function resetFaceted() {
@@ -105,8 +107,3 @@ initListingNavigation = function () {
 };
 
 jQuery(document).ready(initListingNavigation);
-
-
-$("input#form-buttons-synchronize").click(function() {
-    document.getElementById('patience').style.display='block';
-});

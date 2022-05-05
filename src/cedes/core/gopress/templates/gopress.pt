@@ -1,10 +1,11 @@
-<div id="patience"
-     class="portalMessage statusmessage statusmessage-warning alert alert-warning"
+<div tal:define="icons nocall: context/@@iconresolver"
+     id="patience"
+     class="portalMessage statusmessage statusmessage-info alert alert-info"
      style="display:none;">
-  <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
-  <strong>Info</strong>
-  <span>Synchronisation en cours... Veuillez Patienter...
-  </span>
+  <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-info', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+  <strong>Info:</strong>
+  <span>Synchronisation en cours... Veuillez Patienter...</span>
+  &nbsp;&nbsp;<img tal:attributes="src string:${view/portal_url}/++plone++cedes.core/spinner_small.gif" />
 </div>
 
 <p>

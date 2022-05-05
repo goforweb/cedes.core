@@ -19,7 +19,7 @@
            tal:condition="python: bill and bill.get('pdf')">
         <tal:icon tal:define="icons nocall: context/@@iconresolver""
                   tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
-        <strong>Attention</strong>
+        <strong>Avertissement:</strong>
         <span>Il y a une facture en attente de paiement!
           <a target="_blank"
              tal:attributes="href python: view.download_bill_url()">

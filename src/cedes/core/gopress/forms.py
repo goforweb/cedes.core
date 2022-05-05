@@ -74,6 +74,8 @@ class GopressImportForm(form.Form):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
 
     def _check_auth(self):
         """Raise Unauthorized if current user can not use gopress."""

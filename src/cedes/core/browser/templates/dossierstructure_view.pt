@@ -21,8 +21,8 @@
             tal:attributes="class python: 'portalMessage statusmessage statusmessage-info alert alert-info' if may_access else 'portalMessage statusmessage statusmessage-warning alert alert-warning';"
             tal:define="icons nocall: context/@@iconresolver">
           <tal:icon tal:replace="structure python:icons.tag('plone-statusmessage-info' if may_access else 'plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
-          <strong tal:condition="not: may_access">Avertissement</strong>
-          <strong tal:condition="may_access">Info</strong>
+          <strong tal:condition="not: may_access">Avertissement:</strong>
+          <strong tal:condition="may_access">Info:</strong>
           <span tal:condition="python: may_access and price == 0 and not dossier_is_free">
             Votre compte a déjà été débité pour ce dossier, vous pouvez donc y accéder librement.
             <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">Continuer...</a>' pour confirmer.

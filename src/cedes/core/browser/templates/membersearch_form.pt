@@ -80,7 +80,7 @@
                                           tal:condition="python: result['bill_accounting_failed']"
                                           class="icon-four help"
                                           title="Facture échouée" />
-                                    <a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a>
+                                    <a target="_blank" tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a>
                                 </td>
                                 <td><span tal:replace="python:result['member_type'][5:]"/></td>
                                 <td><span tal:replace="result/email"/></td>
@@ -94,7 +94,7 @@
                                 </td>
                                 <td tal:content="python: result['account_balance']">Account balance</td>
                                 <td>
-                                    <a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;">
+                                    <a target="_blank" tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;">
                                         <span title="Editer le profil" class="icon-edit bold" />
                                     </a>
                                 </td>

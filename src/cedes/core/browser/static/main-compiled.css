@@ -223,3 +223,7 @@ td.resource-icon {
 td.resource-icon, td.resource-content {
     padding-top: 0.5em;
 }
+/* used in folder-listing for default Plone contents (Image, ...) */
+div.entries {
+    padding-top: 1em;
+}

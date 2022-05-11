@@ -14,11 +14,8 @@ from z3c.form import form
 from z3c.form.contentprovider import ContentProviders
 from z3c.form.interfaces import IFieldsAndContentProvidersForm
 from zope import interface
-from zope import schema
 from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
-from zope.component.hooks import getSite
 from zope.contentprovider.provider import ContentProviderBase
-from zope.i18n import translate
 from zope.interface import implementer
 
 

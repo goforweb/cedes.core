@@ -254,19 +254,6 @@ class MemberCreditForm(form.Form):
             return ""
         return super(MemberCreditForm, self).render()
 
-    @button.buttonAndHandler('Créditer gratuitement',
-                             name='credit',
-                             condition=lambda form: not form._member.is_cedes_free())
-    def handle_credit(self, action):
-        data, errors = self.extractData()
-        if errors:
-            self.status = self.formErrorsMessage
-            return
-        self._do_credit(data)
-        self._redirect_to = "{0}/@@member-search?form.widgets.login={1}" \
-            "&form.widgets.member_type:list=&form.buttons.search=1".format(
-                self.portal.Members.absolute_url(), data['member_id'])
-
     @button.buttonAndHandler('Créditer et valider le paiement',
                              name='credit_and_validate_payment',
                              condition=lambda form: not form._member.is_cedes_free())
@@ -276,6 +263,19 @@ class MemberCreditForm(form.Form):
             self.status = self.formErrorsMessage
             return
         self._do_credit_and_validate_payment(data)
+        self._redirect_to = "{0}/@@member-search?form.widgets.login={1}" \
+            "&form.widgets.member_type:list=&form.buttons.search=1".format(
+                self.portal.Members.absolute_url(), data['member_id'])
+
+    @button.buttonAndHandler('Créditer gratuitement',
+                             name='credit',
+                             condition=lambda form: not form._member.is_cedes_free())
+    def handle_credit(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+        self._do_credit(data)
         self._redirect_to = "{0}/@@member-search?form.widgets.login={1}" \
             "&form.widgets.member_type:list=&form.buttons.search=1".format(
                 self.portal.Members.absolute_url(), data['member_id'])
@@ -312,7 +312,8 @@ class MemberCreditForm(form.Form):
         now = DateTime()
         member.validate_payment(now)
         self.portal.plone_utils.addPortalMessage(
-            'Le compte de {0} ({1}) a été crédité de {2} points.'.format(
+            'Le compte de {0} ({1}) a été crédité de {2} points et la facture '
+            'en attente de paiement a été validée.'.format(
                 member.getProperty('fullname'), member.getId(), str(data['credit'])))
 
     def _do_credit_free(self, data):

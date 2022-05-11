@@ -69,9 +69,13 @@ class CeDESUserDataPanel(UserDataPanel):
 
         super(CeDESUserDataPanel, self).updateWidgets()
         if self._hide_bill_fields():
-            for w in self.widgets:
-                if w.startswith('bill'):
-                    self.widgets[w].mode = HIDDEN_MODE
+            widget_names = [w for w in self.widgets]
+            for widget_name in widget_names:
+                if widget_name.startswith('bill'):
+                    # ContentProviders are in widgets but not in fields
+                    if widget_name in self.fields:
+                        del self.fields[widget_name]
+                    del self.widgets[widget_name]
 
 
 class CeDESInlineValidationView(InlineValidationView):

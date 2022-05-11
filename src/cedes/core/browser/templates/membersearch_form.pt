@@ -76,7 +76,10 @@
                                           title="Crédits expirent dans moins de 30 jours" /><span
                                           tal:condition="python: result['credit_expired_warning']"
                                           class="icon-three help"
-                                          title="Crédits expirés" />
+                                          title="Crédits expirés" /><span
+                                          tal:condition="python: result['bill_accounting_failed']"
+                                          class="icon-four help"
+                                          title="Facture échouée" />
                                     <a tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a>
                                 </td>
                                 <td><span tal:replace="python:result['member_type'][5:]"/></td>
@@ -149,6 +152,8 @@
                         <span class="icon-one help" title="Facture en attente de paiement">Facture en attente de paiement</span>
                         <span class="icon-two help" title="Crédits expirent dans moins de 30 jours">Crédits expirent dans moins de 30 jours</span>
                         <span class="icon-three help" title="Crédits expirés">Crédits expirés</span>
+                        <span class="icon-four help" title="Facture échouée">Facture échouée</span>
+                        <span class="icon-five help" title="Note de crédit échouée">Note de crédit échouée</span>
                     </div>
 
                     <div class="visualClear" id="clear-space-before-navigation"><!-- --></div>

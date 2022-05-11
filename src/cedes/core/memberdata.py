@@ -131,9 +131,16 @@ class ICeDESUserDataSchema(Interface):
         title=_(u'title_legal_validation',
                 default=u'Legal validation'),
         description=_(u'descr_legal_validation',
-                default=u'Legal validation descr'),
+                      default=u'Legal validation descr'),
         required=True,
         constraint=legal_validation_constraint)
+    newsletter = schema.Bool(
+        title=_(u'title_newsletter',
+                default=u'Subsribe to newsletter?'),
+        description=_(u'descr_newsletter',
+                      default=u'Newsletter descr'),
+        required=False,
+        default=True)
 
     # school
     school_name = schema.TextLine(
@@ -206,7 +213,7 @@ class ICeDESUserDataSchema(Interface):
         is_registering = getattr(data, 'username', False)
         if is_registering:
             if check_email_unicity(data.email):
-                raise Invalid('Un compte est déjà lié à l\'adresse courriel "{0}". '
+                raise Invalid('Un compte est déjà lié à l\'adresse e-mail "{0}". '
                               'Utilisez les procédures "Obtenir votre nom d\'utilisateur" et '
                               '"Réinitialiser votre mot de passe" disponible via le lien '
                               '"Se connecter" pour récupérer votre identifiant et '
@@ -218,17 +225,15 @@ class ICeDESUserDataSchema(Interface):
             current_email = req.get('PUBLISHED').member.getProperty('email')
             if current_email.strip() != data.email.strip() and check_email_unicity:
                 # changing email and reusing an existing one
-                raise Invalid("L'adresse courriel \"{0}\" est déjà utilisée.".format(data.email))
+                raise Invalid("L'adresse e-mail \"{0}\" est déjà utilisée.".format(data.email))
 
         # if bill_... fields are shown and current member is not a Manager, it must be filled
-        if not api.user.get_current().is_manager() and hasattr(data, 'bill_name'):
+        if not api.user.get_current().is_manager() and "form.widgets.bill_name" in req.form:
             if not data.bill_name or \
                not data.bill_email or \
                not data.bill_country or \
                not data.bill_address or \
-               not data.bill_address or \
                not data.bill_postal_code or \
-               not data.bill_locality or \
                not data.bill_locality:
                 raise Invalid('Veuillez encoder tous les champs dans la zone "Facturation" au bas du formulaire.')
 
@@ -358,8 +363,8 @@ class CedesMemberData(MemberData):
     def credit(self, value):
         """ """
         self.set_account_balance(self.get_account_balance() + value)
-        self.set_account_transactions(self.get_account_transactions() +
-                                      (('Crédit', value, DateTime()),))
+        self.set_account_transactions(
+            self.get_account_transactions() + (('Crédit', value, DateTime()),))
         # email notification
         send_mail(subject='CeDES - Vos crédits ont été activés',
                   template_name='mail_credit_activation',
@@ -560,8 +565,7 @@ class CedesMemberData(MemberData):
                           bill_accounting_failed[2], )
             self.setMemberProperties({'bill_accounting_failed': (),
                                       'has_failed_accounting_f': False,
-                                      'has_failed_accounting_n': False,
-                                      'has_bill_waiting_payment': False})
+                                      'has_failed_accounting_n': False})
 
     def send_low_reminder(self):
         """ """

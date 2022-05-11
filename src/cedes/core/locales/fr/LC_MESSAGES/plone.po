@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2022-04-28 14:53+0000\n"
+"POT-Creation-Date: 2022-05-11 07:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,6 +72,11 @@ msgstr ""
 msgid "descr_legal_validation"
 msgstr "Vous pouvez <a href='./pages/charte'>consulter la charte du CeDES ici</a>."
 
+#. Default: "Newsletter descr"
+#: ../memberdata.py:140
+msgid "descr_newsletter"
+msgstr "Vous pourrez vous désinscrire de la newsletter à tout moment en éditant vos données personnelles ou via un lien sur chacune des newsletters envoyées."
+
 #. Default: "No results were found."
 #: ../browser/templates/membersearch_form.pt:164
 msgid "description_no_results_found"
@@ -113,38 +118,38 @@ msgid "member_listing_not_allowed"
 msgstr ""
 
 #. Default: "Bill address"
-#: ../memberdata.py:178
+#: ../memberdata.py:185
 msgid "title_bill_address"
 msgstr "Adresse de facturation"
 
 #. Default: "Bill country"
-#: ../memberdata.py:187
+#: ../memberdata.py:194
 msgid "title_bill_country"
 msgstr "Pays"
 
 #. Default: "Bill email"
-#: ../memberdata.py:173
+#: ../memberdata.py:180
 msgid "title_bill_email"
 msgstr "E-mail pour facturation"
 
 #. Default: "Bill locality"
-#: ../memberdata.py:184
+#: ../memberdata.py:191
 msgid "title_bill_locality"
 msgstr "Localité"
 
 #. Default: "Bill name"
 #: ../browser/membersearch.py:131
-#: ../memberdata.py:170
+#: ../memberdata.py:177
 msgid "title_bill_name"
 msgstr "Nom pour facturation"
 
 #. Default: "Bill postal code"
-#: ../memberdata.py:181
+#: ../memberdata.py:188
 msgid "title_bill_postal_code"
 msgstr "Code Postal"
 
 #. Default: "Bill tva"
-#: ../memberdata.py:166
+#: ../memberdata.py:173
 msgid "title_bill_tva"
 msgstr "TVA"
 
@@ -200,40 +205,45 @@ msgstr "Cochez la case pour confirmer que vous respecterez la charte du CeDES."
 msgid "title_member_type"
 msgstr "Type de membre"
 
+#. Default: "Subsribe to newsletter?"
+#: ../memberdata.py:138
+msgid "title_newsletter"
+msgstr "S'inscrire à notre newsletter?"
+
 #. Default: "School address"
-#: ../memberdata.py:147
+#: ../memberdata.py:154
 msgid "title_school_address"
 msgstr "Adresse"
 
 #. Default: "School country"
-#: ../memberdata.py:156
+#: ../memberdata.py:163
 msgid "title_school_country"
 msgstr "Pays"
 
 #. Default: "School email"
-#: ../memberdata.py:143
+#: ../memberdata.py:150
 msgid "title_school_email"
 msgstr "E-mail de l'institution"
 
 #. Default: "School locality"
-#: ../memberdata.py:153
+#: ../memberdata.py:160
 msgid "title_school_locality"
 msgstr "Localité"
 
 #. Default: "School name"
 #: ../browser/membersearch.py:125
-#: ../memberdata.py:140
+#: ../memberdata.py:147
 msgid "title_school_name"
 msgstr "Nom de l'institution"
 
 #. Default: "School phone"
-#: ../memberdata.py:161
+#: ../memberdata.py:168
 msgid "title_school_phone"
 msgstr "Téléphone"
 
 #. Default: "School postal code"
 #: ../browser/membersearch.py:128
-#: ../memberdata.py:150
+#: ../memberdata.py:157
 msgid "title_school_postal_code"
 msgstr "Code Postal"
 

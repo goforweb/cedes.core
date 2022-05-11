@@ -45,12 +45,13 @@
             </a>
           </td>
           <td valign="top">
-            <div class="portalMessage statusmessage statusmessage-warning alert alert-warning"
-                tal:attributes="id string:ap${repeat/item/number};
-                                class python: viewable and 'portalMessage statusmessage statusmessage-info alert alert-info' or 'portalMessage statusmessage statusmessage-warning alert alert-warning';"
-                tal:define="item_uid item/UID; viewable python: member.check_viewable(item_uid);
-                            icons nocall: context/@@iconresolver"
-                tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
+            <div style="display: none;"
+                 class="portalMessage statusmessage statusmessage-warning alert alert-warning"
+                 tal:attributes="id string:ap${repeat/item/number};
+                                 class python: viewable and 'portalMessage statusmessage statusmessage-info alert alert-info' or 'portalMessage statusmessage statusmessage-warning alert alert-warning';"
+                 tal:define="item_uid item/UID; viewable python: member.check_viewable(item_uid);
+                             icons nocall: context/@@iconresolver"
+                 tal:condition="python:item_type in ('ArticlePayant', 'SequenceApprentissage', )">
               <tal:icon tal:replace="structure python:icons.tag(viewable and 'plone-statusmessage-info' or 'plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
               <strong tal:condition="not: viewable">Avertissement:</strong>
               <strong tal:condition="viewable">Info:</strong>

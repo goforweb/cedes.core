@@ -3,6 +3,7 @@
 
  <property name="member_type" type="string"></property>
  <property name="legal_validation" type="boolean"></property>
+ <property name="newsletter" type="boolean"></property>
 
  <property name="school_name" type="string"></property>
  <property name="school_email" type="string"></property>

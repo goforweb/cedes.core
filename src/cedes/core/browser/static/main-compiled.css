@@ -113,7 +113,19 @@ span.icon-three::before {
   font-size: 120%;
   margin-right: 0.1em;
 }
-
+span.icon-four::before {
+  content: '\e556';
+  font-size: 120%;
+  margin-right: 0.1em;
+}
+span.icon-five::before {
+  content: '\e557';
+  font-size: 120%;
+  margin-right: 0.1em;
+}
+.bill-accounting-failed {
+    color: darkOrange;
+}
 .highlight-orange,
 .mode-n {
     color: orange;

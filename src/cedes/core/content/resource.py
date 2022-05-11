@@ -21,6 +21,7 @@ from zope import schema
 from zope.interface import implementer
 from z3c.relationfield.relation import RelationValue
 from zope.event import notify
+from zope.globalrequest import getRequest
 from zope.lifecycleevent import ObjectModifiedEvent
 
 
@@ -164,14 +165,14 @@ class Resource(object):
             # notify modified so catalog is updated
             notify(ObjectModifiedEvent(point))
 
-        # XXX to be fixed !!!
         # manage DS Subject
         # DS related kw Subject are added automatically
         # when editing Points from resource, make sure it is not in request.form.Subject
         # or when removing from a Point using DS Subject, the kw is reapplied on form save...
-        subject_existing_keywords = self.REQUEST.form.get('subject_existing_keywords', None)
-        if subject_existing_keywords is not None:
-            self.REQUEST.form['subject_existing_keywords'] = list(self.Subject())
+        # mark in request that we need to remove it in the onResourceModified as correct Subject
+        # was recomputed in Point.set_cf_resources
+        req = getRequest()
+        req.set('computed_Subject', self.Subject())
 
         # we store nothing
         return

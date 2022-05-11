@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/@@main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:main fill-slot="content-core">
+<metal:content-core define-macro="content-core"
+  tal:define="res python: context.get_newsletter_content()" >
+
+  <tal:comment replace="nothing">Display fields to Managers</tal:comment>
+  <tal:is_manager condition="python: view.member.is_manager()">
+    <tal:block repeat="widget view/widgets/values|nothing">
+      <tal:block tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
+        <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
+      </tal:block>
+    </tal:block>
+
+    <fieldset tal:repeat="group view/groups|nothing"
+              tal:attributes="id python:''.join((group.prefix, 'groups.', group.__name__)).replace('.', '-')">
+      <legend tal:content="group/label" />
+      <tal:block tal:repeat="widget group/widgets/values|nothing">
+        <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
+      </tal:block>
+    </fieldset>
+  </tal:is_manager>
+
+  <!-- add a table with links to anchors -->
+  <tal:index_loop repeat="i python: range(0, len(res))">
+  <a href="#" tal:attributes="href python: '#%s' % res[i][0].UID()"
+     tal:content="python: res[i][0].Title()">Index link</a><br />
+  <!-- loop on every resources of the theme -->
+  </tal:index_loop>
+  <p>&nbsp;</p>
+  <tal:plan_loop repeat="i python: range(0, len(res))">
+    <!-- display the title of the plan theme -->
+    <a name="#" tal:attributes="name python: res[i][0].UID()"></a><p>&nbsp;</p>
+    <strong><p tal:content="python: res[i][0].Title()">Theme title</p></strong>
+    <!-- loop on every resources of the theme -->
+    <tal:resources_loop define="dummy python: request.set('folderContents', res[i][1]);">
+      <tal:block define="common_result_listing_content context/@@common-result-listing-content/index;">
+          <tal:content replace="structure common_result_listing_content" />
+      </tal:block>
+    </tal:resources_loop>
+  </tal:plan_loop>
+
+
+</metal:content-core>
+</metal:main>
+
+</body>
+</html>

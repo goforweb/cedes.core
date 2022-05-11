@@ -19,6 +19,7 @@ CEDES_RESOURCE_TYPES = ('ArticleGratuit',
                         'SequenceApprentissage')
 
 CEDES_DS_KW_PREFIX = "ds-kw-"
+CEDES_PLAN_ROOT = "plan"
 
 EXTRA_MAIL_TO = ['cedes@unamur.be', 'log@goforweb.be']
 setDefaultRoles(DEFAULT_ADD_CONTENT_PERMISSION, ('Manager', 'Owner',))

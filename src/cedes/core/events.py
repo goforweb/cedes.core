@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core import logger
+from cedes.core.config import CEDES_DS_KW_PREFIX
 from cedes.core.interfaces import IThemeFacetedNavigable
 from cedes.core.utils import get_modified_attrs
 from cedes.core.utils import send_mail
@@ -52,6 +53,11 @@ def onResourceModified(obj, event):
     # remove first classification date if no more classification
     elif not obj.cr_classification:
         obj.cr_first_classification_date = None
+    # make sure ds-kw-... keywords are removed
+    req = getRequest()
+    if 'computed_Subject' in req and not req['computed_Subject'] == obj.Subject():
+        obj.setSubject(req['computed_Subject'])
+        obj.reindexObject(idxs=['Subject'], update_metadata=1)
 
 
 def onResourceLiked(obj, event):

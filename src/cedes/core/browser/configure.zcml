@@ -139,6 +139,13 @@
         permission="zope2.View" />
 
     <!-- content custom views -->
+    <!-- Custom view for EmailContent -->
+    <browser:page
+        for="cedes.core.content.email.IEmailContent"
+        class="cedes.core.browser.content.EmailContentView"
+        name="view"
+        template="templates/emailcontent_view.pt"
+        permission="zope2.View" />
     <!-- Custom view for Point -->
     <browser:page
         for="cedes.core.content.dossierstructure.IPoint"

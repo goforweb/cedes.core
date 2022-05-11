@@ -214,3 +214,12 @@ div.alert {
 div#formfield-form-widgets-extra_field {
     display: none;
 }
+
+td.resource-icon {
+    vertical-align: top;
+    padding-right: 0.5em;
+    width: 32px;
+}
+td.resource-icon, td.resource-content {
+    padding-top: 0.5em;
+}

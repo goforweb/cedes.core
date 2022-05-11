@@ -1,8 +1,8 @@
 <div tal:define="batch python: request.get('folderContents') or view.performSearch(b_size=int(request.get('b_size', 30)), b_start=int(request.get('b_start', 0)));">
 
-<div id="common-result-listing">
+<div>
 
-  <div id="common-result-content"
+  <div
        tal:define="searchterm request/SearchableText|nothing;
                    use_view_action python: ['Image', 'File', 'ArticleGratuit', 'ArticlaPayant'];
                    ploneview nocall:context/@@plone;
@@ -22,7 +22,7 @@
 
     <!-- Search results -->
     <div metal:use-macro="here/batch_macros/macros/navigation" />
-    <table>
+    <table width="100%">
       <tal:loop repeat="item batch">
       <tr tal:define="item_type item/portal_type|item/PortalType;
                       item_type_title python: portal.portal_types.getTypeInfo(item_type).title"
@@ -36,7 +36,7 @@
                                           bc python: request.get('bc', '') or (here.portal_type == 'Theme' and here.UID()) or '';
                                           item_url python: bc and item_url + '?bc=' +bc or item_url;
                                           onclick_action string:document.getElementById('ap${repeat/item/number}').style.display='block';;return false;;">
-          <td valign="top" style="width: 32px; padding-right: 0.5em; padding-top: 0.8em; padding-left: 0.5em;">
+          <td class="resource-icon">
             <a style="border-color: white;"
                tal:attributes="href  item_url;
                                title desc;
@@ -44,7 +44,7 @@
               <img tal:attributes="src item_big_icon; title item_type_title" i18n:domain="plone" i18n:attributes="title" style="padding-top:3px;" />
             </a>
           </td>
-          <td valign="top">
+          <td class="resource-content">
             <div style="display: none;"
                  class="portalMessage statusmessage statusmessage-warning alert alert-warning"
                  tal:attributes="id string:ap${repeat/item/number};
@@ -99,7 +99,7 @@
               </span>
             </form>
 
-            <div class="highlight" tal:condition="isManager">
+            <div class="discreet" tal:condition="isManager">
             <span tal:content="python: context.toLocalizedTime(item.cr_first_classification_date_index)" />
             <div class="actions">
               <!--tal:actions replace="structure python: item.getObject().restrictedTraverse(

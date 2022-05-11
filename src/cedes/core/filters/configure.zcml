@@ -1,0 +1,14 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:browser="http://namespaces.zope.org/browser">
+
+  <adapter
+    provides="plone.outputfilters.interfaces.IFilter"
+    name="email_renderer"
+    for="cedes.core.content.email.IEmailContent
+         *"
+    factory=".email.Renderer" />
+
+</configure>
+

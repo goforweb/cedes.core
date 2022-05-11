@@ -208,7 +208,7 @@ msgstr "Type de membre"
 #. Default: "Subsribe to newsletter?"
 #: ../memberdata.py:138
 msgid "title_newsletter"
-msgstr "S'inscrire à notre newsletter?"
+msgstr "Recevoir notre newsletter?"
 
 #. Default: "School address"
 #: ../memberdata.py:154

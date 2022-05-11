@@ -20,7 +20,7 @@ from zope import schema
 class IArticle(IResource, IFile):
     """ """
 
-    cr_date = schema.Datetime(
+    cr_date = schema.Date(
         title='Date de parution',
         required=False, )
 

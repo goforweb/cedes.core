@@ -9,7 +9,6 @@ from plone.app.users.browser.account import AccountPanelForm
 from plone.app.users.browser.userdatapanel import UserDataPanel
 from plone.app.z3cform.inline_validation import InlineValidationView
 from z3c.form.contentprovider import ContentProviders
-from z3c.form.interfaces import HIDDEN_MODE
 from z3c.form.interfaces import IFieldsAndContentProvidersForm
 from zope.interface import implementer
 

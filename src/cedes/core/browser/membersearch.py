@@ -16,6 +16,8 @@ from z3c.form import button
 from zope import schema
 from zope.component import getMultiAdapter
 from Products.PlonePAS.utils import safe_unicode
+from z3c.form.browser.radio import RadioFieldWidget
+from plone.autoform import directives
 
 
 # monkey patch the extractCriteriaFromRequest to manage our usecases
@@ -28,13 +30,20 @@ def extractCriteriaFromRequest(criteria):
         if key in ['_authenticator', 'form.buttons.search'] or \
            key.endswith('-empty-marker'):
             del criteria[key]
+
     for (key, value) in list(criteria.items()):
         if not value:
             del criteria[key]
         else:
             new_key = key.replace('form.widgets.', '')
+            # Bool as a checkbox
             if value == ['selected']:
                 value = True
+            # Bool as a radio
+            if value == 'true':
+                value = True
+            if value == 'false':
+                value = False
             if isinstance(value, (tuple, list)):
                 value = value[0]
             criteria[new_key] = value
@@ -105,7 +114,8 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
                 'last_login_time',
                 'has_failed_accounting_f',
                 'has_failed_accounting_n',
-                'has_bill_waiting_payment'])
+                'has_bill_waiting_payment',
+                'newsletter'])
 
     # override login for now to change label from u'Name' to u'User Name'
     login = schema.TextLine(
@@ -147,6 +157,10 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
         title=_(u'title_has_bill_waiting_payment',
                 default=u'Facture en attente de paiement'),
         description='Recherche les membres qui ont une facture en attente de paiement',
+        required=False)
+    directives.widget('newsletter', RadioFieldWidget)
+    newsletter = schema.Bool(
+        title=_(u'title_search_newsletter', default=u'Newsletter?'),
         required=False)
 
 

@@ -4,6 +4,7 @@
   <object name="ArticleGratuit" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticlePayant" meta_type="Dexterity FTI" purge="True" />
   <object name="DossierStructure" meta_type="Dexterity FTI" purge="True" />
+  <object name="EmailContent" meta_type="Dexterity FTI" purge="True" />
   <object name="PlanClassement" meta_type="Dexterity FTI" purge="True" />
   <object name="Point" meta_type="Dexterity FTI" purge="True" />
   <object name="SequenceApprentissage" meta_type="Dexterity FTI" purge="True" />

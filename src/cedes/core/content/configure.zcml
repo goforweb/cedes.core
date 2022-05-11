@@ -21,6 +21,9 @@
         factory="cedes.core.content.dossierstructure.DossierStructureSchemaPolicy"
         name="schema_policy_dossierstructure" />
     <utility
+        factory="cedes.core.content.email.EmailContentSchemaPolicy"
+        name="schema_policy_emailcontent" />
+    <utility
         factory="cedes.core.content.dossierstructure.PointSchemaPolicy"
         name="schema_policy_point" />
     <utility

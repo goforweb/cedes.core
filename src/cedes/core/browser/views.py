@@ -75,7 +75,8 @@ class CommonResultListingView(BrowserView):
                                                                      'Bibliographie',
                                                                      'SequenceApprentissage',
                                                                      'DossierStructure',
-                                                                     'Folder'], },
+                                                                     'Folder',
+                                                                     'EmailContent'], },
                                                     batch=False)
         batch = Batch(result, b_size, b_start, orphan=1)
         return batch

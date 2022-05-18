@@ -42,7 +42,7 @@ def normalize_data(data):
         data = data.replace(char, ' ')
     for word in data.split(' '):
         normalizedWord = ''.join(x for x in unicodedata.normalize('NFKD', word)
-                                 if x in (string.ascii_letters+string.digits)).lower()
+                                 if x in (string.ascii_letters + string.digits)).lower()
         normalizedWord = normalizedWord.rstrip('s')
         normalizedWord = normalizedWord.rstrip('x')
         normalizedWord = normalizedWord.strip()
@@ -340,6 +340,10 @@ def create_attachment(filetype, payload, filename):
     encode_base64(attachment)
     attachment.add_header('Content-Disposition', 'attachment', filename=filename)
     return attachment
+
+
+def provoke_unauthorized():
+    raise Unauthorized
 
 
 def get_intid(obj):

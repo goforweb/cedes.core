@@ -3,6 +3,10 @@
            xmlns:i18n="http://namespaces.zope.org/i18n"
            xmlns:five="http://namespaces.zope.org/five">
 
+    <!-- Cron tasks -->
+    <subscriber for="zope.processlifetime.IProcessStarting"
+        handler=".events.onZopeProcessStarting" />
+
     <!-- Theme -->
     <subscriber for="cedes.core.content.theme.ITheme
                      zope.lifecycleevent.interfaces.IObjectAddedEvent"
@@ -32,5 +36,10 @@
     <subscriber for="cedes.core.interfaces.ICeDESLoveThumbsDontYou
                     cioppino.twothumbs.event.IUnlikeEvent"
                 handler=".events.onResourceUnliked" />
+
+    <!-- EmailContent -->
+    <subscriber for="cedes.core.content.email.IEmailContent
+                     zope.lifecycleevent.interfaces.IObjectAddedEvent"
+                handler="cedes.core.events.onEmailContentAdded" />
 
 </configure>

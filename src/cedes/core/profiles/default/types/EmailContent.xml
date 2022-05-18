@@ -51,4 +51,11 @@
     url_expr="string:${object_url}/edit" visible="True">
   <permission value="Modify portal content"/>
  </action>
+ <action title="Send" action_id="send" category="object_buttons" condition_expr=""
+    description="" icon_expr="" link_target="" url_expr="string:${object_url}/send"
+    visible="True" permission="Modify portal content">
+  <permission value="View"/>
+ </action>
+
+
 </object>

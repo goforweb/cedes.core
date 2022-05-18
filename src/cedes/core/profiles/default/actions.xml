@@ -10,6 +10,9 @@
  </object>
  <!-- Hide every user actions -->
  <object name="user" meta_type="CMF Action Category">
+  <object name="join" meta_type="CMF Action">
+   <property name="visible">False</property>
+  </object>
   <object name="sitemap" meta_type="CMF Action">
    <property name="visible">False</property>
   </object>
@@ -26,10 +29,11 @@
   </object>
   <object name="undo" meta_type="CMF Action">
    <property name="visible">False</property>
-  </object> 
-  <!-- object name="logout" meta_type="CMF Action">
-   <property name="visible">False</property>
-  </object-->
+  </object>
+  <!-- remove modal for login -->
+  <object name="login" meta_type="CMF Action">
+   <property name="modal"></property>
+  </object>
   <object name="print" meta_type="CMF Action" i18n:domain="cedes">
    <property name="title" i18n:translate="">Imprimer</property>
    <property name="description" i18n:translate=""></property>
@@ -52,12 +56,12 @@
    </property>
    <property name="visible">True</property>
   </object>
-  <object name="mon_compte" meta_type="CMF Action" i18n:domain="cedes">
-   <property name="title" i18n:translate="">Mon compte</property>
+  <object name="contact" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Contact</property>
    <property name="description" i18n:translate=""></property>
-   <property name="url_expr">string:${portal_url}/@@my-account</property>
-   <property name="icon_expr">string:$portal_url/account.png</property>
-   <property name="available_expr">python:member is not None</property>
+   <property name="url_expr">string:${portal_url}/@@contact-info</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr"></property>
    <property name="permissions">
     <element value="View"/>
    </property>
@@ -74,7 +78,18 @@
    </property>
    <property name="visible">True</property>
   </object>
-  <object name="newsletters" meta_type="CMF Action" i18n:domain="cedes">
+  <object name="mon_compte" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Mon compte</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/@@my-account</property>
+   <property name="icon_expr">string:$portal_url/account.png</property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <!--object name="newsletters" meta_type="CMF Action" i18n:domain="cedes">
    <property name="title" i18n:translate="">Newsletters</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:${portal_url}/newsletters</property>
@@ -84,7 +99,7 @@
     <element value="View"/>
    </property>
    <property name="visible">True</property>
-  </object>
+  </object-->
   <object name="quitter" meta_type="CMF Action" i18n:domain="cedes">
    <property name="title" i18n:translate="">Quitter</property>
    <property name="description" i18n:translate=""></property>

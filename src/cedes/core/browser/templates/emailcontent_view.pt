@@ -26,6 +26,10 @@
         <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
       </tal:block>
     </fieldset>
+    <a tal:attributes="href string:${portal_url}/@@member-search?form.widgets.member_type%3Alist=&form.widgets.newsletter=true&form.buttons.search=Rechercher">
+      Membres inscrits à la newsletter</a><br />
+    <a tal:attributes="href string:${portal_url}/@@member-search?form.widgets.member_type%3Alist=&form.widgets.newsletter=false&form.buttons.search=Rechercher">
+      Membres non inscrits à la newsletter</a><p>&nbsp;</p>
   </tal:is_manager>
 
   <!-- add a table with links to anchors -->

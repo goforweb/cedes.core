@@ -43,6 +43,24 @@
           permission="zope2.View" />
     </configure>
 
+    <!-- override membertools view -->
+    <!-- The member panel (logout, user actions) -->
+    <browser:viewlet
+        name="plone.membertools"
+        manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+        class="plone.app.layout.viewlets.common.PersonalBarViewlet"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope2.View"
+        template="templates/membertools.pt" />
+
+    <!-- override contact-info -->
+    <browser:page
+        for="*"
+        name="contact-info"
+        class=".overrides.CedesContactForm"
+        permission="zope.Public"
+        layer="cedes.core.interfaces.ICedesCoreLayer" />
+
     <!-- content_types default view -->
     <!-- Theme -->
     <browser:page

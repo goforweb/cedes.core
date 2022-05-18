@@ -11,8 +11,22 @@ from plone.app.z3cform.inline_validation import InlineValidationView
 from z3c.form.contentprovider import ContentProviders
 from z3c.form.interfaces import IFieldsAndContentProvidersForm
 from zope.interface import implementer
+from Products.CMFPlone.browser.contact_info import ContactForm
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 import json
+
+
+class CedesContactForm(ContactForm):
+    """ """
+
+    template = ViewPageTemplateFile('templates/contact-info.pt')
+
+    def update(self):
+        """ """
+        super(CedesContactForm, self).update()
+        # make send button primary
+        self.actions.get('send').addClass('btn-primary')
 
 
 class CedesFolderView(FolderView):

@@ -36,6 +36,9 @@ div.portletNavigationTree [class*="contenttype-"] {
 .contenttype-dossierstructure {
     background: no-repeat transparent url("++plone++cedes.core/dossierstructure.gif");
 }
+.contenttype-emailcontent {
+    background: no-repeat transparent url("++plone++cedes.core/emailcontent.gif");
+}
 .contenttype-file {
     background: no-repeat transparent url("++plone++cedes.core/file.gif");
 }
@@ -98,29 +101,34 @@ body.userrole-manager li a#contentview-user_data-personal-preferences {
     max-width: inherit;
 }
 
-span.icon-one::before {
-  content: '\e553';
-  font-size: 120%;
+span.one::before {
+  content: '[1]';
+  font-size: 100%;
+  font-weight: bold;
   margin-right: 0.1em;
 }
-span.icon-two::before {
-  content: '\e554';
-  font-size: 120%;
+span.two::before {
+  content: '[2]';
+  font-size: 100%;
+  font-weight: bold;
   margin-right: 0.1em;
 }
-span.icon-three::before {
-  content: '\e555';
-  font-size: 120%;
+span.three::before {
+  content: '[3]';
+  font-size: 100%;
+  font-weight: bold;
   margin-right: 0.1em;
 }
-span.icon-four::before {
-  content: '\e556';
-  font-size: 120%;
+span.four::before {
+  content: '[4]';
+  font-size: 100%;
+  font-weight: bold;
   margin-right: 0.1em;
 }
-span.icon-five::before {
-  content: '\e557';
-  font-size: 120%;
+span.five::before {
+  content: '[5]';
+  font-size: 100%;
+  font-weight: bold;
   margin-right: 0.1em;
 }
 .bill-accounting-failed {
@@ -226,4 +234,50 @@ td.resource-icon, td.resource-content {
 /* used in folder-listing for default Plone contents (Image, ...) */
 div.entries {
     padding-top: 1em;
+}
+
+/* make formControls always visible */
+div.formControls {
+    position: sticky;
+    bottom: 30px;
+    text-align: center;
+}
+/* user actions when connected (contact, my account, ...) */
+li[id^='membertools-personaltools-'] {
+    float: left;
+    padding-right: 1em;
+    list-style: none;
+}
+li#membertools-personaltools-contact a::before {
+    font-family: "fontello";
+    content: '\e81c';
+    padding-right: 0.5em;
+}
+li#membertools-personaltools-mon_compte a::before {
+    font-family: "fontello";
+    content: '\e800';
+    padding-right: 0.5em;
+}
+li#membertools-personaltools-aide a::before {
+    font-family: "fontello";
+    content: '\e81b';
+    padding-right: 0.5em;
+}
+li#membertools-personaltools-logout a::before {
+    font-family: "fontello";
+    content: '\e803';
+    padding-right: 0.5em;
+}
+/* user actions when anonymous (contact) */
+li a[id^='personaltools-'] {
+    padding-right: 1.5em;
+}
+/* plan tab, ad fontello icon-search */
+div#mainnavigation li.plan.nav-item > a::before {
+    font-family: "fontello";
+    content: '\e81f';
+    padding-right: 0.5em;
+}
+#content-header #portal-header {
+    flex-direction: inherit;
 }

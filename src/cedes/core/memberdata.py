@@ -348,6 +348,10 @@ class CedesMemberData(MemberData):
         """ """
         self.setMemberProperties({'has_bill_waiting_payment': value})
 
+    def get_newsletter(self):
+        """ """
+        return deepcopy(self.getProperty('newsletter'))
+
     def check_balance(self, price):
         """
           Checks if we can afford a purchase's price
@@ -622,7 +626,8 @@ class CedesMemberData(MemberData):
         '''Sets the balance to zero and adds the transaction information'''
         account_transactions = self.get_account_transactions()
         account_transactions = account_transactions + (
-            ('expiration du crédit', self.get_account_balance(), DateTime()),)
+            ('Expiration du crédit', self.get_account_balance(), DateTime()),)
+        self.set_account_transactions(account_transactions)
         self.set_account_balance(0)
 
     def send_expiration_reminder(self, now, days=14):

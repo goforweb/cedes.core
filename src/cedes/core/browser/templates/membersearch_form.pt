@@ -41,7 +41,7 @@
                         </h3>
                     </div>
 
-                    <a href=".">Nouvelle recherche</a>&nbsp;&nbsp;&nbsp;
+                    <a tal:attributes="href string:${portal_url}/Members">Nouvelle recherche</a>&nbsp;&nbsp;&nbsp;
                     <a href="">Actualiser les résultats</a>
 
                     <div metal:use-macro="here/batch_macros/macros/navigation"/>
@@ -69,16 +69,16 @@
                           <tr tal:repeat="result batch" tal:attributes="class python:result['member_type'] == 'CeDES 100%' and 'cedes-100pc' or ''">
                             <tal:block define="userid python: result['login'];">
                                 <td><span tal:condition="python: result['has_bill_waiting_payment']"
-                                          class="icon-one help"
+                                          class="one help"
                                           title="Facture en attente de paiement" /><span
                                           tal:condition="python: result['credit_expiration_warning']"
-                                          class="icon-two help"
+                                          class="two help"
                                           title="Crédits expirent dans moins de 30 jours" /><span
                                           tal:condition="python: result['credit_expired_warning']"
-                                          class="icon-three help"
+                                          class="three help"
                                           title="Crédits expirés" /><span
                                           tal:condition="python: result['bill_accounting_failed']"
-                                          class="icon-four help"
+                                          class="four help"
                                           title="Facture échouée" />
                                     <a target="_blank" tal:attributes="href python:portal_url + '/@@personal-information?userid=' + userid;"><span tal:content="userid">user id</span></a>
                                 </td>
@@ -149,11 +149,11 @@
                             </tal:block>
                           </tr>
                         </table>
-                        <span class="icon-one help" title="Facture en attente de paiement">Facture en attente de paiement</span>
-                        <span class="icon-two help" title="Crédits expirent dans moins de 30 jours">Crédits expirent dans moins de 30 jours</span>
-                        <span class="icon-three help" title="Crédits expirés">Crédits expirés</span>
-                        <span class="icon-four help" title="Facture échouée">Facture échouée</span>
-                        <span class="icon-five help" title="Note de crédit échouée">Note de crédit échouée</span>
+                        <span class="one help" title="Facture en attente de paiement">Facture en attente de paiement</span>
+                        <span class="two help" title="Crédits expirent dans moins de 30 jours">Crédits expirent dans moins de 30 jours</span>
+                        <span class="three help" title="Crédits expirés">Crédits expirés</span>
+                        <span class="four help" title="Facture échouée">Facture échouée</span>
+                        <span class="five help" title="Note de crédit échouée">Note de crédit échouée</span>
                     </div>
 
                     <div class="visualClear" id="clear-space-before-navigation"><!-- --></div>

@@ -5,8 +5,11 @@
 # GNU General Public License (GPL)
 #
 
+from AccessControl import ClassSecurityInfo
 from cedes.core.config import CEDES_PLAN_ROOT
 from cedes.core.config import CEDES_RESOURCE_TYPES
+from cedes.core.utils import send_mail
+from datetime import datetime
 from plone import api
 from plone.app.contenttypes.content import Document
 from plone.app.contenttypes.interfaces import IDocument
@@ -16,6 +19,7 @@ from plone.autoform import directives
 from plone.batching import Batch
 from plone.dexterity.schema import DexteritySchemaPolicy
 from plone.supermodel import model
+from Products.CMFCore.permissions import ModifyPortalContent
 from zope import schema
 from zope.interface import implementer
 
@@ -52,6 +56,10 @@ class IEmailContent(IDocument):
 class EmailContent(Document):
     """ """
 
+    security = ClassSecurityInfo()
+
+    security.declarePrivate('get_newsletter_content')
+
     def get_newsletter_content(self):
         """If we have a newsletter_from and a newsletter_to then we can get newsletter content."""
         res = []
@@ -83,6 +91,27 @@ class EmailContent(Document):
                     i = i + 1
 
         return res
+
+    security.declareProtected(ModifyPortalContent, 'send')
+
+    def send(self):
+        """ """
+        mtos = [user.get_email() for user in api.user.get_users()
+                if user.get_newsletter()]
+        # remove duplicates
+        mtos = list(set(mtos))
+        portal_url = api.portal.get().absolute_url()
+        for mto in mtos:
+            send_mail(subject=self.Title(),
+                      template_name='mail_email',
+                      options={'content': self.text.output_relative_to(self),
+                               'email_address': mto,
+                               'unsubscribe_url': "/@@personal-information".format(portal_url)},
+                      mto=mto)
+        api.portal.show_message('E-mail envoyé à {0} adresses'.format(len(mto)),
+                                request=self.REQUEST)
+        self._email_sent_date = datetime.now()
+        return self.REQUEST.RESPONSE.redirect(self.absolute_url())
 
 
 class EmailContentSchemaPolicy(DexteritySchemaPolicy):

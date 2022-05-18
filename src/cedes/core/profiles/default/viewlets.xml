@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <object>
+  <!-- Hide plone.searchbox -->
+  <hidden manager="plone.portalheader" skinname="Plone Default">
+    <viewlet name="plone.searchbox" />
+  </hidden>
+
   <!-- Hide original contentleadimage that is moved -->
   <hidden manager="plone.abovecontenttitle" skinname="Plone Default">
     <viewlet name="contentleadimage" />

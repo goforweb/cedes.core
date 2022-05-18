@@ -48,7 +48,7 @@ class IResource(model.Schema):
         required=False,
         default=[], )
 
-    cr_first_classification_date = schema.Datetime(
+    cr_first_classification_date = schema.Date(
         title='Date d\'encodage sur le CeDES (initialisé automatiquement lors '
         'de la première classification)',
         required=False, )

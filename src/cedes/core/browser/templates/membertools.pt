@@ -1,0 +1,23 @@
+<tal:block
+     i18n:domain="plone"
+     define="toolbar_visible here/@@plone_context_state/is_toolbar_visible;
+             isAnon view/anonymous;"
+     condition="python:not isAnon and not toolbar_visible">
+
+  <p class="hiddenStructure" i18n:translate="heading_member_tools">Member tools</p>
+  <div tal:condition="python:view.user_actions and not view.anonymous">
+      <ul role="menu" aria-labelledby="menu">
+          <li tal:repeat="action view/user_actions"
+              tal:attributes="id string:membertools-${action/id}">
+              <a href=""
+                 tal:attributes="href action/href;
+                                 target action/link_target|nothing"
+                 tal:content="action/title"
+                 i18n:translate="">
+                  action title
+              </a>
+          </li>
+      </ul>
+  </div>
+
+</tal:block>

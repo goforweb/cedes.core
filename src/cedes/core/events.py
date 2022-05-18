@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core import logger
-from cedes.core.config import CEDES_DS_KW_PREFIX
 from cedes.core.interfaces import IThemeFacetedNavigable
 from cedes.core.utils import get_modified_attrs
 from cedes.core.utils import send_mail
-from datetime import datetime
+from datetime import date
 from DateTime import DateTime
 from eea.facetednavigation.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.layout.interfaces import IFacetedLayout
@@ -15,10 +14,31 @@ from zope.annotation import IAnnotations
 from zope.globalrequest import getRequest
 from zope.interface import alsoProvides
 from zope.interface import noLongerProvides
+from Testing.makerequest import makerequest
+from zope.globalrequest import setRequest
+from zope.component.hooks import setSite
+
+import os
+import transaction
+import Zope2
+
+
+def onZopeProcessStarting(event):
+    """ """
+    app = Zope2.app()
+    app = makerequest(app)
+    app.REQUEST["PARENTS"] = [app]
+    setRequest(app.REQUEST)
+    container = app.unrestrictedTraverse("/")
+    site_id = os.getenv("SITE_ID", "Plone")
+    portal = container.unrestrictedTraverse(site_id)
+    setSite(portal)
+    portal.unrestrictedTraverse('@@cedes-night-tasks')()
+    transaction.commit()
 
 
 def onThemeAdded(theme, event):
-    """Called when new theme added."""
+    """Called when new Theme added."""
     # enable faceted navigation and configure it
     theme.unrestrictedTraverse('@@faceted_subtyper').enable()
     IFacetedLayout(theme).update_layout('faceted-theme-view')
@@ -31,6 +51,11 @@ def onThemeAdded(theme, event):
     alsoProvides(theme, IThemeFacetedNavigable)
     logger.info('Faceted navigation enabled for {0}'.format(
         '/'.join(theme.getPhysicalPath())))
+
+
+def onEmailContentAdded(emailcontent, event):
+    """Called when new EmailContent added."""
+    emailcontent._email_sent_date = None
 
 
 def onThemeModified(theme, event):
@@ -49,7 +74,7 @@ def onResourceModified(obj, event):
     """Called when existing resource modified."""
     # set a first classification date if empty and a classification is defined
     if not obj.cr_first_classification_date and obj.cr_classification:
-        obj.cr_first_classification_date = datetime.now()
+        obj.cr_first_classification_date = date.today()
     # remove first classification date if no more classification
     elif not obj.cr_classification:
         obj.cr_first_classification_date = None

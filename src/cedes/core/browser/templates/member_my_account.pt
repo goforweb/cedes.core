@@ -19,7 +19,7 @@
     <div class="portalMessage statusmessage statusmessage-warning alert alert-warning"
          tal:define="bill python: view.member.get_bill_waiting_payment()"
          tal:condition="python: bill and bill.get('pdf')">
-      <tal:icon tal:define="icons nocall: context/@@iconresolver""
+      <tal:icon tal:define="icons nocall: context/@@iconresolver"
                 tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
       <strong>Attention</strong>
       <span>Il y a une facture en attente de paiement!
@@ -32,14 +32,14 @@
       </span>
     </div>
 
-    <p tal:condition="python: not view.member.is_cedes_free()">
+    <div tal:condition="python: not view.member.is_cedes_free()">
         <b tal:condition="python: not view.member.get_bill_accounting_failed() and not view.member.get_bill_waiting_payment()">
           Votre compte "CeDES 100%" est activé.
         </b>
 
         <div class="portalMessage statusmessage statusmessage-warning alert alert-warning"
              tal:condition="python: view.member.get_bill_accounting_failed()">
-          <tal:icon tal:define="icons nocall: context/@@iconresolver""
+          <tal:icon tal:define="icons nocall: context/@@iconresolver"
                     tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
           <strong>Attention</strong>
           <span>
@@ -48,9 +48,10 @@
         </div>
 
         <br />
-        Le solde de votre compte est de <b tal:content="python: view.member.get_account_balance()"/> points.
-        Vos points sont valides jusqu'au <b tal:content="python:view.plone_view.toLocalizedTime(view.expiration_date)"/>.
-    </p>
+        Le solde de votre compte est de <b tal:content="python: view.member.get_account_balance()"></b> points.
+        Vos points sont valides jusqu'au <b tal:content="python:view.plone_view.toLocalizedTime(view.expiration_date)"></b>.
+    </div>
+
     <p tal:condition="python: view.member.is_cedes_free()">
       <b>Vous disposez d'un compte "CeDES Free".</b>
     </p>

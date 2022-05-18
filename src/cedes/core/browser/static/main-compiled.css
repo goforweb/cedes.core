@@ -236,12 +236,12 @@ div.entries {
     padding-top: 1em;
 }
 
-/* make formControls always visible */
+/* make formControls always visible
 div.formControls {
     position: sticky;
     bottom: 30px;
     text-align: center;
-}
+} */
 /* user actions when connected (contact, my account, ...) */
 li[id^='membertools-personaltools-'] {
     float: left;

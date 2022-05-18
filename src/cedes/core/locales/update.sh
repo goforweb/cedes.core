@@ -1,3 +1,11 @@
-domain=plone
-i18ndude rebuild-pot --pot $domain.pot --create $domain ../
-i18ndude sync --pot $domain.pot */LC_MESSAGES/$domain.po
+#!/usr/bin/env bash
+files="plone"
+languages="fr"
+
+for file in $files; do
+    for language in $languages; do
+        touch $language/LC_MESSAGES/$file.po
+        i18ndude sync --pot $file.pot $language/LC_MESSAGES/$file.po
+        msgfmt -o $language/LC_MESSAGES/$file.mo $language/LC_MESSAGES/$file.po
+    done
+done

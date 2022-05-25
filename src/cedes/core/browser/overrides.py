@@ -4,17 +4,17 @@ from cedes.core import logger
 from cedes.core.browser.register import BillLabelProvider
 from cedes.core.browser.register import SchoolLabelProvider
 from cedes.core.utils import get_member
+from plone import api
 from plone.app.contenttypes.browser.folder import FolderView
 from plone.app.users.browser.account import AccountPanelForm
 from plone.app.users.browser.userdatapanel import UserDataPanel
 from plone.app.z3cform.inline_validation import InlineValidationView
+from Products.CMFPlone.browser.contact_info import ContactForm
+from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.contentprovider import ContentProviders
 from z3c.form.interfaces import IFieldsAndContentProvidersForm
 from zope.interface import implementer
-from Products.CMFPlone.browser.contact_info import ContactForm
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.Five import BrowserView
-from plone import api
 
 import json
 

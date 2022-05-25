@@ -21,7 +21,7 @@ class ILien(IResource, ILink):
     directives.widget("remoteUrl", LinkFieldWidget)
     remoteUrl = schema.TextLine(
         title="URL",
-        required=False, )
+        required=True, )
 
 
 @implementer(ILien)

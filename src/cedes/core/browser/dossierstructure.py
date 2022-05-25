@@ -183,7 +183,7 @@ class HTMLTocView(BrowserView):
         return ViewPageTemplateFile("templates/context_toc.pt")(self)
 
 
-class DossierStructureDefaultView(DefaultView):
+class DossierStructureView(DefaultView):
     """ """
 
     def _update(self):

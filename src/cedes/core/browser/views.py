@@ -2,6 +2,7 @@
 
 from AccessControl import Unauthorized
 from Acquisition import aq_inner
+from cedes.core.utils import send_mail
 from DateTime import DateTime
 from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
@@ -14,7 +15,6 @@ from Products.CMFPlone.browser.navtree import SitemapQueryBuilder
 from Products.CMFPlone.browser.sitemap import SitemapView
 from Products.Five import BrowserView
 from zope.component import getMultiAdapter
-from cedes.core.utils import send_mail
 
 
 class CommonResultListingView(BrowserView):

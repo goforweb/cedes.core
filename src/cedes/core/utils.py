@@ -11,20 +11,20 @@ from cedes.core.config import EXTRA_MAIL_TO
 from collections import OrderedDict
 from DateTime import DateTime
 from email.encoders import encode_base64
+from email.header import Header
 from email.mime.base import MIMEBase
 from plone import api
 from plone.app.textfield.value import RichTextValue
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
-from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
+from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.controlpanel import IMailSchema
-from Products.MailHost.interfaces import IMailHost
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.CMFPlone.utils import safe_unicode
 from Products.Five import BrowserView
-from zope.globalrequest import getRequest
-from email.header import Header
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.MailHost.interfaces import IMailHost
 from zc.relation.interfaces import ICatalog
+from zope.component import getUtility
+from zope.globalrequest import getRequest
 from zope.intid.interfaces import IIntIds
 
 import string

@@ -91,6 +91,34 @@
         class="cedes.core.browser.content.ArticlePayantView"
         template="templates/articlepayant_view.pt"
         permission="zope2.View" />
+    <!-- Audio -->
+    <browser:page
+        for="cedes.core.content.audio.IAudio"
+        name="view"
+        class="cedes.core.browser.content.AudioView"
+        template="templates/audio_view.pt"
+        permission="zope2.View" />
+    <!-- DossierStructure -->
+    <browser:page
+        for="cedes.core.content.dossierstructure.IDossierStructure"
+        name="view"
+        class="cedes.core.browser.dossierstructure.DossierStructureView"
+        template="templates/dossierstructure_view.pt"
+        permission="zope2.View" />
+    <!-- SiteInternet -->
+    <browser:page
+        for="cedes.core.content.siteinternet.ISiteInternet"
+        name="view"
+        class="cedes.core.browser.content.SiteInternetView"
+        template="templates/siteinternet_view.pt"
+        permission="zope2.View" />
+    <!-- Statistiques -->
+    <browser:page
+        for="cedes.core.content.statistiques.IStatistiques"
+        name="view"
+        class="cedes.core.browser.content.StatistiquesView"
+        template="templates/statistiques_view.pt"
+        permission="zope2.View" />
     <!-- Theme -->
     <browser:page
         for="cedes.core.content.theme.ITheme"
@@ -98,13 +126,12 @@
         class="cedes.core.browser.theme.ThemeView"
         template="templates/theme_view.pt"
         permission="zope2.View" />
-
-    <!-- DossierStructure -->
+    <!-- Video -->
     <browser:page
-        for="cedes.core.content.dossierstructure.IDossierStructure"
+        for="cedes.core.content.video.IVideo"
         name="view"
-        class="cedes.core.browser.dossierstructure.DossierStructureDefaultView"
-        template="templates/dossierstructure_view.pt"
+        class="cedes.core.browser.content.VideoView"
+        template="templates/video_view.pt"
         permission="zope2.View" />
 
     <!-- The view rendering common-result-listing -->

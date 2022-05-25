@@ -1,0 +1,8 @@
+<fieldset tal:define="descr python: context.Description().strip()">
+  <legend>Description</legend>
+  <div class="documentDescription"
+     tal:content="descr">
+      Description
+  </div>
+  <div tal:condition="not:descr" class="discreet">Aucune description encodée.</div>
+</fieldset>

@@ -7,17 +7,17 @@ from plone import api
 from plone.app.users.browser import membersearch
 from plone.app.users.browser.membersearch import IMemberSearchSchema
 from plone.app.users.browser.membersearch import MemberSearchForm
+from plone.autoform import directives
 from plone.supermodel import model
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from Products.PlonePAS.plugins.property import ZODBMutablePropertyProvider
 from Products.PlonePAS.plugins.property import isStringType
+from Products.PlonePAS.plugins.property import ZODBMutablePropertyProvider
+from Products.PlonePAS.utils import safe_unicode
 from z3c.form import button
+from z3c.form.browser.radio import RadioFieldWidget
 from zope import schema
 from zope.component import getMultiAdapter
-from Products.PlonePAS.utils import safe_unicode
-from z3c.form.browser.radio import RadioFieldWidget
-from plone.autoform import directives
 
 
 # monkey patch the extractCriteriaFromRequest to manage our usecases

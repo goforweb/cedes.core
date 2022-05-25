@@ -1,0 +1,10 @@
+<fieldset><legend>Lien</legend>
+  <div class="field">
+    <a href=""
+       tal:define="link_infos python: view.link_infos()"
+       tal:attributes="href python: link_infos['absolute_url']"
+       tal:content="python: link_infos['title']"
+       target="_blank">Lien</a>
+    <p class="discreet">Ce lien s'ouvrira dans une nouvelle fenêtre.</p>
+  </div>
+</fieldset>

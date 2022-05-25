@@ -10,13 +10,13 @@ from eea.facetednavigation.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.layout.interfaces import IFacetedLayout
 from persistent.list import PersistentList
 from plone import api
+from Testing.makerequest import makerequest
 from zope.annotation import IAnnotations
+from zope.component.hooks import setSite
 from zope.globalrequest import getRequest
+from zope.globalrequest import setRequest
 from zope.interface import alsoProvides
 from zope.interface import noLongerProvides
-from Testing.makerequest import makerequest
-from zope.globalrequest import setRequest
-from zope.component.hooks import setSite
 
 import os
 import transaction

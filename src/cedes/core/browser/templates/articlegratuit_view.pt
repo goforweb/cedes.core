@@ -13,14 +13,7 @@
         </div>
         </fieldset>
 
-        <fieldset tal:define="descr python: context.Description().strip()">
-          <legend>Description</legend>
-          <div class="documentDescription"
-             tal:content="descr">
-              Description
-          </div>
-          <div tal:condition="not:descr" class="discreet">Aucune description encodée.</div>
-        </fieldset>
+        <tal:block replace="structure python: view.render_description()" />
 
         <fieldset tal:define="size python: context.getSize();"><legend>Téléchargement du document</legend>
         <a class='visualNoPrint'

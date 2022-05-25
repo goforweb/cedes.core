@@ -16,14 +16,7 @@
         </div>
         </fieldset>
 
-        <fieldset tal:define="descr python: context.Description().strip()">
-          <legend>Description</legend>
-          <div class="documentDescription"
-             tal:content="descr">
-              Description
-          </div>
-          <div tal:condition="not:descr" class="discreet">Aucune description encodée.</div>
-        </fieldset>
+        <tal:block replace="structure python: view.render_description()" />
 
         <tal:notMayView condition="python: not mayView and not warned">
           <div class="portalMessage statusmessage statusmessage-warning alert alert-warning">

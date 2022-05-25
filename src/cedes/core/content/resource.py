@@ -6,8 +6,8 @@
 #
 
 from AccessControl import ClassSecurityInfo
-from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from cedes.core.config import CEDES_RESOURCE_TYPES
+from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from cedes.core.utils import get_intid
 from cedes.core.utils import get_relations
 from collective.dexteritytextindexer.directives import searchable
@@ -15,13 +15,13 @@ from plone import api
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
 from plone.supermodel import model
+from z3c.relationfield.relation import RelationValue
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
 from zope import schema
-from zope.interface import implementer
-from z3c.relationfield.relation import RelationValue
 from zope.event import notify
 from zope.globalrequest import getRequest
+from zope.interface import implementer
 from zope.lifecycleevent import ObjectModifiedEvent
 
 

@@ -16,10 +16,10 @@ from plone.autoform import directives
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.PlonePAS.tools.memberdata import MemberData
 from zope import schema
+from zope.globalrequest import getRequest
 from zope.interface import Interface
 from zope.interface import Invalid
 from zope.interface import invariant
-from zope.globalrequest import getRequest
 
 import re
 

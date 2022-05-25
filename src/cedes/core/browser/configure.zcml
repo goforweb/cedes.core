@@ -98,6 +98,13 @@
         class="cedes.core.browser.content.AudioView"
         template="templates/audio_view.pt"
         permission="zope2.View" />
+    <!-- Bibliographie -->
+    <browser:page
+        for="cedes.core.content.bibliographie.IBibliographie"
+        name="view"
+        class="cedes.core.browser.content.BibliographieView"
+        template="templates/bibliographie_view.pt"
+        permission="zope2.View" />
     <!-- DossierStructure -->
     <browser:page
         for="cedes.core.content.dossierstructure.IDossierStructure"
@@ -111,6 +118,13 @@
         name="view"
         class="cedes.core.browser.content.SiteInternetView"
         template="templates/siteinternet_view.pt"
+        permission="zope2.View" />
+    <!-- SequenceApprentissage -->
+    <browser:page
+        for="cedes.core.content.sequenceapprentissage.ISequenceApprentissage"
+        name="view"
+        class="cedes.core.browser.content.SequenceApprentissageView"
+        template="templates/sequenceapprentissage_view.pt"
         permission="zope2.View" />
     <!-- Statistiques -->
     <browser:page

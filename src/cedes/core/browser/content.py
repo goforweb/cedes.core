@@ -17,6 +17,8 @@ class BaseView(DefaultView):
     def update(self):
         super(BaseView, self).update()
         self.member = api.user.get_current()
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
 
     def render_cr_first_classification_date(self):
         """ """
@@ -30,9 +32,22 @@ class BaseView(DefaultView):
         """ """
         return ViewPageTemplateFile("templates/common-description.pt")(self)
 
+    def render_file(self):
+        """ """
+        return ViewPageTemplateFile("templates/common-file.pt")(self)
+
+    def render_html(self, fieldname):
+        """ """
+        self._html_fieldname = fieldname
+        return ViewPageTemplateFile("templates/common-html.pt")(self)
+
     def render_link(self):
         """ """
         return ViewPageTemplateFile("templates/common-link.pt")(self)
+
+    def render_references(self):
+        """ """
+        return ViewPageTemplateFile("templates/common-references.pt")(self)
 
     def link_infos(self):
         """Format the url for display."""
@@ -55,6 +70,10 @@ class ArticlePayantView(BaseView):
     """ """
 
 
+class BibliographieView(BaseView):
+    """ """
+
+
 class EmailContentView(DefaultView):
     """ """
 
@@ -72,6 +91,10 @@ class EmailContentView(DefaultView):
 
 
 class PointView(DefaultView):
+    """ """
+
+
+class SequenceApprentissageView(BaseView):
     """ """
 
 

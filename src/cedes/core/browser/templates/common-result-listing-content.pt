@@ -107,7 +107,7 @@
             </div>
             </div>
 
-            <div class="documentByLine" style="margin: 0;" tal:condition="python:item_type in use_view_action or item_type in ['Bibliographie', 'SequenceApprentissage', ]">
+            <div tal:condition="python:item_type in use_view_action or item_type in ['Bibliographie', 'SequenceApprentissage', ]">
               <span tal:replace="structure item/colophon_with_author"/>
             </div>
 

@@ -86,6 +86,11 @@ class Resource(object):
 
     security = ClassSecurityInfo()
 
+    def query_state(self):
+        '''In what state am I ?'''
+        wfTool = api.portal.get_tool('portal_workflow')
+        return wfTool.getInfoFor(self, 'review_state')
+
     def get_associated_themes(self, as_uids=True):
         """
           Returns all the associated Themes WITHOUT their parents.

@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master">
+<body>
+
+<metal:main fill-slot="content-core">
+    <tal:main-macro metal:define-macro="content">
+
+        <tal:block replace="structure python: view.render_cr_first_classification_date()" />
+
+        <fieldset>
+          <legend>Références</legend>
+          <div tal:content="python: here.cr_subtitle" tal:condition="python: here.cr_subtitle"></div>
+          <div tal:content="python: here.cr_author" tal:condition="python: here.cr_author"></div>
+          <div tal:content="python: here.cr_reference" tal:condition="python: here.cr_reference"></div>
+        </fieldset>
+
+        <tal:block replace="structure python: view.render_file()" />
+        <tal:block replace="structure python: view.render_html('text')" />
+        <tal:block replace="structure python: view.render_html('cr_links')" />
+        <tal:block replace="structure python: view.render_common_content()" />
+
+    </tal:main-macro>
+</metal:main>
+
+</body>
+</html>

@@ -14,8 +14,7 @@ class FacetedThemeView(BrowserView):
 
     def __init__(self, context, request):
         super(FacetedThemeView, self).__init__(context, request)
-        portal_url = api.portal.get_tool('portal_url')
-        self.portal = portal_url.getPortalObject()
+        self.portal = api.portal.get()
         self.portal_url = self.portal.absolute_url()
 
     def is_search(self):

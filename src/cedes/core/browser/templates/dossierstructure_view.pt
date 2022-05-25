@@ -86,8 +86,6 @@
         </div>
         <br/>
 
-        <div class="visualClear"><!-- --></div>
-
       </tal:main-macro>
     </metal:main>
 

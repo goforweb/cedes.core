@@ -1,0 +1,9 @@
+<fieldset tal:define="text python: getattr(context, view._html_fieldname)">
+  <legend tal:content="python: view.fields[view._html_fieldname].field.title">Field title</legend>
+  <div tal:condition="python: text.raw" class="plain">
+      <div tal:replace="structure python: text.output_relative_to(context)" />
+  </div>
+  <p tal:condition="not: text" class="discreet">
+    Pas d'aperçu disponible.
+  </p>
+</fieldset>

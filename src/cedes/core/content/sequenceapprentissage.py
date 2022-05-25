@@ -26,8 +26,8 @@ class ISequenceApprentissage(IResource, IDocument):
         title='Références',
         required=False, )
 
-    model.primary('cr_file')
-    cr_file = NamedBlobFile(
+    model.primary('file')
+    file = NamedBlobFile(
         title='Fichier PDF',
         required=False, )
 

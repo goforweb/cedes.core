@@ -187,7 +187,7 @@ class DossierStructureView(DefaultView):
     """ """
 
     def _update(self):
-        super(DossierStructureDefaultView, self)._update()
+        super(DossierStructureView, self)._update()
         self.member = api.user.get_current()
         self.is_manager = self.member.is_manager()
         self.is_cedes_free = self.member.is_cedes_free()

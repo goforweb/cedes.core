@@ -10,6 +10,9 @@
     <div class="field">
       <tal:render tal:content="structure python: widget.render()">Value</tal:render>
     </div>
+    <span class="discreet" tal:condition="python: not context.cr_classification">
+      Aucune.
+    </span>
 </fieldset>
 
 <fieldset class="cr_points highlight-red"
@@ -18,7 +21,7 @@
     <div class="field">
       <tal:render tal:content="structure python: view.widgets['cr_points'].render()">Value</tal:render>
       <span class="discreet" tal:condition="python: not context.cr_points">
-        Cette ressource n'est liée à aucun point.
+        Aucun.
       </span>
     </div>
 </fieldset>
@@ -28,7 +31,7 @@
     <div class="field">
       <tal:render tal:content="structure python: view.widgets['related_items'].render()">Value</tal:render>
       <span class="discreet" tal:condition="python: not context.related_items">
-        Cette ressource n'est liée à aucune autre ressource.
+        Aucune.
       </span>
     </div>
 </fieldset>

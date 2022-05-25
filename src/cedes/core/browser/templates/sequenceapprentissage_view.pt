@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master">
+<body>
+
+<metal:main fill-slot="content-core">
+    <tal:main-macro metal:define-macro="content">
+
+        <tal:free condition="python: view.member.is_cedes_free()">
+          <div class="portalMessage statusmessage statusmessage-warning alert alert-warning">
+            <tal:icon tal:define="icons nocall: context/@@iconresolver"
+                      tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+            <strong>Avertissement</strong>
+            <span>
+              Vous devez être membre CeDES 100% pour pouvoir consulter les articles payants ou les séquences d'apprentissage. Allez dans <a tal:attributes="href string:${portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.
+            </span>
+          </div>
+        </tal:free>
+
+        <tal:have_access tal:condition="python: not view.member.is_cedes_free()"
+                         tal:define="account_balance python: view.member.get_account_balance()"
+                         tal:omit-tag="">
+
+          <tal:block replace="structure python: view.render_cr_first_classification_date()" />
+
+          <tal:block replace="structure python: view.render_references()" />
+
+          <tal:block replace="structure python: view.render_description()" />
+
+          <tal:block condition="account_balance" replace="structure python: view.render_html('text')" />
+
+          <tal:notAccountBalance condition="python: not account_balance">
+            <div class="portalMessage statusmessage statusmessage-warning alert alert-warning">
+              <tal:icon tal:define="icons nocall: context/@@iconresolver"
+                        tal:replace="structure python:icons.tag('plone-statusmessage-warning', tag_alt='', tag_class='statusmessage-icon mb-1 me-2')" />
+              <strong>Avertissement</strong>
+              <span>L'accès aux séquences d'apprentissage est conditionné par un solde de points créditeur (voir <a tal:attributes="href string:${portal_url}/@my-account">"Mon compte"</a>).<br />
+              Pour recevoir des crédits:<br />
+  a) veuillez renouveler votre abonnement et/ou honorer la facture qui vous sera (ou a été) envoyée par e-mail (vérifiez également votre courrier indésirable) OU<br />
+  b) gagnez des points en collaborant avec le CeDES (informez le CeDES de la pertinence d'une ressource du site à la suite de sa validation en classe ou de l'existence d'un lien brisé, partagez une ressource intéressante, ....). Saisissez la zone commentaire disponible au bas de chaque ressource ou utilisez le formulaire mis à votre disposition sous "Contact" en haut à droite de l'écran.</span>
+            </div>
+          </tal:notAccountBalance>
+
+          <tal:file condition="account_balance">
+            <tal:block replace="structure python: view.render_file()" />
+          </tal:file>
+
+          <tal:block replace="structure python: view.render_common_content()" />
+
+        </tal:have_access>
+
+    </tal:main-macro>
+</metal:main>
+
+</body>
+</html>

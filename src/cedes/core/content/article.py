@@ -48,7 +48,7 @@ class IArticle(IResource, IFile):
 
     model.primary('file')
     file = NamedBlobFile(
-        title='Fichier',
+        title='Fichier PDF',
         required=False, )
 
     searchable("cr_html_preview")

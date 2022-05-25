@@ -4,7 +4,7 @@
        tal:attributes="src string:${view/portal_url}/++plone++cedes.core/${image_name};
                        title python: context.getTypeInfo().title" />
 </tal:cedes_type_image>
-<h1>
+<h1 tal:attributes="class python: context.query_state() == 'private' and 'state-private' or ''">
   <tal:block content="python: context.Title()">
     Title or id
   </tal:block>

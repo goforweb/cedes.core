@@ -29,7 +29,7 @@
           <a tal:attributes="href son/absolute_url"><span tal:replace="son/pretty_title_or_id"/> </a>
 
         </div>
-        <div tal:define="related_items python: here.cc_related"
+        <div tal:define="related_items python: here.get_cc_related(the_objects=True)"
              tal:condition="python:related_items or sons">
           <br/>
           <h3>
@@ -37,9 +37,9 @@
           </h3>
           <ul>
             <li tal:repeat="rel related_items" class="voiraussi">
-               <a tal:attributes="href rel/absolute_url;
-                                  title rel/getTitlePath"
-                  tal:content="rel/pretty_title_or_id"></a>
+               <a tal:attributes="href python: rel.absolute_url();
+                                  title python: rel.get_title_path()"
+                  tal:content="python: rel.Title()"></a>
             </li>
           </ul>
           <ul class="voiraussi" tal:condition="sons">

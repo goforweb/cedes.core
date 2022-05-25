@@ -33,7 +33,7 @@ class ISequenceApprentissage(IResource, IDocument):
 
     searchable("text")
     text = RichText(
-        title="Contenu(s)",
+        title="Contenus",
         allowed_mime_types=(u"text/html", ),
         required=False, )
 

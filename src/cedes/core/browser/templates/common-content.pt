@@ -1,0 +1,34 @@
+<fieldset tal:condition="python:here.cr_comment">
+    <legend>Informations supplémentaires</legend>
+    <div class="field">
+        <span tal:replace="python: here.cr_comment" />
+    </div>
+</fieldset>
+
+<fieldset class="classification" tal:define="widget python: view.widgets['cr_classification']">
+    <legend>Autres ressources de thématique similaire</legend>
+    <div class="field">
+      <tal:render tal:content="structure python: widget.render()">Value</tal:render>
+    </div>
+</fieldset>
+
+<fieldset class="cr_points highlight-red"
+          tal:condition="python: view.member.is_manager()">
+    <legend>Points auxquels la ressource est liée</legend>
+    <div class="field">
+      <tal:render tal:content="structure python: view.widgets['cr_points'].render()">Value</tal:render>
+      <span class="discreet" tal:condition="python: not context.cr_points">
+        Cette ressource n'est liée à aucun point.
+      </span>
+    </div>
+</fieldset>
+
+<fieldset class="related_items">
+    <legend>Ressources liées</legend>
+    <div class="field">
+      <tal:render tal:content="structure python: view.widgets['related_items'].render()">Value</tal:render>
+      <span class="discreet" tal:condition="python: not context.related_items">
+        Cette ressource n'est liée à aucune autre ressource.
+      </span>
+    </div>
+</fieldset>

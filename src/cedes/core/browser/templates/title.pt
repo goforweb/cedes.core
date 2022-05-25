@@ -1,0 +1,15 @@
+<tal:cedes_type_image
+  define="image_name python: 'big-' + context.portal_type.lower() + '.gif'">
+  <img class="image-left"
+       tal:attributes="src string:${view/portal_url}/++plone++cedes.core/${image_name};
+                       title python: context.getTypeInfo().title" />
+</tal:cedes_type_image>
+<h1>
+  <tal:block content="python: context.Title()">
+    Title or id
+  </tal:block>
+  <span class="ds-kw-epc"
+        tal:condition="python: 'ds-kw-epc' in context.Subject()">
+    EPC
+  </span>
+</h1>

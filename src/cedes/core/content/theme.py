@@ -69,6 +69,15 @@ class Theme(Container):
             return parent
         return parent.get_root_theme()
 
+    security.declarePublic('get_cc_related')
+
+    def get_cc_related(self, the_objects=True):
+        """ """
+        res = self.cc_related
+        if the_objects:
+            res = [rel.to_object for rel in res]
+        return res
+
     security.declarePublic('get_associated_resources')
 
     def get_associated_resources(self, sorted=True, summary=False):
@@ -138,9 +147,6 @@ class Theme(Container):
           param short_length number of caracters to keep, truncate the rest
         """
         title = self.Title().strip()
-        # get unicode to get a correct length and cut
-        if not isinstance(title, unicode):
-            title = unicode(title, 'UTF-8')
         if len(title) > short_length:
             title = title[:short_length] + '...'
         return title.encode('UTF-8')

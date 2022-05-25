@@ -25,17 +25,17 @@
           <strong tal:condition="may_access">Info:</strong>
           <span tal:condition="python: may_access and price == 0 and not dossier_is_free">
             Votre compte a déjà été débité pour ce dossier, vous pouvez donc y accéder librement.
-            <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">Continuer...</a>' pour confirmer.
+            <br />Cliquez sur <a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">"Continuer"</a> pour confirmer.
           </span>
           <span tal:condition="python: not is_cedes_free and dossier_is_free and view.has_credits">
             Le dossier est gratuit. Vous pouvez y accéder librement.
-            <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">Continuer...</a>' pour confirmer.
+            <br />Cliquez sur <a href="" onclick="document.getElementById('credit-confirmation').style.display='none';" tal:attributes="href string:${context_url}/@@pdf; title here/pretty_title_or_id;">"Continuer"</a> pour confirmer.
           </span>
           <span tal:condition="python:member.check_balance(price) and not price == 0"> Vous êtes sur le point de télécharger le PDF de ce dossier. Votre compte sera débité de <span tal:condition="python:price<=1" tal:replace="string:$price point"/> <span tal:condition="python:price>1" tal:replace="string:$price points"/>.
           <br />Cliquez sur '<a href="" onclick="document.getElementById('credit-confirmation').style.display='none';"
               tal:attributes="href string:${context_url}/@@pdf;
                               title here/pretty_title_or_id;">
-              Continuer...
+              Continuer
             </a>' pour confirmer!
           </span>
           <span tal:condition="is_cedes_free"> Vous devez être membre CeDES 100% pour pouvoir télécharger le PDF d'un dossier.<br>Allez dans <a tal:attributes="href string:${portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.</span>

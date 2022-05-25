@@ -13,6 +13,8 @@ from z3c.form.interfaces import IFieldsAndContentProvidersForm
 from zope.interface import implementer
 from Products.CMFPlone.browser.contact_info import ContactForm
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Five import BrowserView
+from plone import api
 
 import json
 
@@ -98,3 +100,13 @@ class CeDESInlineValidationView(InlineValidationView):
         """ """
         self.request.response.setHeader('Content-Type', 'application/json')
         return json.dumps({'errmsg': ''})
+
+
+class TitleView(BrowserView):
+    """ """
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()

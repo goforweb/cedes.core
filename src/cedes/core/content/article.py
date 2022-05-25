@@ -81,8 +81,9 @@ class Article(File, Resource):
             if self.cr_periodical and self.cr_date:
                 colophon += ', '
             if self.cr_date:
-                ploneview = self.context.unrestrictedTraverse('@@plone')
-                colophon += ploneview.toLocalizedTime(self.cr_date)
+                # can not use toLocalizedTime because it does not handle
+                # datetime.date, only datetime.datetime
+                colophon += self.cr_date.strftime('%d/%m/%Y')
         if self.cr_periodical_number:
             colophon += ', n&deg; ' + self.cr_periodical_number
         if self.cr_periodical_pp:

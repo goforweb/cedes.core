@@ -1,0 +1,7 @@
+<div class="field highlight-red"
+     tal:define="widget python: view.widgets['cr_first_classification_date']"
+     tal:condition="python: view.member.is_manager()">
+  <span class="help" tal:attributes="title python: widget.label">
+    <tal:render tal:content="structure python: widget.render()">Value</tal:render>
+  </span>
+</div>

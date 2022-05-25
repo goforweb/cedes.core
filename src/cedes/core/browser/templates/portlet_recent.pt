@@ -48,18 +48,18 @@
                        tal:attributes="id string:apn${repeat/obj/number};
                                        class python: viewable and 'portalMessage info', 'portalMessage warning';"
                        tal:define="viewable python: member.check_viewable(obj.UID);">
-                    <dd tal:condition="python: viewable">Votre compte a d&eacute;j&agrave; &eacute;t&eacute; d&eacute;bit&eacute; pour cet article, vous pouvez donc y acc&eacute;der librement. Cliquez sur 'Continuer' pour confirmer.
+                    <dd tal:condition="python: viewable">Votre compte a d&eacute;j&agrave; &eacute;t&eacute; d&eacute;bit&eacute; pour cet article, vous pouvez donc y acc&eacute;der librement. Cliquez sur "Continuer" pour confirmer.
                       <a href=""
                         tal:attributes="href  item_url;
                                          title desc;">
-                        Continuer...
+                        Continuer
                       </a>
                     </dd>
-                    <dd tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur 'Continuer' pour confirmer!
+                    <dd tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point. Cliquez sur "Continuer" pour confirmer!
                       <a href=""
                         tal:attributes="href  item_url;
                                          title desc;">
-                        Continuer...
+                        Continuer
                       </a>
                     </dd>
                     <dd tal:condition="python: view.is_cedes_free"> Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage. Allez dans <a tal:attributes="href string:${view/portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.</dd>

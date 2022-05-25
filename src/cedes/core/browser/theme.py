@@ -3,5 +3,5 @@
 from plone.dexterity.browser.view import DefaultView
 
 
-class ThemeDefaultView(DefaultView):
+class ThemeView(DefaultView):
     """ """

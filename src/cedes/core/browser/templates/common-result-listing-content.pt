@@ -60,7 +60,7 @@
                 <a href=""
                   tal:attributes="href  item_url;
                                    title desc;">
-                  "Continuer..."
+                  "Continuer"
                 </a>
                 pour confirmer!
               </span>
@@ -69,7 +69,7 @@
                 <a href=""
                   tal:attributes="href  item_url;
                                    title item/Description;">
-                  "Continuer..."
+                  "Continuer"
                 </a>
                 pour confirmer!
               </span>

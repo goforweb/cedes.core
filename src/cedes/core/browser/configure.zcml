@@ -62,11 +62,40 @@
         layer="cedes.core.interfaces.ICedesCoreLayer" />
 
     <!-- content_types default view -->
+    <!-- title -->
+    <browser:page
+        for="cedes.core.content.resource.IResource"
+        name="title"
+        class=".overrides.TitleView"
+        template="templates/title.pt"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope.Public" />
+    <!-- description -->
+    <browser:page
+        for="cedes.core.content.resource.IResource"
+        name="description"
+        template="templates/description.pt"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope.Public" />
+    <!-- ArticleGratuit -->
+    <browser:page
+        for="cedes.core.content.articlegratuit.IArticleGratuit"
+        name="view"
+        class="cedes.core.browser.content.ArticleGratuitView"
+        template="templates/articlegratuit_view.pt"
+        permission="zope2.View" />
+    <!-- ArticlePayant -->
+    <browser:page
+        for="cedes.core.content.articlepayant.IArticlePayant"
+        name="view"
+        class="cedes.core.browser.content.ArticlePayantView"
+        template="templates/articlepayant_view.pt"
+        permission="zope2.View" />
     <!-- Theme -->
     <browser:page
         for="cedes.core.content.theme.ITheme"
         name="view"
-        class="cedes.core.browser.theme.ThemeDefaultView"
+        class="cedes.core.browser.theme.ThemeView"
         template="templates/theme_view.pt"
         permission="zope2.View" />
 

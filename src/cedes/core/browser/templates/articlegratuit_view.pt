@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      metal:use-macro="here/main_template/macros/master">
+<body>
+
+<metal:main fill-slot="content-core">
+    <tal:main-macro metal:define-macro="content">
+
+        <tal:block replace="structure python: view.render_cr_first_classification_date()" />
+
+        <fieldset><legend>Références</legend>
+        <div class="documentByLine">
+            <span tal:replace="structure python: context.get_colophon_with_author()"/>
+        </div>
+        </fieldset>
+
+        <fieldset tal:define="descr python: context.Description().strip()">
+          <legend>Description</legend>
+          <div class="documentDescription"
+             tal:content="descr">
+              Description
+          </div>
+          <div tal:condition="not:descr" class="discreet">Aucune description encodée.</div>
+        </fieldset>
+
+        <fieldset tal:define="size python: context.getSize();"><legend>Téléchargement du document</legend>
+        <a class='visualNoPrint'
+           tal:condition="size"
+           target="_blank"
+           tal:attributes="href string:${here/absolute_url}/@@download;
+                           title here/pretty_title_or_id;">
+            <img tal:attributes="src string:${portal_url}/++plone++cedes.core/pdf_icon.gif"
+                 alt="PDF" align="absmiddle"/>
+        </a>
+        <p tal:condition="not: size" class="discreet">Aucun document à télécharger.</p>
+        </fieldset>
+
+        <fieldset tal:define="text python: here.cr_html_preview"><legend>Aperçu</legend>
+        <div tal:condition="python: text.raw" class="plain">
+            <div tal:replace="structure python: text.output_relative_to(context)" />
+        </div>
+        <p tal:condition="not: text" class="discreet">Pas d'aperçu disponible.</p>
+        </fieldset>
+
+        <tal:block replace="structure python: view.render_common_content()" />
+
+        <div class="visualClear"><!-- --></div>
+
+
+    </tal:main-macro>
+</metal:main>
+
+</body>
+</html>

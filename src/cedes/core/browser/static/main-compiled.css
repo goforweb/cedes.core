@@ -156,14 +156,15 @@ span.five::before {
 
 /* EPC term next to title of resources linked to an EPC DS */
 span.ds-kw-epc {
-    color: &dtml-blueColor;;
     font-size: 125%;
     display: inline;
     text-shadow: 2px 2px 4px grey;
     font-weight: bold;
     margin-left: 1em;
 }
-
+h1 span.ds-kw-epc {
+    font-size: 100%;
+}
 /* collapsible */
 .collapsible {
     background-repeat: no-repeat;

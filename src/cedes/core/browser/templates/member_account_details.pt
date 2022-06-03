@@ -41,7 +41,7 @@
         <tr>
           <th> Date et heure</th>
           <th> Article consulté </th>
-          <th> Prix </th>
+          <th style="text-align:right"> Prix </th>
         </tr>
         <tr tal:repeat="transaction transactions">
         <tal:notNullTransactions define="res python:view.catalog(UID=transaction[0])" condition="python: transaction[1] != 0 or (res and res[0].portal_type != 'ArticlePayant')">

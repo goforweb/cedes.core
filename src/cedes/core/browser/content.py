@@ -17,6 +17,8 @@ class BaseView(DefaultView):
     def update(self):
         super(BaseView, self).update()
         self.member = api.user.get_current()
+        if self.member.has_role('Anonymous'):
+            provoke_unauthorized()
         self.portal = api.portal.get()
         self.portal_url = self.portal.absolute_url()
 
@@ -68,6 +70,14 @@ class ArticleGratuitView(BaseView):
 
 class ArticlePayantView(BaseView):
     """ """
+
+    def was_warned(self):
+        """User must always have been warned before accessing a payint resource."""
+        warned = False
+        if self.request['HTTP_REFERER'].startswith(self.portal_url) and \
+           'login?came_from' not in self.request['HTTP_REFERER']:
+            warned = True
+        return warned
 
 
 class BibliographieView(BaseView):

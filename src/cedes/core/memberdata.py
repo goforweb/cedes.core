@@ -171,7 +171,7 @@ class ICeDESUserDataSchema(Interface):
     # bill
     bill_tva = schema.TextLine(
         title=_(u'title_bill_tva', default=u'Bill tva'),
-        description=('Encodez votre numéro de TVA seulement si vous êtes assujetti'),
+        description=('Encodez votre numéro de TVA seulement si vous êtes assujetti.'),
         required=False)
     bill_name = schema.TextLine(
         title=_(u'title_bill_name', default=u'Bill name'),

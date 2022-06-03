@@ -6,7 +6,7 @@
       <tal:main-macro metal:define-macro="content"
                       tal:define="context_uid python: context.UID();
                                   mayView python: view.member.check_viewable(context_uid);
-                                  warned python: context.REQUEST['HTTP_REFERER'].startswith(portal_url) and not 'credentials_cookie_auth' in context.REQUEST['HTTP_REFERER'];">
+                                  warned python: view.was_warned();">
 
         <tal:block replace="structure python: view.render_cr_first_classification_date()" />
 

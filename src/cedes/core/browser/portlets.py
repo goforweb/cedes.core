@@ -110,13 +110,24 @@ class PortletCedes(BasePortletFolders):
     main_folder_id = "boite-a-outils"
 
 
+def _show_portlet(request):
+    """ """
+    res = True
+    if "@@" in request.getURL():
+        res = False
+    else:
+        member = api.user.get_current()
+        if member.has_role('Anonymous') or not member.is_manager():
+            res = False
+    return res
+
+
 class CedesNavigationRenderer(NavigationRenderer):
     """ """
 
     @property
     def available(self):
-        member = api.user.get_current()
-        if member.has_role('Anonymous') or not member.is_manager():
+        if not _show_portlet(self.request):
             return False
         return super(CedesNavigationRenderer, self).available
 
@@ -126,7 +137,6 @@ class CedesRecentRenderer(RecentRenderer):
 
     @property
     def available(self):
-        member = api.user.get_current()
-        if member.has_role('Anonymous') or not member.is_manager():
+        if not _show_portlet(self.request):
             return False
         return super(CedesRecentRenderer, self).available

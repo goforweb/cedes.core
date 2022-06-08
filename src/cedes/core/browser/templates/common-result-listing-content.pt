@@ -59,18 +59,14 @@
               <br />Cliquez sur
                 <a href=""
                   tal:attributes="href  item_url;
-                                   title desc;">
-                  "Continuer"
-                </a>
+                                   title desc;">"Continuer"</a>
                 pour confirmer!
               </span>
               <span tal:condition="python:member.check_balance(1) and not viewable"> Vous &ecirc;tes sur le point de consulter un article payant. Votre compte sera d&eacute;bit&eacute; de 1 point.
               <br />Cliquez sur
                 <a href=""
                   tal:attributes="href  item_url;
-                                   title item/Description;">
-                  "Continuer"
-                </a>
+                                   title item/Description;">"Continuer"</a>
                 pour confirmer!
               </span>
               <span tal:condition="is_cedes_free">Vous devez &ecirc;tre membre CeDES 100% pour pouvoir consulter les articles payants ou les s&eacute;quences d'apprentissage.<br>Allez dans <a tal:attributes="href string:${portal_url}/@@my-account">"Mon compte"</a> pour modifier votre abonnement.</span>

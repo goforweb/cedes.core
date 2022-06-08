@@ -318,9 +318,6 @@ footer#portal-footer-wrapper {
     background-color: #e9ecef;
     color: black;
 }
-footer#portal-footer-wrapper div.footer-text {
-    float: left;
-}
 
 /* ftw.slider */
 div#slider-wrapper div.sliderImage {

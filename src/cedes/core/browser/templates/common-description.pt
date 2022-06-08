@@ -1,4 +1,4 @@
-<fieldset tal:define="descr python: context.Description().strip()">
+<fieldset class="description" tal:define="descr python: context.Description().strip()">
   <legend>Description</legend>
   <div class="documentDescription"
      tal:content="descr">

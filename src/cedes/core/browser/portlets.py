@@ -2,6 +2,8 @@
 
 from cedes.core import utils
 from plone import api
+from plone.app.portlets.portlets.navigation import Renderer as NavigationRenderer
+from plone.app.portlets.portlets.recent import Renderer as RecentRenderer
 from Products.CMFCore.utils import _checkPermission
 from Products.Five import BrowserView
 
@@ -106,3 +108,25 @@ class PortletCedes(BasePortletFolders):
     """ """
 
     main_folder_id = "boite-a-outils"
+
+
+class CedesNavigationRenderer(NavigationRenderer):
+    """ """
+
+    @property
+    def available(self):
+        member = api.user.get_current()
+        if member.has_role('Anonymous') or not member.is_manager():
+            return False
+        return super(CedesNavigationRenderer, self).available
+
+
+class CedesRecentRenderer(RecentRenderer):
+    """ """
+
+    @property
+    def available(self):
+        member = api.user.get_current()
+        if member.has_role('Anonymous') or not member.is_manager():
+            return False
+        return super(CedesRecentRenderer, self).available

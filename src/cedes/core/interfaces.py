@@ -7,6 +7,7 @@
 
 from cioppino.twothumbs.interfaces import ILoveThumbsDontYou
 from eea.facetednavigation.interfaces import IFacetedNavigable
+from plone.app.z3cform.interfaces import IPloneFormLayer
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
 
@@ -14,7 +15,7 @@ class IThemeFacetedNavigable(IFacetedNavigable):
     """Theme faceted navigable inteface"""
 
 
-class ICedesCoreLayer(IDefaultBrowserLayer):
+class ICedesCoreLayer(IDefaultBrowserLayer, IPloneFormLayer):
     """ """
 
 

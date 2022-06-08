@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="references">
   <legend>Références</legend>
   <div>
       <span tal:replace="structure python: context.get_colophon_with_author()"/>

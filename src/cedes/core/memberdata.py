@@ -410,7 +410,8 @@ class CedesMemberData(MemberData):
 
     def is_manager(self):
         """ """
-        return "Manager" in self.getRoles()
+        roles = self.getRoles()
+        return "Manager" in roles or "Site Administrator" in roles
 
     def check_viewable(self, article_uid):
         """

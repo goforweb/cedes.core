@@ -2,7 +2,8 @@
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:faceted="http://namespaces.zope.org/faceted"
            xmlns:five="http://namespaces.zope.org/five"
-           xmlns:plone="http://namespaces.plone.org/plone">
+           xmlns:plone="http://namespaces.plone.org/plone"
+           xmlns:z3c="http://namespaces.zope.org/z3c">
 
     <include package="z3c.jbot" file="meta.zcml" />
     <browser:jbot directory="jbot" />
@@ -43,7 +44,7 @@
           permission="zope2.View" />
     </configure>
 
-    <!-- override membertools view -->
+    <!-- override membertools viewlet -->
     <!-- The member panel (logout, user actions) -->
     <browser:viewlet
         name="plone.membertools"
@@ -52,6 +53,25 @@
         layer="cedes.core.interfaces.ICedesCoreLayer"
         permission="zope2.View"
         template="templates/membertools.pt" />
+
+    <!-- Override the keywords viewlet to show it only to administrators -->
+    <configure package="plone.app.layout.viewlets">
+        <browser:viewlet
+            name="plone.keywords"
+            manager=".interfaces.IBelowContentBody"
+            view="plone.app.layout.globals.interfaces.IViewView"
+            layer="cedes.core.interfaces.ICedesCoreLayer"
+            template="keywords.pt"
+            permission="cmf.ManagePortal" />
+    </configure>
+
+    <!-- Override the site footer -->
+    <browser:page
+        for="*"
+        name="footer"
+        permission="zope.Public"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        template="templates/footer.pt" />
 
     <!-- override contact-info -->
     <browser:page
@@ -204,7 +224,7 @@
     <browser:page
         for="plone.dexterity.interfaces.IDexterityContainer"
         name="listing_view"
-        class="plone.app.contenttypes.browser.folder.FolderView"
+        class="cedes.core.browser.overrides.CedesFolderView"
         layer="cedes.core.interfaces.ICedesCoreLayer"
         permission="zope2.View"
         template="templates/folder-listing.pt" />
@@ -217,6 +237,14 @@
             permission="zope2.View"
             template="templates/listing.pt" />
     </configure>
+    <!-- add the @@listing_full_view for Folders -->
+    <browser:page
+        for="plone.dexterity.interfaces.IDexterityContainer"
+        name="listing_full_view"
+        class="cedes.core.browser.overrides.CedesFolderView"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope2.View"
+        template="templates/folder-listing.pt" />
 
     <!-- The jQuery/ajax content refresh view that refresh common-result-listing-content -->
     <browser:page
@@ -318,7 +346,7 @@
         for="*"
         class=".membersearch.CeDESMemberSearchForm"
         layer="cedes.core.interfaces.ICedesCoreLayer"
-        permission="zope2.View" />
+        permission="cmf.ListPortalMembers" />
     <browser:page
         name="register"
         for="plone.app.layout.navigation.interfaces.INavigationRoot"
@@ -387,5 +415,12 @@
         name="member-fix-failed-accounting"
         permission="cmf.ManagePortal"
         class=".member.FixFailedAccountingFormWrapper" />
+
+    <!-- override display for RelatedItemsWidget -->
+    <z3c:widgetTemplate
+        mode="display"
+        widget="plone.app.z3cform.interfaces.IRelatedItemsWidget"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        template="templates/relateditems_display.pt" />
 
 </configure>

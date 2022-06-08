@@ -116,7 +116,7 @@
             Description
             </div>
 
-            <tal:know_more condition="python: desc and item_type in ['DossierStructure',]">
+            <tal:know_more condition="python: item_type in ['DossierStructure',]">
               <div id="collapsible-more" class="collapsible-content">
                 <div class="collapsible-inner-content">
                 <div class="documentDescription" tal:content="structure python:item.Description.replace('\n', '<br/>')">Description</div>

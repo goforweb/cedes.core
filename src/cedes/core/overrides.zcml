@@ -18,4 +18,24 @@
         class="cedes.core.browser.overrides.CeDESInlineValidationView"
         permission="zope.Public" />
 
+    <!-- portlet -->
+    <configure package="plone.app.portlets.portlets">
+        <plone:portlet
+            name="portlets.Navigation"
+            interface=".navigation.INavigationPortlet"
+            assignment=".navigation.Assignment"
+            renderer="cedes.core.browser.portlets.CedesNavigationRenderer"
+            addview=".navigation.AddForm"
+            editview=".navigation.EditForm" />
+    </configure>
+    <configure package="plone.app.portlets.portlets">
+        <plone:portlet
+            name="portlets.Recent"
+            interface=".recent.IRecentPortlet"
+            assignment=".recent.Assignment"
+            renderer="cedes.core.browser.portlets.CedesRecentRenderer"
+            addview=".recent.AddForm"
+            editview=".recent.EditForm" />
+    </configure>
+
 </configure>

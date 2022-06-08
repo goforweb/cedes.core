@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<object
+    i18n:domain="plone"
+    meta_type="Dexterity FTI"
+    name="Folder"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+
+  <property name="view_methods">
+    <element value="listing_full_view"/>
+    <element value="listing_view"/>
+  </property>
+
+</object>

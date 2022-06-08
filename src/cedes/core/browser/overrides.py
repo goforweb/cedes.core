@@ -34,6 +34,11 @@ class CedesContactForm(ContactForm):
 class CedesFolderView(FolderView):
     """ """
 
+    def __call__(self):
+        """ """
+        self.member = api.user.get_current()
+        return super(CedesFolderView, self).__call__()
+
     @property
     def no_items_message(self):
         """Do not display the message 'There is no element in this folder.'"""

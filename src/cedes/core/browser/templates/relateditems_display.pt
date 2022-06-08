@@ -1,0 +1,16 @@
+<span id="form-widgets-fieldname"
+      class="relateditems-widget textline-field"
+      i18n:domain="plone"
+      tal:define="plone_view nocall:context/@@plone;
+                  normalizeString python:plone_view.normalizeString;
+                  items python: view.items();
+                  Batch python:modules['Products.CMFPlone'].Batch;"
+      tal:condition="items"
+      tal:attributes="id python:'form-widgets-{}'.format(view.__name__);
+                      class python: 'relateditems-widget {}-field'.format(normalizeString(view.field.__class__.__name__));">
+    <div tal:define="dummy python: request.set('folderContents', Batch(items._basesequence, size=999));">
+        <tal:block define="common_result_listing context/@@common-result-listing/index;">
+            <tal:content replace="structure common_result_listing" />
+        </tal:block>
+    </div>
+</span>

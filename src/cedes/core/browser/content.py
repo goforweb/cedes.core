@@ -51,6 +51,10 @@ class BaseView(DefaultView):
         """ """
         return ViewPageTemplateFile("templates/common-references.pt")(self)
 
+    def render_related_resources(self):
+        """ """
+        return ViewPageTemplateFile("templates/common-related-resources.pt")(self)
+
     def link_infos(self):
         """Format the url for display."""
         view = self.context.unrestrictedTraverse('@@link_redirect_view')

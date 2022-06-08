@@ -25,7 +25,7 @@ class CommonResultListingView(BrowserView):
         self.context = context
         self.request = request
         self.portal = api.portal.get()
-        self.full = self.context.getLayout() == 'folder_full_listing'
+        self.full = self.context.getLayout() == 'listing_full_view'
 
     def performSearch(self, b_size=30, b_start=0):
         """
@@ -97,7 +97,7 @@ class CommonResultListingView(BrowserView):
             return 'recently_modified'
 
         contextLayout = self.context.getLayout()
-        if contextLayout in ['listing_view']:
+        if contextLayout in ['listing_view', 'listing_full_view']:
             return 'folder_listing'
         if contextLayout == 'dossier_view':
             return 'dossier_view'

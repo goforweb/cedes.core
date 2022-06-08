@@ -1,5 +1,5 @@
 div.container {
-    max-width: 1600px;
+    max-width: 1200px;
 }
 
 form.gopress_import caption {
@@ -281,4 +281,88 @@ div#mainnavigation li.plan.nav-item > a::before {
 }
 #content-header #portal-header {
     flex-direction: inherit;
+}
+
+/* limit space between doc title h1 and text */
+section#portal-column-content article > header {
+  margin-bottom: 0rem;
+}
+
+#content img {
+    max-width: 100%;
+}
+
+/* limit space between fields on edit forms */
+form .mb-3 {
+    margin-bottom: 0.5rem;
+}
+/* fix height of textarea, too short by default (2 rows or so...) */
+textarea.form-control {
+    height: 100px;
+}
+#content fieldset {
+    margin-bottom: 1em;
+}
+#content fieldset legend {
+    margin-bottom: 0;
+}
+/* highlight fieldset preview */
+fieldset.cr_html_preview {
+    padding: 1em;
+    border: 1px solid #dddddd;
+    background-color: #fafafa;
+}
+
+/* footer */
+footer#portal-footer-wrapper {
+    background-color: #e9ecef;
+    color: black;
+}
+footer#portal-footer-wrapper div.footer-text {
+    float: left;
+}
+
+/* ftw.slider */
+div#slider-wrapper div.sliderImage {
+    height: auto;
+}
+div#slider-wrapper div.sliderImage img {
+    width: 100%;
+    height: auto;
+}
+div.sliderText {
+    opacity: 0.8;
+    background-color: black;
+    color: white;
+    width: 85%;
+}
+ul.slick-dots > li.slick-active > button,
+ul.slick-dots > li > button {
+    border-radius: 0;
+    border: 1px solid;
+    border-color: #007bb1;
+}
+ul.slick-dots > li.slick-active > button {
+    background-color: #007bb1;
+    color: white;
+}
+ul.slick-dots > li > button {
+    background-color: white;
+    color: #007bb1;
+}
+div#slider-wrapper button {
+    border: 0;
+}
+button.slick-prev {
+    margin-left: -50px;
+}
+button.slick-next::before {
+    font-family: 'Glyphicons Halflings';
+    content: '\e080';
+    color: #007bb1;
+}
+button.slick-prev::before {
+    font-family: 'Glyphicons Halflings';
+    content: '\e079';
+    color: #007bb1;
 }

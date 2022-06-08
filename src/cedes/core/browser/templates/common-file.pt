@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="file">
   <legend>Télécharger le document</legend>
   <a class='visualNoPrint'
      tal:condition="python: context.file"

@@ -149,6 +149,9 @@ msgstr "S'inscrire"
 msgid "legend_member_search_criteria"
 msgstr ""
 
+msgid "listing_full_view"
+msgstr "Vue tout le contenu avec sous-dossiers"
+
 #. Default: "You are not allowed to list portal members."
 #: ../browser/templates/membersearch_form.pt:29
 msgid "member_listing_not_allowed"

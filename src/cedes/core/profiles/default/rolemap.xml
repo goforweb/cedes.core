@@ -5,5 +5,29 @@
       <role name="Manager" />
       <role name="Site Administrator" />
     </permission>
+    <permission name="List portal members" acquire="False">
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+    <permission name="List undoable changes" acquire="False">
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+    <permission name="Portlets: Manage own portlets" acquire="False">
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+    <permission name="Portlets: View dashboard" acquire="False">
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+    <permission name="View Groups" acquire="False">
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+    <permission name="View management screens" acquire="False">
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
   </permissions>
 </rolemap>

@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      tal:omit-tag=""
+      i18n:domain="plone">
+
+  <div class="card card-classic" id="portal-footer-signature" metal:define-macro="portlet">
+
+    <div class="card-body">
+
+      <div class="footer-text">
+        <span><a href='http://www.unamur.be/facultes/eco/' target="_blank">Universit&eacute; de Namur - Facult&eacute; de Sciences Economiques, Sociales et de Gestion</a></span><br />
+        <span>CeDES - Rempart de la Vierge, 8, B-5000 Namur, Belgique</span><br />
+        <span>T&eacute;l. : +32 (0)81 72 48 51 - E-mail : cedes@unamur.be</span><br />
+      </div>
+      <div class="footer-links">
+        <a href="contact-info" tal:attributes="href string:/contact-info">CONTACT</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</html>

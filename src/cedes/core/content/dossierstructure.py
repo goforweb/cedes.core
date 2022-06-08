@@ -89,7 +89,7 @@ class Base(object):
         Returns brains of paying resources (ArticlePayant)
         """
         catalog = api.portal.get_tool('portal_catalog')
-        return catalog(UID=uids)
+        return catalog(UID=uids, portal_type="ArticlePayant")
 
 
 @implementer(IDossierStructure, ICeDESLoveThumbsDontYou)
@@ -202,7 +202,8 @@ class Point(Folder, Base):
     def get_cf_resources(self, the_objects=False):
         """ """
         if not the_objects:
-            return self.__dict__['cf_resources']
+            # cf_resources may not exist when creating new element
+            return self.__dict__.get('cf_resources', [])
         else:
             return [resource.to_object for resource in self.cf_resources]
 

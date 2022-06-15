@@ -121,7 +121,7 @@ class ICeDESUserDataSchema(Interface):
     )
 
     # member type and legal validation
-    directives.write_permission(member_type="cmf.ManagePortal")
+    directives.write_permission(member_type="cmf.ListPortalMembers")
     member_type = schema.Choice(
         title=_(u'title_member_type', default=u'Member type'),
         values=["CeDES Free", "CeDES 100%"],
@@ -229,7 +229,6 @@ class ICeDESUserDataSchema(Interface):
 
         # if bill_... fields are shown and current member is not a Manager, it must be filled
         # validation is done during registration (user is anonymous) or when editing personal data
-        import ipdb; ipdb.set_trace()
         if (api.user.is_anonymous() or not api.user.get_current().is_manager()) and \
            "form.widgets.bill_name" in req.form:
             if not data.bill_name or \

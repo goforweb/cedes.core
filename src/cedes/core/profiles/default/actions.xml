@@ -131,5 +131,45 @@
     <element value="Manage portal"/>
    </property>
   </object>
+  <object name="redirection" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="ical_import_enable" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="ical_import_disable" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="faceted.sync" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="faceted.disable" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="faceted.enable" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="faceted.search.disable" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
+  <object name="faceted.search.enable" meta_type="CMF Action" i18n:domain="plone">
+   <property name="permissions">
+    <element value="Manage portal"/>
+   </property>
+  </object>
  </object>
 </object>

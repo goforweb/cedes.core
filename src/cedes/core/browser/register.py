@@ -60,7 +60,7 @@ def extra_field_constraint(value):
 class ICeDESCombinedRegisterSchema(pau_schema.IRegisterSchema, ICeDESUserDataSchema):
     """ """
     # redefine member_type, we will hide it but it must be editable
-    # and by default it is protected by the "Manage portal" permission
+    # and by default it is protected by the "List portal members" permission
     directives.write_permission(member_type="cmf.AddPortalMember")
     member_type = schema.Choice(
         title=_(u'title_member_type', default=u'Member type'),

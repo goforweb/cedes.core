@@ -13,13 +13,19 @@
       <role name="Manager" />
       <role name="Site Administrator" />
     </permission>
+    <!-- portlets -->
     <permission name="Portlets: Manage own portlets" acquire="False">
       <role name="Manager" />
       <role name="Site Administrator" />
     </permission>
+    <permission name="Portlets: Manage own portlets" acquire="False">
+      <role name="Manager" />
+    </permission>
+    <permission name="Portlets: Manage portlets" acquire="False">
+      <role name="Manager" />
+    </permission>
     <permission name="Portlets: View dashboard" acquire="False">
       <role name="Manager" />
-      <role name="Site Administrator" />
     </permission>
     <permission name="View Groups" acquire="False">
       <role name="Manager" />
@@ -28,6 +34,22 @@
     <permission name="View management screens" acquire="False">
       <role name="Manager" />
       <role name="Site Administrator" />
+    </permission>
+    <!-- sharing -->
+    <permission name="Sharing page: Delegate Contributor role" acquire="False">
+      <role name="Manager" />
+    </permission>
+    <permission name="Sharing page: Delegate Editor role" acquire="False">
+      <role name="Manager" />
+    </permission>
+    <permission name="Sharing page: Delegate Reader role" acquire="False">
+      <role name="Manager" />
+    </permission>
+    <permission name="Sharing page: Delegate Reviewer role" acquire="False">
+      <role name="Manager" />
+    </permission>
+    <permission name="Sharing page: Delegate roles" acquire="False">
+      <role name="Manager" />
     </permission>
   </permissions>
 </rolemap>

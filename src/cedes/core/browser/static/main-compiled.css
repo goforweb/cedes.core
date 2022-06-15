@@ -22,10 +22,10 @@ div.portletNavigationTree [class*="contenttype-"] {
 }
 
 .contenttype-articlegratuit {
-    background: no-repeat transparent url("++plone++cedes.core/article-gratuit.gif");
+    background: no-repeat transparent url("++plone++cedes.core/articlegratuit.gif");
 }
 .contenttype-articlepayant {
-    background: no-repeat transparent url("++plone++cedes.core/article-payant.gif");
+    background: no-repeat transparent url("++plone++cedes.core/articlepayant.gif");
 }
 .contenttype-audio {
     background: no-repeat transparent url("++plone++cedes.core/audio.gif");
@@ -49,10 +49,10 @@ div.portletNavigationTree [class*="contenttype-"] {
     background: no-repeat transparent url("++plone++cedes.core/image.gif");
 }
 .contenttype-sequenceapprentissage {
-    background: no-repeat transparent url("++plone++cedes.core/sequence-apprentissage.gif");
+    background: no-repeat transparent url("++plone++cedes.core/sequenceapprentissage.gif");
 }
 .contenttype-siteinternet {
-    background: no-repeat transparent url("++plone++cedes.core/site-internet.gif");
+    background: no-repeat transparent url("++plone++cedes.core/siteinternet.gif");
 }
 .contenttype-statistiques {
     background: no-repeat transparent url("++plone++cedes.core/statistiques.gif");

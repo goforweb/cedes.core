@@ -22,7 +22,7 @@
 
         <tal:notRoot condition="python: not context.is_root()">
         <tal:defines define="results python: context.restrictedTraverse('@@common-result-listing').searchForThemeView();
-                             sons python:here.objectValues('Theme');">
+                             sons python:here.objectValues();">
         <div tal:repeat="son sons"
              tal:attributes="style string:background:url($portal_url/arrowRight.png) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
 
@@ -44,7 +44,9 @@
           </ul>
           <ul class="voiraussi" tal:condition="sons">
             <li>
-              <a href="plan_classement">La structure du plan de classement dans le thème en cours</a>
+              <a tal:attributes="href string:${context/absolute_url}/@@plan-classement">
+                La structure du plan de classement dans le thème en cours
+              </a>
             </li>
           </ul>
         </div>

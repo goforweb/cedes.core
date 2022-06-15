@@ -277,14 +277,6 @@
         name="dossierstructure_pdf"
         template="templates/dossierstructure_pdf.pt"
         permission="zope2.View" />
-    <!-- The view rendering html-toc -->
-    <browser:view
-        for="*"
-        class="cedes.core.browser.dossierstructure.HTMLTocView"
-        name="html-toc"
-        allowed_attributes="point_title
-                            point_number"
-        permission="zope2.View" />
     <!-- generate_pdf -->
     <browser:view
         for="cedes.core.content.dossierstructure.IDossierStructure"
@@ -296,6 +288,23 @@
         for="cedes.core.content.dossierstructure.IDossierStructure"
         class="cedes.core.browser.dossierstructure.GetPDFView"
         name="pdf"
+        permission="zope2.View" />
+
+    <!-- The view rendering html-toc -->
+    <browser:view
+        for="*"
+        class="cedes.core.browser.dossierstructure.HTMLTocView"
+        name="html-toc"
+        allowed_attributes="point_title
+                            point_number"
+        permission="zope2.View" />
+
+    <!-- The view rendering plan-classement -->
+    <browser:page
+        for="cedes.core.content.theme.ITheme"
+        class="cedes.core.browser.views.PlanClassementView"
+        name="plan-classement"
+        template="templates/plan-classement.pt"
         permission="zope2.View" />
 
     <!-- portlets -->

@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+  metal:use-macro="here/main_template/macros/master">
+  <body>
+
+    <metal:main fill-slot="content-core">
+      <tal:main-macro metal:define-macro="content">
+
+        <a href="javascript:history.back();">Retourner à la page pécédente</a>
+        <div class="classification">
+          <tal:block tal:replace="structure python: view.show_pc_details()" />
+        </div>
+      </tal:main-macro>
+    </metal:main>
+
+  </body>
+</html>

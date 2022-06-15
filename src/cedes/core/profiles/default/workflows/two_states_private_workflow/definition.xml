@@ -7,7 +7,7 @@
 - 2 states workflow used for private resources.
 - initial_state is private and element may be published."
              state_variable="review_state"
-             initial_state="private"
+             initial_state="published"
              i18n:attributes="title; description">
 
  <permission>Access contents information</permission>

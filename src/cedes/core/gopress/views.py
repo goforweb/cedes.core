@@ -737,7 +737,7 @@ class XmlToPloneView(BrowserView):
             cr_periodical_pp=merged_pages and ','.join(merged_pages) or article_info['article_page'],
             cr_date=datetime.fromisoformat(article_info['article_date']),
             file=NamedBlobFile(article_pdf_data, filename=article_id + '.pdf'),
-            cr_html_preview=article_html)
+            cr_html_preview=richtextval(article_html))
 
 
 class DownloadArticlePDFView(BrowserView):

@@ -2,6 +2,7 @@
 
 from AccessControl import Unauthorized
 from Acquisition import aq_inner
+from cedes.core.config import CEDES_RESOURCE_TYPES
 from cedes.core.utils import send_mail
 from DateTime import DateTime
 from plone import api
@@ -125,7 +126,7 @@ class ContextCatalogSiteMap(CatalogSiteMap):
         strategy = getMultiAdapter((context, self), INavtreeStrategy)
 
         # begin changes by cedes.core
-        query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 3}
+        query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 1}
         query['portal_type'] = ['Theme']
         query['exclude_from_nav'] = False
         # path to 'plan'
@@ -241,3 +242,35 @@ class CeDESNightTasks(BrowserView):
         self._set_last_execution(now)
 
         return out.replace('\n', '<br>')
+
+
+class PlanClassementView(BrowserView):
+    """ """
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
+
+    def show_pc_details(self):
+        """ """
+        res = '<ul>'
+        brains = api.content.find(context=self.context, portal_type="Theme")
+        context_uid = self.context.UID()
+        for brain in brains:
+            # ignore context
+            if brain.UID == context_uid:
+                continue
+            theme = brain.getObject()
+            details = theme.get_associated_resources(sorted=True, summary=True)
+            res = res + '<li>' + '<a class="state-' + brain.review_state + '" href="' + \
+                theme.absolute_url() + '">' + theme.Title() + '&nbsp;'
+            for portal_type in CEDES_RESOURCE_TYPES:
+                if details[portal_type]:
+                    res += " <img src='%s/++plone++cedes.core/%s.gif' valign='top' border='0'/> %s " % (
+                        self.portal_url, portal_type.lower(), str(details[portal_type]))
+            res += '</a> </li>'
+            res += theme.unrestrictedTraverse('@@plan-classement').show_pc_details()
+        res += '</ul>'
+        return res

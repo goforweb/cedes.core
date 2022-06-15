@@ -1,0 +1,26 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:i18n="http://namespaces.zope.org/i18n"
+           xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
+           xmlns:five="http://namespaces.zope.org/five">
+
+    <!-- data -->
+    <transmogrifier:registerConfig
+      name="collective.jsonmigrator.data"
+      title="CeDES: migrate common data (Folder, Document)"
+      configuration="pipelines/data.cfg" />
+
+    <!-- themes -->
+    <transmogrifier:registerConfig
+      name="collective.jsonmigrator.themes"
+      title="CeDES: migrate common themes (Theme)"
+      configuration="pipelines/themes.cfg" />
+
+    <!-- resources -->
+    <transmogrifier:registerConfig
+      name="collective.jsonmigrator.resources"
+      title="CeDES: migrate common resources (ArticleGratuit, ArticlaPayant, SiteInternet, ...)"
+      configuration="pipelines/resources.cfg" />
+
+</configure>

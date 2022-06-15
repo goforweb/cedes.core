@@ -104,18 +104,20 @@ def onPrincipalCreated(event):
     # send email to administrator
     request = getRequest()
     form = request.form
-    send_mail(subject='Cedes - Nouvelle inscription',
-              template_name='mail_newmember_template',
-              options={'username': form['form.widgets.username'],
-                       'fullname': form['form.widgets.fullname'],
-                       'email': form['form.widgets.email'],
-                       'school_name': form['form.widgets.school_name'],
-                       'school_phone': form['form.widgets.school_phone'], })
+    # special case, do not send email if adding a user manually in the configuration
+    if "form.widgets.school_name" in form:
+        send_mail(subject='Cedes - Nouvelle inscription',
+                  template_name='mail_newmember_template',
+                  options={'username': form['form.widgets.username'],
+                           'fullname': form['form.widgets.fullname'],
+                           'email': form['form.widgets.email'],
+                           'school_name': form['form.widgets.school_name'],
+                           'school_phone': form['form.widgets.school_phone'], })
 
-    # asks for a bill if member is "CeDES 100%"
-    # here member properties are still not set so get member_type from request
-    if not request.form['form.widgets.member_type'] == ['CeDES Free']:
-        member.bill_credits()
+        # asks for a bill if member is "CeDES 100%"
+        # here member properties are still not set so get member_type from request
+        if not request.form['form.widgets.member_type'] == ['CeDES Free']:
+            member.bill_credits()
 
 
 def onPrincipalDeleted(event):

@@ -17,7 +17,7 @@
 
     <include file="events.zcml" />
     <include file="profiles.zcml" />
-    <include file="pipelines.zcml" />
+    <include zcml:condition="installed plone.app.transmogrifier" file="pipelines.zcml" />
 
     <!-- Faceted criteria adapter -->
     <adapter for="cedes.core.interfaces.IThemeFacetedNavigable"

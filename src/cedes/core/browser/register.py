@@ -40,8 +40,7 @@ class BillLabelProvider(ContentProviderBase):
         self.__parent__ = view
 
     def render(self):
-        if self.__parent__.form.widgets['bill_email'].mode != HIDDEN_MODE:
-            return '<h3>Facturation</h3>'
+        return '<h3>Facturation</h3>'
 
 
 def compute_constraint(value):
@@ -87,9 +86,9 @@ class CeDESRegistrationForm(RegistrationForm):
     """ """
     contentProviders = ContentProviders()
     contentProviders['school_label'] = SchoolLabelProvider
-    contentProviders['school_label'].position = 5
+    contentProviders['school_label'].position = 6
     contentProviders['bill_label'] = BillLabelProvider
-    contentProviders['bill_label'].position = 13
+    contentProviders['bill_label'].position = 14
 
     @property
     def schema(self):
@@ -133,12 +132,15 @@ class CeDESRegistrationForm(RegistrationForm):
         self.label = "Formulaire d'inscription - {0}".format(
             self.widgets['member_type'].value[0])
 
-        # if member_type is "Free", hide the bill_* fields
+        # if member_type is "Free", remove the bill_* fields
         if self.widgets['member_type'].value == ["CeDES Free"]:
-            for w in self.widgets:
-                if w.startswith('bill'):
-                    self.widgets[w].mode = HIDDEN_MODE
-                    self.widgets[w].required = False
+            widget_names = [w for w in self.widgets]
+            for widget_name in widget_names:
+                if widget_name.startswith('bill'):
+                    # ContentProviders are in widgets but not in fields
+                    if widget_name in self.fields:
+                        del self.fields[widget_name]
+                    del self.widgets[widget_name]
 
         # display a message explaining what will happen
         if self.widgets['member_type'].value == ["CeDES Free"]:

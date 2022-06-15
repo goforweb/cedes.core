@@ -228,7 +228,7 @@ class CeDESNightTasks(BrowserView):
                            "de non paiement. Devient cedes Free si balance nulle." % member_id)
 
         if not out:
-            out = "Aucune action à effectuer"
+            out = ["Aucune action à effectuer"]
         out = "\n".join(out)
 
         # email notification for Managers

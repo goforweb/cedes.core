@@ -210,6 +210,7 @@ class ICeDESUserDataSchema(Interface):
         # check email unicity, 2 cases:
         # registering, then we can not found an email
         # editing personnal preferences or changing existing email, we may only find current member
+        req = getRequest()
         is_registering = getattr(data, 'username', False)
         if is_registering:
             if check_email_unicity(data.email):
@@ -221,14 +222,16 @@ class ICeDESUserDataSchema(Interface):
         else:
             # editing email, only one may be found (myself) if not changing
             # and none may be found if changing
-            req = getRequest()
             current_email = req.get('PUBLISHED').member.getProperty('email')
             if current_email.strip() != data.email.strip() and check_email_unicity:
                 # changing email and reusing an existing one
                 raise Invalid("L'adresse e-mail \"{0}\" est déjà utilisée.".format(data.email))
 
         # if bill_... fields are shown and current member is not a Manager, it must be filled
-        if not api.user.get_current().is_manager() and "form.widgets.bill_name" in req.form:
+        # validation is done during registration (user is anonymous) or when editing personal data
+        import ipdb; ipdb.set_trace()
+        if (api.user.is_anonymous() or not api.user.get_current().is_manager()) and \
+           "form.widgets.bill_name" in req.form:
             if not data.bill_name or \
                not data.bill_email or \
                not data.bill_country or \
@@ -712,7 +715,7 @@ class CedesMemberData(MemberData):
 
     def retry_bill_credits(self):
         '''
-          Tries to rebill credits if previous attempt failed
+          Tries to bill credits if previous attempt failed
           Returns True if successfull, False otherwise
           None if member was not waiting to send a bill
         '''

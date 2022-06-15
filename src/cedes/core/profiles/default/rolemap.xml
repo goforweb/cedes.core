@@ -51,5 +51,9 @@
     <permission name="Sharing page: Delegate roles" acquire="False">
       <role name="Manager" />
     </permission>
+    <!-- display -->
+    <permission name="Modify view template" acquire="False">
+      <role name="Manager" />
+    </permission>
   </permissions>
 </rolemap>

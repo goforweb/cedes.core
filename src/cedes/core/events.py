@@ -31,10 +31,13 @@ def onZopeProcessStarting(event):
     setRequest(app.REQUEST)
     container = app.unrestrictedTraverse("/")
     site_id = os.getenv("SITE_ID", "Plone")
-    portal = container.unrestrictedTraverse(site_id)
-    setSite(portal)
-    portal.unrestrictedTraverse('@@cedes-night-tasks')()
-    transaction.commit()
+    try:
+        portal = container.unrestrictedTraverse(site_id)
+        setSite(portal)
+        portal.unrestrictedTraverse('@@cedes-night-tasks')()
+        transaction.commit()
+    except KeyError:
+        pass
 
 
 def onThemeAdded(theme, event):

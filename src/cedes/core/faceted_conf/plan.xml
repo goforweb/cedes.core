@@ -121,7 +121,7 @@
    <property name="title">Thème associé</property>
    <property name="index">all_associated_theme_uids</property>
    <property name="default">context/UID</property>
-   <property name="position">right</property>
+   <property name="position">center</property>
    <property name="section">default</property>
    <property name="hidden">True</property>
   </criterion>
@@ -129,9 +129,9 @@
    <property name="widget">debug</property>
    <property name="title">Debug</property>
    <property name="user">admin</property>
-   <property name="position">right</property>
+   <property name="position">center</property>
    <property name="section">default</property>
-   <property name="hidden">True</property>
+   <property name="hidden">False</property>
   </criterion>
  </criteria>
 </object>

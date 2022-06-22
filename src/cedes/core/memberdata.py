@@ -382,7 +382,7 @@ class CedesMemberData(MemberData):
         self.set_account_transactions(
             self.get_account_transactions() + (('Crédit', value, DateTime()),))
         # email notification
-        send_mail(subject='CeDES - Vos crédits ont été activés',
+        send_mail(subject='[CeDES] - Vos crédits ont été activés',
                   template_name='mail_credit_activation',
                   options={'title': self.Title(),
                            'credit': value, },
@@ -413,7 +413,7 @@ class CedesMemberData(MemberData):
         self.set_bill_accounting_failed(total, mode, now)
         # email notification for Managers
         send_mail(
-            subject="CeDES - Erreur de l'application comptable",
+            subject="[CeDES] - Erreur de l'application comptable",
             template_name='mail_registration_error_manager',
             options={'member_id': self.getId(),
                      'error_text': "SERVEUR INDISPONIBLE, L'application CeDES tentera de se "
@@ -586,7 +586,7 @@ class CedesMemberData(MemberData):
 
     def send_low_reminder(self):
         """ """
-        send_mail("CeDES - Le solde de votre compte est bientôt épuisé",
+        send_mail("[CeDES] - Le solde de votre compte est bientôt épuisé",
                   template_name='mail_credit_low_notification',
                   options={'title': self.Title(),
                            'balance': self.get_account_balance(), },
@@ -595,7 +595,7 @@ class CedesMemberData(MemberData):
 
     def send_credit_request_confirmation(self):
         """ """
-        send_mail("CeDES - Votre demande de crédits a été acceptée",
+        send_mail("[CeDES] - Votre demande de crédits a été acceptée",
                   template_name='mail_credit_request_confirmation',
                   options={'title': self.Title()},
                   mto=self.get_email())
@@ -606,7 +606,7 @@ class CedesMemberData(MemberData):
           Sends an email to confirm Cedes100pc request accepted
           Returns True if email has been sent
         '''
-        send_mail("CeDES - Votre demande d'abonnement à CeDES 100% a été acceptée",
+        send_mail("[CeDES] - Votre demande d'abonnement à CeDES 100% a été acceptée",
                   template_name='mail_cedes100pc_request_confirmation',
                   options={'title': self.Title()},
                   mto=self.get_email())
@@ -626,7 +626,7 @@ class CedesMemberData(MemberData):
             registration_date = self.get_registration_date()
             # sends an email p_days after registration
             if registration_date + days < now:
-                send_mail("CeDES - Votre inscription au site cedes",
+                send_mail("[CeDES] - Votre inscription au site cedes",
                           template_name='mail_registration_nologin_notification',
                           options={'title': self.Title()},
                           mto=self.get_email())
@@ -659,7 +659,7 @@ class CedesMemberData(MemberData):
                 if expiration_notification_date.year() == 1950:
                     # send a mail to the member to warn him...
                     last_payment_date, expiration_date = self._compute_payment_dates(formatted=True)
-                    send_mail("CeDES - Vos crédits expirent bientôt",
+                    send_mail("[CeDES] - Vos crédits expirent bientôt",
                               template_name='mail_credit_expiration_notification',
                               options={'title': self.Title(),
                                        'expiration_date': expiration_date},
@@ -682,7 +682,7 @@ class CedesMemberData(MemberData):
                     self.set_member_type("CeDES Free")
                     # send a mail to the member to warn him...
                     last_payment_date, expiration_date = self._compute_payment_dates(formatted=True)
-                    send_mail("CeDES - Vos crédits sont expirés",
+                    send_mail("[CeDES] - Vos crédits sont expirés",
                               template_name='mail_credit_expired_notification',
                               options={'title': self.Title(),
                                        'expiration_date': expiration_date},
@@ -712,7 +712,7 @@ class CedesMemberData(MemberData):
                         if not bill:
                             return False
                         attachment = create_attachment('application/pdf', bill, 'facture.pdf')
-                        send_mail(subject='CeDES - Votre paiement en attente',
+                        send_mail(subject='[CeDES] - Votre paiement en attente',
                                   template_name='mail_credit_payment_notification',
                                   options={'title': self.Title()},
                                   mto=self.get_email(),

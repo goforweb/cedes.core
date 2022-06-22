@@ -109,7 +109,7 @@ def onPrincipalCreated(event):
     form = request.form
     # special case, do not send email if adding a user manually in the configuration
     if "form.widgets.school_name" in form:
-        send_mail(subject='Cedes - Nouvelle inscription',
+        send_mail(subject='[CeDES] - Nouvelle inscription',
                   template_name='mail_newmember_template',
                   options={'username': form['form.widgets.username'],
                            'fullname': form['form.widgets.fullname'],

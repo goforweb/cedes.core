@@ -327,7 +327,7 @@ def send_mail(subject,
     host.send(payload,
               mto=mto,
               mfrom=mfrom,
-              subject='Cedes - Nouvelle inscription',
+              subject=subject,
               charset=encoding)
 
 

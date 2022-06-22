@@ -643,13 +643,13 @@ class FixFailedAccountingForm(AutoExtensibleForm, EditForm):
     def _send_bill_email(self, bill, accounting_mode):
         """ """
         if accounting_mode == 'F':
-            subject = 'CeDES - Facture'
+            subject = '[CeDES] - Facture'
             template_name = 'mail_credit_bill_notification'
             options = {'title': self.member.Title()}
             filename = 'facture.pdf'
         else:
             # 'N'
-            subject = 'CeDES - Note de crédit'
+            subject = '[CeDES] - Note de crédit'
             template_name = 'mail_credit_note_notification'
             ploneview = self.context.unrestrictedTraverse("@@plone")
             bill_date = ploneview.toLocalizedTime(

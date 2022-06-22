@@ -233,7 +233,7 @@ class CeDESNightTasks(BrowserView):
         out = "\n".join(out)
 
         # email notification for Managers
-        send_mail(subject='CeDES - Résultat des tâches lancées la nuit',
+        send_mail(subject='[CeDES] - Résultat des tâches lancées la nuit',
                   template_name='mail_crontasks_result',
                   options={'out': out,
                            'startdate': now,

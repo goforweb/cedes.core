@@ -131,4 +131,5 @@ def onPrincipalDeleted(event):
 
 def onUserInitialLogin(event):
     """Set the member first_login_time."""
-    api.user.get(event.object.getId()).set_first_login_time(DateTime())
+    if api.user.get(event.object.getId()).get_first_login_time().year() != 2000:
+        api.user.get(event.object.getId()).set_first_login_time(DateTime())

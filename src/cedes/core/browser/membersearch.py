@@ -206,6 +206,11 @@ class CeDESMemberSearchForm(MemberSearchForm):
             for user_info in self.results:
                 if user_info['login'] in properties_storage:
                     user_info.update(properties_storage.get(user_info['login']))
+                # find max login time
+                user_info['login_time'] = max([
+                    user_info['login_time'],
+                    user_info['last_login_time'],
+                    user_info['first_login_time']])
                 # expiration_date and last_payment_date are not stored
                 user_info['expiration_date'] = \
                     CedesMemberData.get_expiration_date(

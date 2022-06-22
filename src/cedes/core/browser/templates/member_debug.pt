@@ -25,7 +25,7 @@
         </tr>
         <tr tal:repeat="prop python: view.computed">
           <td tal:content="python: prop[0]">Property name</td>
-          <td tal:content="python: prop[1]">Property value</td>
+          <td tal:content="structure python: prop[1]">Property value</td>
         </tr>
       </table>
 

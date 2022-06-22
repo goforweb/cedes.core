@@ -21,7 +21,7 @@
      <bound-workflow workflow_id="two_states_open_workflow"/>
   </type>
   <type type_id="Folder">
-     <bound-workflow workflow_id="two_states_open_workflow"/>
+     <bound-workflow workflow_id="two_states_private_workflow"/>
   </type>
   <type type_id="ftw.slider.Container">
      <bound-workflow workflow_id="two_states_open_workflow"/>

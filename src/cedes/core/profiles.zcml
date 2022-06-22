@@ -10,6 +10,7 @@
       title="cedes"
       directory="profiles/default"
       description="Extension profile for cedes."
+      post_handler=".setuphandlers.post_handler"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

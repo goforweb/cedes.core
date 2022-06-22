@@ -1,0 +1,22 @@
+<tal:root define="lt string:&lt;;gt string:&gt;;
+                  member python:options['member'];
+                  reset python:options.get('reset', None) or here.portal_password_reset.requestReset(member.getId());
+                  email_from_name python:context.portal_registry['plone.email_from_name'];"
+>From: <span tal:replace="structure view/encoded_mail_sender" />
+To: <span tal:replace="python:member.getProperty('email')" />
+Subject: [CeDES] - Bienvenue sur notre site
+Content-Type: text/plain
+Precedence: bulk
+
+Bienvenue <span tal:replace="member/Title" />,
+
+le CeDES a bien reçu votre inscription et vous en remercie.
+
+Vous pouvez dès à présent définir votre mot de passe à l'adresse suivante : <span tal:replace="python:view.construct_url(reset['randomstring'])+'?userid='+member.getUserName()" />
+
+Ce lien ne peut être utilisé qu'une seule fois et expirera dans 7 jours, soit le <span tal:replace="python:
+    context.toLocalizedTime(reset['expires'], long_format=1)" />.
+
+Bonne visite et bon travail de la part de l'équipe du CeDES
+
+</tal:root>

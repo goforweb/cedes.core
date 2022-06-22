@@ -85,7 +85,8 @@
                                 <td><span tal:replace="python:result['member_type'][5:]"/></td>
                                 <td><span tal:replace="result/email"/></td>
                                 <td><span tal:replace="result/fullname"/></td>
-                                <td><span tal:replace="python:view.toLocalizedTime(result['login_time'], long_format=True)"/></td>
+                                <td><span tal:attributes="class python: result['login_time'].year() == 2000 and 'highlight-orange' or ''"
+                                          tal:content="python:view.toLocalizedTime(result['login_time'], long_format=True)"/></td>
                                 <td><span tal:attributes="class python: (result['credit_expiration_warning'] and 'highlight-orange') or (result['credit_expired_warning'] and 'highlight-red') or ''"
                                           tal:content="python:result['expiration_date'] and view.toLocalizedTime(result['expiration_date']) or '-'"/>
                                 </td>

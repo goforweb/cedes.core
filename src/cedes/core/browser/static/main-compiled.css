@@ -363,3 +363,7 @@ button.slick-prev::before {
     content: '\e079';
     color: #007bb1;
 }
+/* adds margin top for the navigation displayed at the bottom of the page */
+#clear-space-before-navigation {
+  margin-top: 1em;
+}

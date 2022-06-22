@@ -282,7 +282,7 @@
         for="cedes.core.content.dossierstructure.IDossierStructure"
         class="cedes.core.browser.dossierstructure.GeneratePDFView"
         name="generate_pdf"
-        permission="cmf.ManagePortal" />
+        permission="zope2.ViewManagementScreens" />
     <!-- pdf -->
     <browser:view
         for="cedes.core.content.dossierstructure.IDossierStructure"
@@ -406,7 +406,7 @@
         class=".member.MemberDebugView"
         layer="cedes.core.interfaces.ICedesCoreLayer"
         template="templates/member_debug.pt"
-        permission="cmf.ManagePortal" />
+        permission="zope2.ViewManagementScreens" />
     <browser:view
         for="*"
         class=".member.DownloadBillWaitingPayment"
@@ -418,7 +418,7 @@
         for="*"
         class=".member.MemberCreditForm"
         layer="cedes.core.interfaces.ICedesCoreLayer"
-        permission="cmf.ManagePortal" />
+        permission="zope2.ViewManagementScreens" />
     <browser:page
         name="member-renew"
         for="plone.app.layout.navigation.interfaces.INavigationRoot"
@@ -432,7 +432,7 @@
     <browser:page
         for="*"
         name="member-fix-failed-accounting"
-        permission="cmf.ManagePortal"
+        permission="zope2.ViewManagementScreens"
         class=".member.FixFailedAccountingFormWrapper" />
 
     <!-- override display for RelatedItemsWidget -->
@@ -441,5 +441,14 @@
         widget="plone.app.z3cform.interfaces.IRelatedItemsWidget"
         layer="cedes.core.interfaces.ICedesCoreLayer"
         template="templates/relateditems_display.pt" />
+
+    <!-- Plone default emails overrides -->
+    <browser:page
+        name="registered_notify_template"
+        for="*"
+        class="Products.CMFPlone.browser.login.password_reset.PasswordResetToolView"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        template="templates/mail_plone_registered_notify_template.pt"
+        permission="zope.Public" />
 
 </configure>

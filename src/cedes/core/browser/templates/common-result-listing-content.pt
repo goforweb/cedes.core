@@ -1,8 +1,8 @@
 <div tal:define="batch python: request.get('folderContents') or view.performSearch(b_size=int(request.get('b_size', 30)), b_start=int(request.get('b_start', 0)));">
 
-<div>
+<div id="common-result-listing">
 
-  <div
+  <div id="common-result-content"
        tal:define="searchterm request/SearchableText|nothing;
                    use_view_action python: ['Image', 'File', 'ArticleGratuit', 'ArticlaPayant'];
                    ploneview nocall:context/@@plone;

@@ -71,7 +71,7 @@ class ICeDESCombinedRegisterSchema(pau_schema.IRegisterSchema, ICeDESUserDataSch
     # add extra fields to fight against robots
     compute = schema.Int(
         title=_('title_compute', default='Combien font trois fois quatre?'),
-        description="Ceci nous permet de vérifier que vous n'êtes pas un robot",
+        description="Ceci nous permet de vérifier que vous n'êtes pas un robot.",
         constraint=compute_constraint,
         required=True)
     # will be hidden using CSS

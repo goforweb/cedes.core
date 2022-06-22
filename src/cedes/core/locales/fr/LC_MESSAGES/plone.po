@@ -79,6 +79,11 @@ msgstr "Envoyer"
 msgid "box_recent_no_items"
 msgstr ""
 
+#. Default: "Last login"
+#: ../browser/membersearch.py:144
+msgid "descr_last_login_time_negative"
+msgstr "Recherche les membres qui ne se sont PAS connectés depuis la date spécifiée ci-dessus"
+
 #. Default: "Legal validation descr"
 #: ../memberdata.py:133
 msgid "descr_legal_validation"
@@ -235,8 +240,13 @@ msgstr "Note de crédit échouée"
 
 #. Default: "Last login"
 #: ../browser/membersearch.py:144
-msgid "title_last_login"
+msgid "title_last_login_time"
 msgstr "Dernière connexion"
+
+#. Default: "Last login"
+#: ../browser/membersearch.py:144
+msgid "title_last_login_time_negative"
+msgstr "Aucune connexion depuis la date spécifiée"
 
 #. Default: "Legal validation"
 #: ../memberdata.py:131

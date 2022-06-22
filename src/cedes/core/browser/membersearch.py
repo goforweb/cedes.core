@@ -25,7 +25,7 @@ membersearch.__old__extractCriteriaFromRequest = membersearch.extractCriteriaFro
 
 
 def extractCriteriaFromRequest(criteria):
-    """ """
+    """Make most of criteria types work, need to override most of code..."""
     for key in tuple(criteria.keys()):
         if key in ['_authenticator', 'form.buttons.search'] or \
            key.endswith('-empty-marker'):
@@ -51,7 +51,12 @@ def extractCriteriaFromRequest(criteria):
     # manage dates
     for key in criteria:
         if key.endswith('_time'):
-            criteria[key] = (DateTime(criteria[key]), DateTime())
+            # search from 2000/01/01 to value
+            if key + '_reverse' in criteria:
+                criteria[key] = (DateTime('1999/01/01'), DateTime(criteria[key]))
+            else:
+                # search from value to now
+                criteria[key] = (DateTime(criteria[key]), DateTime())
     return criteria
 
 
@@ -84,7 +89,12 @@ def testMemberData(self, memberdata, criteria, exact_match=False):
             try:
                 # begin changes by cedes.core
                 if isinstance(testvalue, DateTime) and isinstance(value, tuple):
-                    return testvalue > value[0] and testvalue < value[1]
+                    # if we also have a key that is current key + _negative
+                    # then it means we want values not in the values
+                    if key + '_negative' in criteria.keys():
+                        return testvalue < value[0] or testvalue > value[1]
+                    else:
+                        return testvalue > value[0] and testvalue < value[1]
                 # end changes by cedes.core
                 if value not in testvalue:
                     return False
@@ -112,6 +122,7 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
                 'school_postal_code',
                 'bill_name',
                 'last_login_time',
+                'last_login_time_negative',
                 'has_failed_accounting_f',
                 'has_failed_accounting_n',
                 'has_bill_waiting_payment',
@@ -141,7 +152,11 @@ class ICeDESMemberSearchSchema(IMemberSearchSchema):
         title=_(u'title_bill_name', default=u'Bill name'),
         required=False)
     last_login_time = schema.Date(
-        title=_(u'title_last_login', default=u'Last login'),
+        title=_(u'title_last_login_time', default=u'Last login time'),
+        required=False)
+    last_login_time_negative = schema.Bool(
+        title=_(u'title_last_login_time_negative', default=u'Last login time negative?'),
+        description=_(u'descr_last_login_time_negative'),
         required=False)
     has_failed_accounting_f = schema.Bool(
         title=_(u'title_has_failed_accounting_f',

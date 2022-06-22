@@ -5,4 +5,5 @@ Email : mailto:<span tal:replace="options/email" />
 Institution : <span tal:replace="options/school_name" />
 Téléphone de l'institution : <span tal:replace="options/school_phone" />
 
-<span tal:replace="string:${context/absolute_url}/@@personal-information?userid=${options/username}" />
+<span tal:replace="string:${options/portal_url}/@@personal-information?userid=${options/username}" />
+<span tal:replace="string:${options/portal_url}/@@member-search?form.widgets.login=${options/username}&form.widgets.member_type%3Alist=&form.buttons.search=Rechercher" />

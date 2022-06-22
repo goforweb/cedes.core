@@ -112,6 +112,20 @@ class MemberDebugView(BrowserView):
         self.computed['bill_waiting_payment'] = bill_waiting_payment
         self.computed['last_payment_date'], self.computed['expiration_date'] = \
             self.member._compute_payment_dates()
+        # check if a password reset is on the way
+        pw_reset = api.portal.get_tool('portal_password_reset')
+        self.computed['pw_reset'] = None
+        pw_reset_data = {infos[1]: randomstring for randomstring, infos in pw_reset._requests.items()
+                         if infos[0] == self.member.getId()}
+        if pw_reset_data:
+            randomstring = pw_reset_data[max(pw_reset_data.keys())]
+            self.computed['pw_reset'] = \
+                "{0} (<a href='{1}/passwordreset/{2}?userid={3}'>User reset pw link</a>)".format(
+                    max(pw_reset_data).strftime('%Y/%m/%d %H:%M'),
+                    self.portal_url,
+                    randomstring,
+                    self.member.getUserName())
+        # sorte computed data
         self.computed = sorted(self.computed.items())
         return super(MemberDebugView, self).__call__()
 

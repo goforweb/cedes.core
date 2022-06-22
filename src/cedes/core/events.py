@@ -115,7 +115,8 @@ def onPrincipalCreated(event):
                            'fullname': form['form.widgets.fullname'],
                            'email': form['form.widgets.email'],
                            'school_name': form['form.widgets.school_name'],
-                           'school_phone': form['form.widgets.school_phone'], })
+                           'school_phone': form['form.widgets.school_phone'],
+                           'portal_url': api.portal.get().absolute_url()})
 
         # asks for a bill if member is "CeDES 100%"
         # here member properties are still not set so get member_type from request

@@ -236,29 +236,29 @@ class ICeDESUserDataSchema(Interface):
         # validation is done during registration (user is anonymous) or when editing personal data
         if (api.user.is_anonymous() or not api.user.get_current().is_manager()) and \
            "form.widgets.bill_name" in req.form:
-
-            if len(data.bill_name) > 64:
+            # we check if data encoded because invariant is evaulated even if field required and empty...
+            if data.bill_name and len(data.bill_name) > 64:
                 raise WidgetActionExecutionError(
                     'bill_name',
                     Invalid('La champ "Nom pour facturation" ne peut dépasser 64 caractères.'))
 
-            if len(data.bill_address) > 64:
+            if data.bill_address and len(data.bill_address) > 64:
                 raise WidgetActionExecutionError(
                     'bill_address',
                     Invalid('La champ "Adresse pour facturation" ne peut dépasser 64 caractères.'))
 
-            if len(data.bill_postal_code) > 64:
+            if data.bill_postal_code and len(data.bill_postal_code) > 64:
                 raise WidgetActionExecutionError(
                     'bill_postal_code',
                     Invalid('La champ "Code postal" ne peut dépasser 64 caractères.'))
 
-            if len(data.bill_locality) > 64:
+            if data.bill_locality and len(data.bill_locality) > 64:
                 raise WidgetActionExecutionError(
                     'bill_locality',
                     Invalid('La champ "Localité" ne peut dépasser 64 caractères.'))
 
             # TVA validity
-            if data.bill_tva:
+            if data.bill_tva and data.bill_tva:
                 # Grèce is an exception to this rule
                 if data.bill_tva[0:2] != data.bill_country and data.bill_tva[0:2] != 'GR':
                     raise WidgetActionExecutionError(

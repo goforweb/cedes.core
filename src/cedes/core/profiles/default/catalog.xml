@@ -14,7 +14,9 @@
     <indexed_attr value="user_ratings"/>
  </index>
  <index name="cr_first_classification_date_index" meta_type="DateIndex" />
- <index name="has_cr_points" meta_type="BooleanIndex" />
+ <index name="has_cr_points" meta_type="BooleanIndex">
+    <indexed_attr value="has_cr_points"/>
+ </index>
 
  <column value="associated_themes_title_and_path"/>
  <column value="title_path"/>

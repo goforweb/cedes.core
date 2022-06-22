@@ -347,6 +347,16 @@
         for="plone.app.layout.navigation.interfaces.INavigationRoot"
         permission="cmf.ManagePortal" />
 
+    <!-- @@search, only useable by Managers -->
+    <configure package="Products.CMFPlone.browser">
+        <browser:page
+            name="search"
+            class=".search.Search"
+            permission="zope2.ViewManagementScreens"
+            layer="cedes.core.interfaces.ICedesCoreLayer"
+            for="plone.app.layout.navigation.interfaces.INavigationRoot"
+            template="templates/search.pt" />
+    </configure>
     <!-- Members management -->
     <!-- Views -->
     <!-- plone.app.users -->

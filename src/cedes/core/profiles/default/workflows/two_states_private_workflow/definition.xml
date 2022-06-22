@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <dc-workflow xmlns:i18n="http://xml.zope.org/namespaces/i18n"
              i18n:domain="plone"
-             workflow_id="simple_publication_workflow"
-             title="Simple Publication Workflow"
+             workflow_id="two_states_private_workflow"
+             title="Two States Private Workflow"
              description="
 - 2 states workflow used for private resources.
 - initial_state is private and element may be published."

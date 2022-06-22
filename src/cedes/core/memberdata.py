@@ -385,7 +385,8 @@ class CedesMemberData(MemberData):
         send_mail(subject='[CeDES] - Vos crédits ont été activés',
                   template_name='mail_credit_activation',
                   options={'title': self.Title(),
-                           'credit': value, },
+                           'credit': value,
+                           'portal_url': api.portal.get().absolute_url()},
                   mto=self.get_email())
 
     def request_credit(self):

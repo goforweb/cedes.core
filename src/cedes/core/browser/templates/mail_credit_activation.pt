@@ -1,6 +1,6 @@
 Bonjour <span tal:replace="options/title"/>,
 
-Rendez-vous dès aujourd'hui sur CeDES 100% à l'adresse suivante : https://www.cedes.be
+Rendez-vous dès aujourd'hui sur CeDES 100% à l'adresse suivante : <span tal:replace="options/portal_url"/>
 
 Votre compte a été crédité de <span tal:replace="options/credit"/> points.
 

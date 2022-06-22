@@ -15,6 +15,7 @@ from plone.app.users import schema as pau_schema
 from plone.autoform import directives
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.PlonePAS.tools.memberdata import MemberData
+from z3c.form.interfaces import WidgetActionExecutionError
 from zope import schema
 from zope.globalrequest import getRequest
 from zope.interface import Interface
@@ -175,21 +176,20 @@ class ICeDESUserDataSchema(Interface):
         required=False)
     bill_name = schema.TextLine(
         title=_(u'title_bill_name', default=u'Bill name'),
-        required=False)
+        required=True)
     bill_email = schema.TextLine(
         title=_(u'title_bill_email', default=u'Bill email'),
         constraint=pau_schema.checkEmailAddress,
-        # managed using a validator because we use same form to manage Free account
-        required=False)
+        required=True)
     bill_address = schema.TextLine(
         title=_(u'title_bill_address', default=u'Bill address'),
-        required=False)
+        required=True)
     bill_postal_code = schema.TextLine(
         title=_(u'title_bill_postal_code', default=u'Bill postal code'),
-        required=False)
+        required=True)
     bill_locality = schema.TextLine(
         title=_(u'title_bill_locality', default=u'Bill locality'),
-        required=False)
+        required=True)
     bill_country = schema.Choice(
         title=_(u'title_bill_country', default=u'Bill country'),
         vocabulary='cedes.core.vocabularies.countriesvocabulary',
@@ -201,7 +201,8 @@ class ICeDESUserDataSchema(Interface):
         ''' '''
         # username is only available when registrating
         if len(getattr(data, 'username', '')) > 32:
-            raise Invalid('L\'identifiant ne peut dépasser 32 caractères.')
+            raise WidgetActionExecutionError(
+                'username', Invalid('L\'identifiant ne peut dépasser 32 caractères.'))
 
         # if request.get("email")!= None and request.get("email").find("hotmail") > 1:
         #   state.setError('email', 'Pour des raisons techniques, nous ne pouvons actuellement
@@ -214,54 +215,63 @@ class ICeDESUserDataSchema(Interface):
         is_registering = getattr(data, 'username', False)
         if is_registering:
             if check_email_unicity(data.email):
-                raise Invalid('Un compte est déjà lié à l\'adresse e-mail "{0}". '
-                              'Utilisez les procédures "Obtenir votre nom d\'utilisateur" et '
-                              '"Réinitialiser votre mot de passe" disponible via le lien '
-                              '"Se connecter" pour récupérer votre identifiant et '
-                              'votre mot de passe.'.format(data.email))
+                raise WidgetActionExecutionError(
+                    'email',
+                    Invalid('Un compte est déjà lié à l\'adresse e-mail "{0}". '
+                            'Utilisez les procédures "Obtenir votre nom d\'utilisateur" et '
+                            '"Réinitialiser votre mot de passe" disponible via le lien '
+                            '"Se connecter" pour récupérer votre identifiant et '
+                            'votre mot de passe.'.format(data.email)))
         else:
             # editing email, only one may be found (myself) if not changing
             # and none may be found if changing
             current_email = req.get('PUBLISHED').member.getProperty('email')
             if current_email.strip() != data.email.strip() and check_email_unicity:
                 # changing email and reusing an existing one
-                raise Invalid("L'adresse e-mail \"{0}\" est déjà utilisée.".format(data.email))
+                raise WidgetActionExecutionError(
+                    'email',
+                    Invalid("L'adresse e-mail \"{0}\" est déjà utilisée.".format(data.email)))
 
-        # if bill_... fields are shown and current member is not a Manager, it must be filled
+        # if bill_... fields are shown and current member is not a Manager
         # validation is done during registration (user is anonymous) or when editing personal data
         if (api.user.is_anonymous() or not api.user.get_current().is_manager()) and \
            "form.widgets.bill_name" in req.form:
-            if not data.bill_name or \
-               not data.bill_email or \
-               not data.bill_country or \
-               not data.bill_address or \
-               not data.bill_postal_code or \
-               not data.bill_locality:
-                raise Invalid('Veuillez encoder tous les champs dans la zone "Facturation" au bas du formulaire.')
 
             if len(data.bill_name) > 64:
-                raise Invalid('La champ "Nom pour facturation" ne peut dépasser 64 caractères.')
+                raise WidgetActionExecutionError(
+                    'bill_name',
+                    Invalid('La champ "Nom pour facturation" ne peut dépasser 64 caractères.'))
 
             if len(data.bill_address) > 64:
-                raise Invalid('La champ "Adresse pour facturation" ne peut dépasser 64 caractères.')
+                raise WidgetActionExecutionError(
+                    'bill_address',
+                    Invalid('La champ "Adresse pour facturation" ne peut dépasser 64 caractères.'))
 
             if len(data.bill_postal_code) > 64:
-                raise Invalid('La champ "Code postal" ne peut dépasser 64 caractères.')
+                raise WidgetActionExecutionError(
+                    'bill_postal_code',
+                    Invalid('La champ "Code postal" ne peut dépasser 64 caractères.'))
 
             if len(data.bill_locality) > 64:
-                raise Invalid('La champ "Localité" ne peut dépasser 64 caractères.')
+                raise WidgetActionExecutionError(
+                    'bill_locality',
+                    Invalid('La champ "Localité" ne peut dépasser 64 caractères.'))
 
             # TVA validity
             if data.bill_tva:
                 # Grèce is an exception to this rule
                 if data.bill_tva[0:2] != data.bill_country and data.bill_tva[0:2] != 'GR':
-                    raise Invalid('Votre numéro de TVA ne correspond pas au pays de l\'adresse de facturation. '
-                                  'Veuillez entrer le numéro au complet en commençant par le code pays. '
-                                  'Exemple pour la Belgique: BE0888923935.')
+                    raise WidgetActionExecutionError(
+                        'bill_tva',
+                        Invalid('Votre numéro de TVA ne correspond pas au pays de l\'adresse de facturation. '
+                                'Veuillez entrer le numéro au complet en commençant par le code pays. '
+                                'Exemple pour la Belgique: BE0888923935.'))
                 elif check_tva_number(data.bill_tva) is not True:
-                    raise Invalid('Votre numéro de TVA n\'est pas valide. '
-                                  'Veuillez entrer votre numéro sans espace en commençant par le code pays. '
-                                  'Exemple pour la Belgique: BE0888923935.')
+                    raise WidgetActionExecutionError(
+                        'bill_tva',
+                        Invalid('Votre numéro de TVA n\'est pas valide. '
+                                'Veuillez entrer votre numéro sans espace en commençant par le code pays. '
+                                'Exemple pour la Belgique: BE0888923935.'))
 
 
 pau_schema.IUserDataSchema = ICeDESUserDataSchema

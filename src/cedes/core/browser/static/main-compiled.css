@@ -45,6 +45,9 @@ div.portletNavigationTree [class*="contenttype-"] {
 .contenttype-folder {
     background: no-repeat transparent url("++plone++cedes.core/folder.gif");
 }
+.contenttype-ftw-slider-container {
+    background: no-repeat transparent url("++plone++cedes.core/folder.gif");
+}
 .contenttype-image {
     background: no-repeat transparent url("++plone++cedes.core/image.gif");
 }
@@ -382,4 +385,69 @@ button.slick-prev::before {
 /* adds margin top for the navigation displayed at the bottom of the page */
 #clear-space-before-navigation {
   margin-top: 1em;
+}
+
+#sitemap div.plan_head {
+    background-image: linear-gradient(#D5E6E8, white);
+    border: 2px solid;
+    box-shadow: 6px -3px;
+    color: #222222;
+    font-weight: bold;
+    width: 400px;
+    margin-bottom: 0.7em;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 140%;
+    padding: 1em;
+}
+
+#sitemap li.navTreeItem a {
+    border: 2px solid;
+    padding: 0.5em;
+    margin-bottom: 0.7em;
+    width: 150px;
+    border-radius: 3px;
+    font-size: 80%;
+    display: block;
+}
+#sitemap ul.navTreeLevel0 a:hover,
+#sitemap ul.navTreeLevel2 a:hover {
+    text-decoration: underline;
+}
+#sitemap ul.navTreeLevel0 a {
+    box-shadow: 6px -3px;
+    font-weight: bold;
+    height: 50px;
+    width: 185px;
+}
+
+#sitemap ul.navTreeLevel2 a {
+    box-shadow: 6px -3px;
+    color: #007bb1;
+    font-weight: normal;
+    height: auto;
+    width: 150px;
+    padding-top: 5px;
+}
+
+#sitemap ul.navTreeLevel2 li {
+    list-style: none;
+}
+#sitemap ul.navTreeLevel2 li a::before {
+    font-family: "fontello";
+    content: '\e84c';
+    margin-right: 0.5em;
+}
+
+#sitemap a {
+    text-align: center;
+}
+
+#sitemap td {
+    width: 240px;
+}
+
+#sitemap .visualNoMarker {
+    list-style: none;
 }

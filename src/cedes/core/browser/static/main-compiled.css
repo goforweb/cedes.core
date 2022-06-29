@@ -245,8 +245,8 @@ div#formfield-form-widgets-extra_field {
 
 td.resource-icon {
     vertical-align: top;
-    padding-right: 0.5em;
-    width: 32px;
+    /* 32px + padding right*/
+    width: 38px;
 }
 td.resource-icon, td.resource-content {
     padding-top: 0.5em;

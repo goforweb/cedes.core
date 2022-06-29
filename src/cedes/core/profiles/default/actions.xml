@@ -120,7 +120,7 @@
    <property name="icon_expr"></property>
    <property name="available_expr">python: context.portal_type != 'Plone Site' and context.isPrincipiaFolderish</property>
    <property name="permissions">
-    <element value="Manage portal"/>
+    <element value="View management screens"/>
    </property>
    <property name="visible">True</property>
   </object>

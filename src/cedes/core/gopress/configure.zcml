@@ -7,14 +7,14 @@
         for="*"
         name="gopress"
         class=".views.GoPressView"
-        permission="zope.Public"
+        permission="zope2.ViewManagementScreens"
         allowed_attributes="synchronize" />
 
     <browser:view
         for="*"
         name="xml-to-plone"
         class=".views.XmlToPloneView"
-        permission="zope.Public"
+        permission="zope2.ViewManagementScreens"
         allowed_attributes="getFoldersInformation
                             getArticlesInformation
                             uploadArticle
@@ -25,7 +25,7 @@
         for="*"
         name="download-article-pdf"
         class=".views.DownloadArticlePDFView"
-        permission="zope.Public" />
+        permission="zope2.ViewManagementScreens" />
 
     <!-- Form for gopress import -->
     <browser:page
@@ -33,6 +33,6 @@
         layer="cedes.core.interfaces.ICedesCoreLayer"
         name="gopress_import"
         class=".forms.GopressImportFormWrapper"
-        permission="cmf.ManagePortal" />
+        permission="zope2.ViewManagementScreens" />
 
 </configure>

@@ -70,9 +70,11 @@ msgstr "La validation du type de fichier joint a échoué!"
 msgid "Mon compte"
 msgstr ""
 
-#: ../browser/member.py:544
 msgid "Send"
 msgstr "Envoyer"
+
+msgid "Send for test"
+msgstr "Envoyer en test"
 
 #. Default: "No items changed yet."
 #: ../browser/templates/portlet_recent.pt:73

@@ -1,7 +1,7 @@
-<span tal:replace="options/content"/>
+<tal:block tal:replace="structure options/content" />
 <br />
 <div style="font-size: 70%;">
-<span>Cet e-mail a été envoyé à <span tal:replace="options/email_address"/>
+<span>Cet e-mail a été envoyé à <span tal:replace="options/email_address" />
 <br />
 Vous recevez cet e-mail car vous êtes inscrit à notre newsletter.
 Vous pouvez vous désinscrire <a tal:attributes="href options/unsubscribe_url">ici</a> en décochant "Recevoir notre newsletter?"

@@ -56,6 +56,10 @@
     visible="True" permission="Modify portal content">
   <permission value="View"/>
  </action>
-
+ <action title="Send for test" action_id="send_test" category="object_buttons" condition_expr=""
+    description="" icon_expr="" link_target="" url_expr="string:${object_url}/send?test:boolean=1"
+    visible="True" permission="Modify portal content">
+  <permission value="View"/>
+ </action>
 
 </object>

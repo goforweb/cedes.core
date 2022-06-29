@@ -43,6 +43,12 @@ class IEmailContent(IDocument):
         required=False,
         default=False, )
 
+    test_addresses = schema.TextLine(
+        title="Adresses e-mail à utiliser pour l'envoi de test (séparées par des "
+        "virgules si plusieurs adresses)",
+        required=True,
+        default='cedes@unamur.be', )
+
     directives.widget('text', RichTextFieldWidget)
     model.primary('text')
     text = RichTextField(
@@ -92,25 +98,37 @@ class EmailContent(Document):
 
         return res
 
+    security.declareProtected(ModifyPortalContent, 'send_test')
+
+    def send_test(self):
+        """ """
+        return self.send(test=True)
+
     security.declareProtected(ModifyPortalContent, 'send')
 
-    def send(self):
+    def send(self, test=False):
         """ """
-        mtos = [user.get_email() for user in api.user.get_users()
-                if user.get_newsletter()]
-        # remove duplicates
-        mtos = list(set(mtos))
+        if test:
+            mtos = self.test_addresses.split(",")
+        else:
+            mtos = [user.get_email() for user in api.user.get_users()
+                    if user.get_newsletter()]
+            # remove duplicates
+            mtos = list(set(mtos))
+            # save that e-mail was sent to display a message and avoid multiple send
+            self._email_sent_date = datetime.now()
+
+        # now send the e-mail to mtos
         portal_url = api.portal.get().absolute_url()
         for mto in mtos:
             send_mail(subject=self.Title(),
                       template_name='mail_email',
                       options={'content': self.text.output_relative_to(self),
                                'email_address': mto,
-                               'unsubscribe_url': "/@@personal-information".format(portal_url)},
+                               'unsubscribe_url': "{0}/@@personal-information".format(portal_url)},
                       mto=mto)
-        api.portal.show_message('E-mail envoyé à {0} adresses'.format(len(mto)),
+        api.portal.show_message('E-mail envoyé à {0} adresse(s)'.format(len(mtos)),
                                 request=self.REQUEST)
-        self._email_sent_date = datetime.now()
         return self.REQUEST.RESPONSE.redirect(self.absolute_url())
 
 

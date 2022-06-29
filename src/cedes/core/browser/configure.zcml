@@ -212,13 +212,18 @@
         permission="zope.Public"
         allowed_attributes="breadcrumbs" />
 
-    <!-- overrides for @@download of formwidget.namedfile, manage access to ArticlePayant -->
+    <!-- overrides for @@download and @@display-file of plone.namedfile,
+         manage access to ArticlePayant -->
     <browser:page
         name="download"
-        for="plone.formwidget.namedfile.interfaces.INamedFileWidget"
-        layer="cedes.core.interfaces.ICedesCoreLayer"
+        for="cedes.core.content.articlepayant.IArticlePayant"
         class=".views.ArticlePayantDownload"
-        permission="zope2.Public" />
+        permission="zope2.View" />
+    <browser:page
+        name="display-file"
+        for="cedes.core.content.articlepayant.IArticlePayant"
+        class=".views.ArticlePayantDisplayFile"
+        permission="zope2.View" />
 
     <!-- overrides the @@listing_view for Folders -->
     <browser:page

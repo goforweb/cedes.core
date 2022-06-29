@@ -9,8 +9,9 @@ from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
 from plone.app.layout.navigation.navtree import buildFolderTree
 from plone.batching import Batch
-from plone.formwidget.namedfile.widget import Download as fnw_Download
 from plone.memoize.view import memoize
+from plone.namedfile.browser import DisplayFile
+from plone.namedfile.browser import Download
 from Products.CMFPlone.browser.navigation import CatalogSiteMap
 from Products.CMFPlone.browser.navtree import SitemapQueryBuilder
 from Products.CMFPlone.browser.sitemap import SitemapView
@@ -157,17 +158,28 @@ class ContextSitemapView(SitemapView):
         return self._renderLevel(children=data.get('children', []))
 
 
-class ArticlePayantDownload(fnw_Download):
-    """Make sure access to ArticlePayant file is controled."""
+class ArticlePayantDownload(Download):
+    """Make sure access to @@download for ArticlePayant file is controled."""
 
     def __call__(self):
         can_download = True
-        parent = self.context.__parent__.context
-        if parent.portal_type in ['ArticlePayant']:
-            member = api.user.get_current()
-            can_download = member.check_viewable(parent.UID())
+        member = api.user.get_current()
+        can_download = member.check_viewable(self.context.UID())
         if can_download:
             return super(ArticlePayantDownload, self).__call__()
+        else:
+            raise Unauthorized
+
+
+class ArticlePayantDisplayFile(DisplayFile):
+    """Make sure access to @@display-file for ArticlePayant file is controled."""
+
+    def __call__(self):
+        can_download = True
+        member = api.user.get_current()
+        can_download = member.check_viewable(self.context.UID())
+        if can_download:
+            return super(ArticlePayantDisplayFile, self).__call__()
         else:
             raise Unauthorized
 

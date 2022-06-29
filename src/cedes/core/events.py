@@ -46,8 +46,8 @@ def onThemeAdded(theme, event):
     theme.unrestrictedTraverse('@@faceted_subtyper').enable()
     IFacetedLayout(theme).update_layout('faceted-theme-view')
     # show the left portlets
-    if IHidePloneLeftColumn.providedBy(theme):
-        noLongerProvides(theme, IHidePloneLeftColumn)
+    # if IHidePloneLeftColumn.providedBy(theme):
+    #    noLongerProvides(theme, IHidePloneLeftColumn)
     # remove every criteria as we use criteria stored on PlanClassement
     annotations = IAnnotations(theme)
     annotations['FacetedCriteria'] = PersistentList()

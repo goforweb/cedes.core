@@ -23,11 +23,11 @@
         <tal:notRoot condition="python: not context.is_root()">
         <tal:defines define="results python: context.restrictedTraverse('@@common-result-listing').searchForThemeView();
                              sons python:here.objectValues();">
-        <div tal:repeat="son sons"
-             tal:attributes="style string:background:url($portal_url/arrowRight.png) no-repeat;; margin-top:1px;;padding-left:10px;;background-position: 0% 3px;;;">
-
-          <a tal:attributes="href son/absolute_url"><span tal:replace="son/pretty_title_or_id"/> </a>
-
+        <div tal:repeat="son sons">
+          <a tal:attributes="href son/absolute_url">
+            <span class="glyphicon glyphicon-triangle-right" />
+            <span tal:replace="son/pretty_title_or_id"/>
+          </a>
         </div>
         <div tal:define="related_items python: here.get_cc_related(the_objects=True)"
              tal:condition="python:related_items or sons">

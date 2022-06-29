@@ -17,9 +17,6 @@
         <div class="dossier-structure">
           <span tal:replace="structure toc_view/display_context_toc"/>
         </div>
-        <br/>
-
-        <div class="visualClear"><!-- --></div>
 
         <a class="link-parent" tal:attributes="href python:context.get_dossier_structure().absolute_url()"> Retour à la table des matières du dossier structuré </a>
 

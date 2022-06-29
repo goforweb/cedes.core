@@ -41,7 +41,7 @@
                tal:attributes="href  item_url;
                                title desc;
                                onclick python:((item_type == 'ArticlePayant' and not isManager) or (item_type =='SequenceApprentissage' and is_cedes_free)) and onclick_action or '';">
-              <img tal:attributes="src item_big_icon; title item_type_title" i18n:domain="plone" i18n:attributes="title" style="padding-top:3px;" />
+              <img tal:attributes="src item_big_icon; title item_type_title" i18n:domain="plone" i18n:attributes="title" />
             </a>
           </td>
           <td class="resource-content">

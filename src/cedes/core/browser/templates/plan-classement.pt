@@ -5,7 +5,7 @@
     <metal:main fill-slot="content-core">
       <tal:main-macro metal:define-macro="content">
 
-        <a href="javascript:history.back();">Retourner à la page pécédente</a>
+        <a class="link-parent" href="javascript:history.back();">Retourner à la page pécédente</a>
         <div class="classification">
           <tal:block tal:replace="structure python: view.show_pc_details()" />
         </div>

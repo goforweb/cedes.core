@@ -82,7 +82,6 @@
         <div class="dossier-structure">
           <span tal:replace="structure here/@@html-toc/display_full_toc"/>
         </div>
-        <br/>
 
       </tal:main-macro>
     </metal:main>

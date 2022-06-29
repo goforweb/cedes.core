@@ -70,6 +70,9 @@ div.portletNavigationTree [class*="contenttype-"] {
     background: no-repeat transparent url("++plone++cedes.core/video.gif");
 }
 
+span.glyphicon-triangle-right {
+    font-size: 80%;
+}
 .state-private,
 a.state-private,
 /* folder_contents */
@@ -87,6 +90,10 @@ div.faceted_loading {
   background: url(../../++plone++cedes.core/spinner.gif) no-repeat 50% 1.5em;
   height: 200px;
 }
+#content #faceted-form fieldset {
+    margin: 0;
+    margin-bottom: 0.5em;
+}
 
 /* hide 'Personal preferences' (rich editor, language, timezont) in user panel to non admins */
 li a#contentview-user_data-personal-preferences {
@@ -101,6 +108,15 @@ body.userrole-manager li a#contentview-user_data-personal-preferences {
     max-width: inherit;
 }
 
+a.link-parent {
+    display: block;
+    padding-bottom: 0.5em;
+}
+a.link-parent::before {
+    font-family: "fontello";
+    content: '\e84d';
+    margin-right: 0.5em;
+}
 span.one::before {
   content: '[1]';
   font-size: 100%;

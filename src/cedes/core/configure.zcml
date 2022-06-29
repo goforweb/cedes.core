@@ -14,10 +14,10 @@
     <include package=".content" />
     <include package=".filters" />
     <include package=".gopress" />
+    <include zcml:condition="installed plone.app.transmogrifier" package=".pipelines" />
 
     <include file="events.zcml" />
     <include file="profiles.zcml" />
-    <include zcml:condition="installed plone.app.transmogrifier" file="pipelines.zcml" />
 
     <!-- Faceted criteria adapter -->
     <adapter for="cedes.core.interfaces.IThemeFacetedNavigable"

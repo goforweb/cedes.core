@@ -9,18 +9,24 @@
     <transmogrifier:registerConfig
       name="collective.jsonmigrator.data"
       title="CeDES: migrate common data (Folder, Document)"
-      configuration="pipelines/data.cfg" />
+      configuration="data.cfg" />
+
+    <!-- carousel -->
+    <transmogrifier:registerConfig
+      name="collective.jsonmigrator.carousel"
+      title="CeDES: migrate carousel"
+      configuration="carousel.cfg" />
 
     <!-- themes -->
     <transmogrifier:registerConfig
       name="collective.jsonmigrator.themes"
       title="CeDES: migrate common themes (Theme)"
-      configuration="pipelines/themes.cfg" />
+      configuration="themes.cfg" />
 
     <!-- resources -->
     <transmogrifier:registerConfig
       name="collective.jsonmigrator.resources"
       title="CeDES: migrate common resources (ArticleGratuit, ArticlaPayant, SiteInternet, ...)"
-      configuration="pipelines/resources.cfg" />
+      configuration="resources.cfg" />
 
 </configure>

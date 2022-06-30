@@ -29,7 +29,7 @@ class FacetedThemeView(BrowserView):
         member = membership.getAuthenticatedMember()
         return (not(member.is_cedes_free()) or
                 (member.is_cedes_free() and
-                 member.get_first_login_time() + 7 > DateTime()))
+                 member.get_first_login_time() + 7 < DateTime()))
 
     def search_terms(self):
         """ """

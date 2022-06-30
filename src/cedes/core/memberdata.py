@@ -344,6 +344,22 @@ class CedesMemberData(MemberData):
         """ """
         self.setMemberProperties({'first_login_time': value})
 
+    def get_login_time(self):
+        """ """
+        return deepcopy(self.getProperty('login_time'))
+
+    def set_login_time(self, value):
+        """ """
+        self.setMemberProperties({'login_time': value})
+
+    def get_last_login_time(self):
+        """ """
+        return deepcopy(self.getProperty('last_login_time'))
+
+    def set_last_login_time(self, value):
+        """ """
+        self.setMemberProperties({'last_login_time': value})
+
     def get_bill_accounting_failed(self):
         """ """
         return deepcopy(self.getProperty('bill_accounting_failed'))
@@ -622,8 +638,7 @@ class CedesMemberData(MemberData):
         # if a user has never logged in, the login time is set to 2000/01/01
         # the no_login_notification_date is set to 1950/01/01 by default
         no_login_notification_date = self.get_no_login_notification_date()
-        if no_login_notification_date.year() == 1950 and \
-           deepcopy(self.getProperty('last_login_time', '')).year() == 2000:
+        if no_login_notification_date.year() == 1950 and self.get_last_login_time().year() == 2000:
             registration_date = self.get_registration_date()
             # sends an email p_days after registration
             if registration_date + days < now:

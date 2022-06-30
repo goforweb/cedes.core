@@ -27,9 +27,10 @@ class FacetedThemeView(BrowserView):
         """ """
         membership = api.portal.get_tool('portal_membership')
         member = membership.getAuthenticatedMember()
+        # is not Free or 7 days use time is not expired
         return (not(member.is_cedes_free()) or
                 (member.is_cedes_free() and
-                 member.get_first_login_time() + 7 < DateTime()))
+                 member.get_first_login_time() + 7 > DateTime()))
 
     def search_terms(self):
         """ """

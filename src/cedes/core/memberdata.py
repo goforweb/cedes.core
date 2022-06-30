@@ -39,7 +39,7 @@ def check_email_unicity(email):
     BYPASSED_DOMAINS = ['@unamur.be', '@goforweb.be', '@fundp.ac.be']
     for domain in BYPASSED_DOMAINS:
         if domain in email:
-            return True
+            return False
     mTool = api.portal.get_tool('portal_membership')
     return bool(mTool.searchForMembers(email=email))
 

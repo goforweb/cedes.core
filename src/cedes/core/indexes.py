@@ -10,9 +10,6 @@ from cedes.core.content.resource import IResource
 from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from cedes.core.utils import normalize_data
 from cioppino.twothumbs.rate import yays
-from collective.dexteritytextindexer.converters import DexterityRichTextIndexFieldConverter
-from collective.dexteritytextindexer.interfaces import IDexterityTextIndexFieldConverter
-from collective.dexteritytextindexer.interfaces import IDynamicTextIndexExtender
 from plone.app.textfield.interfaces import IRichText
 from plone.indexer import indexer
 from z3c.form.interfaces import IWidget
@@ -20,6 +17,16 @@ from zope.annotation import IAnnotations
 from zope.component import adapter
 from zope.component import adapts
 from zope.interface import implementer
+
+
+try:
+    from plone.app.dexterity.textindexer.converters import DexterityRichTextIndexFieldConverter
+    from plone.app.dexterity.textindexer.interfaces import IDexterityTextIndexFieldConverter
+    from plone.app.dexterity.textindexer.interfaces import IDynamicTextIndexExtender
+except ImportError:
+    from collective.dexteritytextindexer.converters import DexterityRichTextIndexFieldConverter
+    from collective.dexteritytextindexer.interfaces import IDexterityTextIndexFieldConverter
+    from collective.dexteritytextindexer.interfaces import IDynamicTextIndexExtender
 
 
 @indexer(ICeDESLoveThumbsDontYou)

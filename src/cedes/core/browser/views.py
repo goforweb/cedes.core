@@ -127,7 +127,7 @@ class ContextCatalogSiteMap(CatalogSiteMap):
         strategy = getMultiAdapter((context, self), INavtreeStrategy)
 
         # begin changes by cedes.core
-        query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 1}
+        query['path'] = {'query': '/'.join(context.getPhysicalPath()), 'depth': 2}
         query['portal_type'] = ['Theme']
         query['exclude_from_nav'] = False
         # path to 'plan'

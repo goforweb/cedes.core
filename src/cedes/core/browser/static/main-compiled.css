@@ -410,6 +410,7 @@ button.slick-prev::before {
     border-radius: 3px;
     font-size: 80%;
     display: block;
+    text-align: left;
 }
 #sitemap ul.navTreeLevel0 a:hover,
 #sitemap ul.navTreeLevel2 a:hover {
@@ -419,15 +420,17 @@ button.slick-prev::before {
     box-shadow: 6px -3px;
     font-weight: bold;
     height: 50px;
-    width: 185px;
+    width: 200px;
 }
-
+#sitemap ul.navTreeLevel0 {
+    padding-left: 1em;
+}
 #sitemap ul.navTreeLevel2 a {
     box-shadow: 6px -3px;
     color: #007bb1;
     font-weight: normal;
     height: auto;
-    width: 150px;
+    width: 165px;
     padding-top: 5px;
 }
 

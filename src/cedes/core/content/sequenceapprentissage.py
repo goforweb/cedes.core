@@ -8,7 +8,6 @@
 from AccessControl import ClassSecurityInfo
 from cedes.core.content.resource import IResource
 from cedes.core.content.resource import Resource
-from collective.dexteritytextindexer.directives import searchable
 from plone.app.contenttypes.content import Document
 from plone.app.contenttypes.interfaces import IDocument
 from plone.app.textfield import RichText
@@ -17,6 +16,12 @@ from plone.namedfile.field import NamedBlobFile
 from plone.supermodel import model
 from zope import schema
 from zope.interface import implementer
+
+
+try:
+    from plone.app.dexterity.textindexer.directives import searchable
+except ImportError:
+    from collective.dexteritytextindexer.directives import searchable
 
 
 class ISequenceApprentissage(IResource, IDocument):

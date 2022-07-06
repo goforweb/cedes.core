@@ -8,13 +8,18 @@
 from AccessControl import ClassSecurityInfo
 from cedes.core.content.resource import IResource
 from cedes.core.content.resource import Resource
-from collective.dexteritytextindexer.directives import searchable
 from plone.app.contenttypes.content import File
 from plone.app.contenttypes.interfaces import IFile
 from plone.app.textfield import RichText
 from plone.namedfile.field import NamedBlobFile
 from plone.supermodel import model
 from zope import schema
+
+
+try:
+    from plone.app.dexterity.textindexer.directives import searchable
+except ImportError:
+    from collective.dexteritytextindexer.directives import searchable
 
 
 class IArticle(IResource, IFile):

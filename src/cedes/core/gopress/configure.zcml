@@ -17,9 +17,8 @@
         permission="zope2.ViewManagementScreens"
         allowed_attributes="getFoldersInformation
                             getArticlesInformation
-                            uploadArticle
-                            mergeAndUploadArticles
-                            downloadArticlePDF" />
+			    upload_article
+                            merge_and_upload_articles" />
 
     <browser:view
         for="*"

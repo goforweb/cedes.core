@@ -8,7 +8,7 @@
     <!-- data -->
     <transmogrifier:registerConfig
       name="collective.jsonmigrator.data"
-      title="CeDES: migrate common data (Folder, Document)"
+      title="CeDES: migrate common data (Folder, Document, Image)"
       configuration="data.cfg" />
 
     <!-- carousel -->

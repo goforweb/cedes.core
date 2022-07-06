@@ -7,8 +7,11 @@
 
     <i18n:registerTranslations directory="locales" />
 
-    <include package="collective.dexteritytextindexer" />
+    <!--include zcml:condition="installed collective.dexteritytextindexer"
+                package="collective.dexteritytextindexer" /-->
     <include package="Products.CMFCore" file="permissions.zcml" />
+
+    <include package="z3c.form" file="meta.zcml" />
 
     <include package=".browser" />
     <include package=".content" />
@@ -65,5 +68,10 @@
     <adapter
       provides="Products.CMFCore.interfaces.IMember"
       factory="cedes.core.memberdata.CedesMemberData" />
+
+    <!-- Theme, set exclude_from_nav=True by default -->
+    <adapter
+        for="cedes.core.content.theme.ITheme"
+        factory="plone.app.dexterity.behaviors.exclfromnav.default_exclude_true" />
 
 </configure>

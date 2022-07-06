@@ -10,7 +10,6 @@ from cedes.core.config import CEDES_RESOURCE_TYPES
 from cedes.core.interfaces import ICeDESLoveThumbsDontYou
 from cedes.core.utils import get_intid
 from cedes.core.utils import get_relations
-from collective.dexteritytextindexer.directives import searchable
 from plone import api
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
@@ -23,6 +22,12 @@ from zope.event import notify
 from zope.globalrequest import getRequest
 from zope.interface import implementer
 from zope.lifecycleevent import ObjectModifiedEvent
+
+
+try:
+    from plone.app.dexterity.textindexer.directives import searchable
+except ImportError:
+    from collective.dexteritytextindexer.directives import searchable
 
 
 class IResource(model.Schema):

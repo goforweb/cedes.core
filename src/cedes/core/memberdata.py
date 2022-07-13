@@ -9,6 +9,7 @@ from cedes.core import logger
 from cedes.core.utils import create_attachment
 from cedes.core.utils import send_mail
 from copy import deepcopy
+from datetime import datetime
 from DateTime import DateTime
 from plone import api
 from plone.app.users import schema as pau_schema
@@ -488,7 +489,7 @@ class CedesMemberData(MemberData):
             # better, but finally storing the directly correct format is correct as well
             self.set_account_transactions(
                 self.get_account_transactions() +
-                ((article_uid, article_price, DateTime().strftime('%d/%m/%Y (%H:%M)')), ))
+                ((article_uid, article_price, datetime.now()), ))
         return None
 
     def validate_payment(self, now=None):

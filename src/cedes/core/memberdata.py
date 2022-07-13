@@ -146,11 +146,11 @@ class ICeDESUserDataSchema(Interface):
     # school
     school_name = schema.TextLine(
         title=_(u'title_school_name', default=u'School name'),
-        required=False)
+        required=True)
     school_email = schema.TextLine(
         title=_(u'title_school_email', default=u'School email'),
         constraint=pau_schema.checkEmailAddress,
-        required=True)
+        required=False)
     school_address = schema.TextLine(
         title=_(u'title_school_address', default=u'School address'),
         required=False)
@@ -483,9 +483,12 @@ class CedesMemberData(MemberData):
             self.set_account_balance(previous_balance - article_price)
             if previous_balance >= 20 and self.get_account_balance() < 20:
                 self.send_low_reminder()
+            # we do not store a DateTime in the account_transactions or it makes
+            # mutable_properties become very slow, storing a python datetime is a bit
+            # better, but finally storing the directly correct format is correct as well
             self.set_account_transactions(
                 self.get_account_transactions() +
-                ((article_uid, article_price, DateTime()), ))
+                ((article_uid, article_price, DateTime().strftime('%d/%m/%Y (%H:%M)')), ))
         return None
 
     def validate_payment(self, now=None):

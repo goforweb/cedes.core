@@ -17,6 +17,12 @@
       title="CeDES: migrate carousel"
       configuration="carousel.cfg" />
 
+    <!-- members -->
+    <transmogrifier:registerConfig
+      name="collective.jsonmigrator.members"
+      title="CeDES: migrate members"
+      configuration="members.cfg" />
+
     <!-- themes -->
     <transmogrifier:registerConfig
       name="collective.jsonmigrator.themes"

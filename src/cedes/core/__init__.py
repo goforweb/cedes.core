@@ -8,9 +8,9 @@
 from zope.i18n.locales import locales
 from zope.i18n.locales.xmlfactory import LocaleFactory
 
+
 import logging
 import os
-
 
 logger = logging.getLogger('cedes.core')
 
@@ -18,6 +18,8 @@ logger = logging.getLogger('cedes.core')
 locales._locales["fr", None, None] = LocaleFactory(
     os.path.join(os.path.dirname(__file__), "fr_patched.xml")
 )()
+
+from cedes.core import monkey
 
 
 def initialize(context):

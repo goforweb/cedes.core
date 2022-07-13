@@ -20,7 +20,6 @@ class SearchableTypesVocabulary(object):
 
     def __call__(self, context):
         res = []
-        plone_utils = getToolByName(context, 'plone_utils')
         portal_types = getToolByName(context, 'portal_types')
         for portal_type_name in CEDES_RESOURCE_TYPES:
             type_info = portal_types.get(portal_type_name)

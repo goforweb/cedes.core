@@ -7,15 +7,19 @@
 
 from AccessControl import ClassSecurityInfo
 from cedes.core.config import CEDES_RESOURCE_TYPES
+from cedes.core.utils import get_intid
 from plone import api
 from plone.app.z3cform.widget import RelatedItemsFieldWidget
 from plone.autoform import directives
 from plone.dexterity.content import Container
 from plone.dexterity.schema import DexteritySchemaPolicy
 from plone.supermodel import model
+from z3c.relationfield.relation import RelationValue
 from z3c.relationfield.schema import RelationChoice
 from z3c.relationfield.schema import RelationList
+from zope.event import notify
 from zope.interface import implementer
+from zope.lifecycleevent import ObjectModifiedEvent
 
 
 class ITheme(model.Schema):
@@ -25,6 +29,7 @@ class ITheme(model.Schema):
         'cc_related',
         RelatedItemsFieldWidget,
         pattern_options={
+            'basePath': '/sitecedes/plan',
             'selectableTypes': ['Theme'],
         }, )
     cc_related = RelationList(
@@ -71,12 +76,44 @@ class Theme(Container):
 
     security.declarePublic('get_cc_related')
 
-    def get_cc_related(self, the_objects=True):
+    def get_cc_related(self, the_objects=False):
         """ """
-        res = self.cc_related
-        if the_objects:
-            res = [rel.to_object for rel in res]
-        return res
+        if not the_objects:
+            # cc_related may not exist when creating new element
+            return self.__dict__.get('cc_related', [])
+        else:
+            return [theme.to_object for theme in self.cc_related]
+
+    def set_cc_related(self, values, **kwargs):
+        """
+          Override mutator to be able to manage BiReference.
+        """
+        new = [rel.to_object for rel in values]
+        stored = self.get_cc_related(True)
+        added = [theme for theme in new if theme not in stored]
+        removed = [theme for theme in stored if theme not in new]
+
+        # store value and update relations because we need it now
+        self.__dict__['cc_related'] = values
+
+        # update references of removed elements
+        uid = self.UID()
+        for theme in removed:
+            new_cc_related = [rel for rel in theme.cc_related
+                              if rel.to_object.UID() != uid]
+            theme.__dict__['cc_related'] = new_cc_related
+            # notify modified so catalog is updated
+            notify(ObjectModifiedEvent(theme))
+
+        # update references of added elements
+        for theme in added:
+            new_cc_related = theme.cc_related + [RelationValue(get_intid(self))]
+            theme.__dict__['cc_related'] = new_cc_related
+            # notify modified so catalog is updated
+            notify(ObjectModifiedEvent(theme))
+
+    # accessor/mutator for field "cf_resources"
+    cc_related = property(get_cc_related, set_cc_related)
 
     security.declarePublic('get_associated_resources')
 

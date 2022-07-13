@@ -41,9 +41,7 @@
                                   title python: rel.get_title_path()"
                   tal:content="python: rel.Title()"></a>
             </li>
-          </ul>
-          <ul class="voiraussi" tal:condition="sons">
-            <li>
+            <li class="voiraussi" tal:condition="sons">
               <a tal:attributes="href string:${context/absolute_url}/@@plan-classement">
                 La structure du plan de classement dans le thème en cours
               </a>

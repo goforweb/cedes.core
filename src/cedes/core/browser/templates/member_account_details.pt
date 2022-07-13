@@ -45,7 +45,7 @@
         </tr>
         <tr tal:repeat="transaction transactions">
         <tal:notNullTransactions define="res python:view.catalog(UID=transaction[0])" condition="python: transaction[1] != 0 or (res and res[0].portal_type != 'ArticlePayant')">
-          <td tal:content="python:view.plone_view.toLocalizedTime(transaction[2], long_format=1)">date</td>
+          <td tal:content="python: transaction[2]">date</td>
           <td>
             <span tal:condition="not: res" tal:content="python:transaction[0]">art</span>
             <a class="#" tal:condition="res" href="#" tal:attributes="href python: res[0].getURL() + '/view'; class python: 'contenttype-' + res[0].portal_type.lower()" tal:content="python: res[0].Title">art</a>

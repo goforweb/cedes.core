@@ -21,7 +21,7 @@
                tal:define="listing_allowed python: checkPermission('List portal members', here);
                            results python:listing_allowed and view.results;
                            Batch python:modules['Products.CMFPlone'].Batch;
-                           b_size python:20;b_start python:0;b_start request/b_start | b_start;">
+                           b_size python:view.b_size;b_start python:0;b_start request/b_start | b_start;">
             <h1 class="documentFirstHeading"
                 i18n:translate="heading_search_results">Search results</h1>
 
@@ -41,8 +41,13 @@
                         </h3>
                     </div>
 
-                    <a tal:attributes="href string:${portal_url}/Members">Nouvelle recherche</a>&nbsp;&nbsp;&nbsp;
-                    <a href="">Actualiser les résultats</a>
+                    <a tal:attributes="href string:${portal_url}/Members">
+                      <span class="glyphicon glyphicon-search bold" />
+                      Nouvelle recherche</a>&nbsp;&nbsp;&nbsp;
+                    <a href="">
+                      <span class="glyphicon glyphicon-refresh bold" />
+                      Actualiser les résultats
+                    </a>
 
                     <div metal:use-macro="here/batch_macros/macros/navigation"/>
 
@@ -59,6 +64,7 @@
                             <th>Expire le</th>
                             <th>Paiement expire le</th>
                             <th>Crédits</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -145,6 +151,11 @@
                                 <td>
                                     <a tal:attributes="href python:portal_url + '/Members/@@member-debug?userid=' + userid;">
                                         <span title="Debug" class="glyphicon glyphicon-zoom-in bold" />
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" tal:attributes="onclick python:'event.preventDefault();;confirmDeleteMember(\'%s\')' % userid;">
+                                        <span title="Supprimer le compte" class="glyphicon glyphicon-remove bold highlight-red" />
                                     </a>
                                 </td>
                             </tal:block>

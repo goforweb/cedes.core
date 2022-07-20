@@ -7,6 +7,10 @@
 
 from cedes.core.config import CEDES_RESOURCE_TYPES
 from cedes.core.config import COUNTRIES
+from plone.app.vocabularies.principals import GroupsFactory
+from plone.app.vocabularies.principals import PrincipalsFactory
+from plone.app.vocabularies.principals import UsersFactory
+from plone.memoize import ram
 from Products.CMFCore.utils import getToolByName
 from zope.interface import implementer
 from zope.schema.interfaces import IVocabularyFactory
@@ -65,3 +69,46 @@ class CountriesVocabulary(object):
 
 
 CountriesVocabularyFactory = CountriesVocabulary()
+
+
+# override principals/users/groups vocabularies to add caching
+class CeDESPrincipalsFactory(PrincipalsFactory):
+
+    def __call___cachekey(method, self, context, query=''):
+        '''cachekey method for self.__call__.'''
+        return query
+
+    @ram.cache(__call___cachekey)
+    def CeDESPrincipalsFactory__call__(self, context, query=''):
+        return super(CeDESPrincipalsFactory, self).__call__(context, query)
+
+    # do ram.cache have a different key name
+    __call__ = CeDESPrincipalsFactory__call__
+
+
+class CeDESUsersFactory(UsersFactory):
+
+    def __call___cachekey(method, self, context, query=''):
+        '''cachekey method for self.__call__.'''
+        return query
+
+    @ram.cache(__call___cachekey)
+    def CeDESUsersFactory__call__(self, context, query=''):
+        return super(CeDESUsersFactory, self).__call__(context, query)
+
+    # do ram.cache have a different key name
+    __call__ = CeDESUsersFactory__call__
+
+
+class CeDESGroupsFactory(GroupsFactory):
+
+    def __call___cachekey(method, self, context, query=''):
+        '''cachekey method for self.__call__.'''
+        return query
+
+    @ram.cache(__call___cachekey)
+    def CeDESGroupsFactory__call__(self, context, query=''):
+        return super(CeDESGroupsFactory, self).__call__(context, query)
+
+    # do ram.cache have a different key name
+    __call__ = CeDESGroupsFactory__call__

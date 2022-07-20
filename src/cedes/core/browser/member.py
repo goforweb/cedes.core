@@ -125,9 +125,28 @@ class MemberDebugView(BrowserView):
                     self.portal_url,
                     randomstring,
                     self.member.getUserName())
+        # display password hash
+        self.computed['password'] = self.portal.acl_users.source_users._user_passwords[self.member.getId()]
         # sorte computed data
         self.computed = sorted(self.computed.items())
         return super(MemberDebugView, self).__call__()
+
+
+class DeleteMemberView(BrowserView):
+    """ """
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
+
+    def __call__(self, member_id):
+        """ """
+        mtool = api.portal.get_tool('portal_membership')
+        mtool.deleteMembers([member_id], delete_localroles=False)
+        self.portal.plone_utils.addPortalMessage(
+            'Le compte "{0}" a été supprimé!'.format(member_id))
 
 
 class DownloadBillWaitingPayment(BrowserView):

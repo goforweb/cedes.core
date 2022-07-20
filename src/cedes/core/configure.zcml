@@ -21,19 +21,12 @@
 
     <include file="events.zcml" />
     <include file="profiles.zcml" />
+    <include file="vocabularies.zcml" />
 
     <!-- Faceted criteria adapter -->
     <adapter for="cedes.core.interfaces.IThemeFacetedNavigable"
              provides="eea.facetednavigation.interfaces.ICriteria"
              factory="cedes.core.adapters.ThemeCriteria" />
-
-    <!-- Vocabularies -->
-    <utility component="cedes.core.vocabularies.SearchableTypesVocabularyFactory"
-             name="cedes.core.vocabularies.searchabletypesvocabulary" />
-    <utility component="cedes.core.vocabularies.FacetedSortingVocabularyFactory"
-             name="cedes.core.vocabularies.facetedsortingvocabulary" />
-    <utility component="cedes.core.vocabularies.CountriesVocabularyFactory"
-             name="cedes.core.vocabularies.countriesvocabulary" />
 
     <!-- portal_catalog indexes -->
     <adapter name="all_associated_theme_uids"

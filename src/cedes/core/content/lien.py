@@ -19,6 +19,7 @@ class ILien(IResource, ILink):
     """ """
 
     directives.widget("remoteUrl", LinkFieldWidget)
+    directives.order_before(remoteUrl='cr_comment')
     remoteUrl = schema.TextLine(
         title="URL",
         required=True, )

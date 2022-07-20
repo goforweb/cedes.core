@@ -38,4 +38,12 @@
             editview=".recent.EditForm" />
     </configure>
 
+    <!-- Override principals/users/groups vocabularies to add caching -->
+    <utility factory=".vocabularies.CeDESUsersFactory"
+             name="plone.app.vocabularies.Users" />
+    <utility factory=".vocabularies.CeDESGroupsFactory"
+             name="plone.app.vocabularies.Groups" />
+    <utility factory=".vocabularies.CeDESPrincipalsFactory"
+             name="plone.app.vocabularies.Principals" />
+
 </configure>

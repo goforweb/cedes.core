@@ -107,3 +107,26 @@ initListingNavigation = function () {
 };
 
 jQuery(document).ready(initListingNavigation);
+
+// member delete confirm message
+function confirmDeleteMember(member_id){
+    if (confirm("Supprimer ce compte définitivement?")) {
+        deleteMember(member_id); }
+}
+
+function deleteMember(member_id) {
+  $.ajax({
+    url: canonical_url() + "/@@member-delete",
+    dataType: 'html',
+    data: {'member_id': member_id, },
+    cache: false,
+    async: true,
+    success: function(data) {
+        location.reload();
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      /*console.log(textStatus);*/
+      window.location.href = window.location.href;
+      }
+    });
+}

@@ -23,16 +23,19 @@
       title="CeDES: migrate members"
       configuration="members.cfg" />
 
+    <!-- resources -->
+    <transmogrifier:registerConfig
+      name="collective.jsonmigrator.resources"
+      title="CeDES: migrate common resources (ArticleGratuit, ArticlaPayant, SiteInternet, ...)"
+      configuration="resources.cfg" />
+
     <!-- themes -->
     <transmogrifier:registerConfig
       name="collective.jsonmigrator.themes"
       title="CeDES: migrate common themes (Theme)"
       configuration="themes.cfg" />
 
-    <!-- resources -->
-    <transmogrifier:registerConfig
-      name="collective.jsonmigrator.resources"
-      title="CeDES: migrate common resources (ArticleGratuit, ArticlaPayant, SiteInternet, ...)"
-      configuration="resources.cfg" />
+  <utility component=".blueprints.Yays"
+      name="cedes.core.blueprints.yays" />
 
 </configure>

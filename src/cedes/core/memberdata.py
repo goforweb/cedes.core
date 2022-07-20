@@ -647,7 +647,7 @@ class CedesMemberData(MemberData):
             # sends an email p_days after registration
             if registration_date + days < now:
                 send_mail("[CeDES] - Votre inscription au site cedes",
-                          template_name='mail_registration_nologin_notification',
+                          template_name='mail_registration_no_login_notification',
                           options={'title': self.Title()},
                           mto=self.get_email())
                 # marks member that notification has been sent

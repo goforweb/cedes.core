@@ -413,6 +413,12 @@
         template="templates/member_debug.pt"
         permission="zope2.ViewManagementScreens" />
     <browser:view
+        name="member-delete"
+        for="*"
+        class=".member.DeleteMemberView"
+        layer="cedes.core.interfaces.ICedesCoreLayer"
+        permission="zope2.ViewManagementScreens" />
+    <browser:view
         for="*"
         class=".member.DownloadBillWaitingPayment"
         name="download-bill-waiting-payment"

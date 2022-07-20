@@ -196,6 +196,7 @@ class CeDESMemberSearchForm(MemberSearchForm):
     def handleApply(self, action):
         """ """
         super(CeDESMemberSearchForm, self).handleApply(self, action)
+        self.b_size = 30
         if self.results:
             self.now = DateTime()
             ploneview = getMultiAdapter((self.context, self.request), name='plone')
@@ -203,7 +204,9 @@ class CeDESMemberSearchForm(MemberSearchForm):
             # complete results data
             portal = api.portal.get()
             properties_storage = portal.acl_users.mutable_properties._storage
-            for user_info in self.results:
+            # only compute values for shown results
+            b_start = self.request.form.get('b_start', 0)
+            for user_info in self.results[b_start:b_start + self.b_size]:
                 if user_info['login'] in properties_storage:
                     user_info.update(properties_storage.get(user_info['login']))
                 # find max login time
@@ -212,10 +215,11 @@ class CeDESMemberSearchForm(MemberSearchForm):
                     user_info['last_login_time'],
                     user_info['first_login_time']])
                 # expiration_date and last_payment_date are not stored
+                user_info['last_payment_date'] = \
+                    CedesMemberData.get_last_payment_date(
+                        user_info['account_bills'])
                 user_info['expiration_date'] = \
-                    CedesMemberData.get_expiration_date(
-                        CedesMemberData.get_last_payment_date(
-                            user_info['account_bills']))
+                    CedesMemberData.get_expiration_date(user_info['last_payment_date'])
                 user_info['credit_expiration_warning'] = False
                 user_info['credit_expired_warning'] = False
                 if user_info['expiration_date']:

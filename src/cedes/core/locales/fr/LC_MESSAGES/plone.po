@@ -318,3 +318,21 @@ msgstr ""
 #: ../browser/membersearch.py:122
 msgid "title_user_name"
 msgstr "Identifiant"
+
+msgid "Published to members"
+msgstr "Publié aux membres"
+
+msgid "This will hide element for members."
+msgstr "Ceci rendra l'élément inaccessible à tout le monde."
+
+msgid "Publishing the item makes it visible to members."
+msgstr "Publier un élément le rendra accessible aux membres."
+
+msgid "Published to everyone"
+msgstr "Publié aux membres et aux anonymes"
+
+msgid "Publishing the item makes it visible to everyone including anonymous."
+msgstr "Publier un élément le rendra accessible à tout le monde y compris aux anonymes."
+
+msgid "Theme"
+msgstr "Thème"

@@ -96,7 +96,8 @@
             </form>
 
             <div class="discreet" tal:condition="isManager">
-            <span tal:content="python: context.toLocalizedTime(item.cr_first_classification_date_index)" />
+              <tal:comment replace="nothing">toLocalizedTime does not support datetime.date</tal:comment>
+            <span tal:content="python: item.cr_first_classification_date_index and item.cr_first_classification_date_index.strftime('%d/%m/%Y')" />
             <div class="actions">
               <!--tal:actions replace="structure python: item.getObject().restrictedTraverse(
                 '@@actions_panel')(showTransitions=False, showActions=False)" /-->

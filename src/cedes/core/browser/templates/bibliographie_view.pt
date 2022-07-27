@@ -17,7 +17,7 @@
 
         <tal:block replace="structure python: view.render_file()" />
         <tal:block replace="structure python: view.render_html('text')" />
-        <tal:block replace="structure python: view.render_html('cr_links')" />
+        <tal:block replace="structure python: view.render_html('cr_links', empty_text='Aucun lien.')" />
         <tal:block replace="structure python: view.render_common_content()" />
 
     </tal:main-macro>

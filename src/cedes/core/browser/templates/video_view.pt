@@ -9,6 +9,7 @@
           <tal:block replace="structure python: view.render_cr_first_classification_date()" />
           <tal:block replace="structure python: view.render_description()" />
           <tal:block replace="structure python: view.render_link()" />
+          <tal:block replace="structure python: view.render_html('cr_preview')" />
           <tal:block replace="structure python: view.render_common_content()" />
 
           <div class="visualClear"><!-- --></div>

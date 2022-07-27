@@ -1,7 +1,8 @@
-<fieldset><legend>Lien</legend>
+<fieldset>
+  <legend>Lien</legend>
   <div class="field">
     <a href=""
-       tal:define="link_infos python: view.link_infos()"
+       tal:define="link_infos python: view._render_link_infos()"
        tal:attributes="href python: link_infos['absolute_url']"
        tal:content="python: link_infos['title']"
        target="_blank">Lien</a>

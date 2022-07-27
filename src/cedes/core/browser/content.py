@@ -8,7 +8,9 @@
 from cedes.core.utils import provoke_unauthorized
 from plone import api
 from plone.dexterity.browser.view import DefaultView
+from Products.CMFPlone.utils import human_readable_size
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.i18n import translate
 
 
 class BaseView(DefaultView):
@@ -34,14 +36,32 @@ class BaseView(DefaultView):
         """ """
         return ViewPageTemplateFile("templates/common-description.pt")(self)
 
+    def _render_file_infos(self):
+        """ """
+        mt = api.portal.get_tool('mimetypes_registry')
+        return "{0}, {1}".format(
+            translate(mt.lookup(self.context.file.contentType)[0].name(),
+                      domain="plone",
+                      context=self.request),
+            human_readable_size(self.context.getSize()))
+
     def render_file(self):
         """ """
         return ViewPageTemplateFile("templates/common-file.pt")(self)
 
-    def render_html(self, fieldname):
+    def render_html(self, fieldname, empty_text="Pas d'aperçu disponible."):
         """ """
         self._html_fieldname = fieldname
+        self._html_empty_text = empty_text
         return ViewPageTemplateFile("templates/common-html.pt")(self)
+
+    def _render_link_infos(self):
+        """Format the url for display."""
+        view = self.context.unrestrictedTraverse('@@link_redirect_view')
+        infos = view.display_link()
+        if infos:
+            infos.update({'absolute_url': view.absolute_target_url()})
+        return infos
 
     def render_link(self):
         """ """
@@ -54,14 +74,6 @@ class BaseView(DefaultView):
     def render_related_resources(self):
         """ """
         return ViewPageTemplateFile("templates/common-related-resources.pt")(self)
-
-    def link_infos(self):
-        """Format the url for display."""
-        view = self.context.unrestrictedTraverse('@@link_redirect_view')
-        infos = view.display_link()
-        if infos:
-            infos.update({'absolute_url': view.absolute_target_url()})
-        return infos
 
 
 class AudioView(BaseView):

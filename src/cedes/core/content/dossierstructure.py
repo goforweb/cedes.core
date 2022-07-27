@@ -215,7 +215,11 @@ class Point(Folder, Base):
             then we will add this keyword to every resources linked to a Point of a DS of this
             Folder and reindex the 'Subject' index for it.
         """
-        new = [rel.to_object for rel in values]
+        try:
+            new = [rel.to_object for rel in values
+                   if rel is not None]
+        except:
+            import ipdb; ipdb.set_trace()
         stored = self.get_cf_resources(True)
         added = [resource for resource in new if resource not in stored]
         removed = [resource for resource in stored if resource not in new]

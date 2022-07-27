@@ -205,7 +205,7 @@ padding-left:0.5em;
 
 </head>
 
-<body tal:define="member here/portal_membership/getAuthenticatedMember;
+<body tal:define="member python: view.portal.portal_membership.getAuthenticatedMember();
                   toc_view python: context.restrictedTraverse('@@html-toc');
                   wf_tool python: view.wf_tool;">
 
@@ -241,7 +241,7 @@ padding-left:0.5em;
               <div tal:omit-tag="" tal:condition="python:subitem.portal_type == 'Link'">
                 <a class="link"
                    tal:attributes="href subitem/getRemoteUrl"
-                   tal:content="structure python:here.clean_linkforpdf(subitem.getRemoteUrl())">Link</a>
+                   tal:content="structure python:view.clean_linkforpdf(subitem.getRemoteUrl())">Link</a>
               </div>
               <div tal:omit-tag="" tal:condition="python:subitem.portal_type == 'Point'" tal:repeat="resource python: view.get_resources(subitem)">
 
@@ -249,7 +249,7 @@ padding-left:0.5em;
                   <td width="20">
                     <img tal:define="item_type resource/portal_type;
                                      normalizeString nocall: context/plone_utils/normalizeString;"
-                         tal:attributes="src python: here.portal_url() + '/++plone++cedes.core/big-' + normalizeString(item_type) + '.gif';"/>
+                         tal:attributes="src python: view.portal_url + '/++plone++cedes.core/big-' + normalizeString(item_type) + '.gif';"/>
                   </td>
                   <td>&nbsp;&nbsp;
                     <span tal:content="resource/Title" class="cedestitle"></span>
@@ -259,7 +259,7 @@ padding-left:0.5em;
                   <div class="colophon"> <span style="font-weight:bold;" tal:content="python:resource.cr_author"></span>,
                     <span tal:replace="structure python:resource.get_colophon()"/></div>
                   <div tal:content="structure python:view.clean_htmlforpdf(resource.cr_html_preview.output)" class="text" tal:condition="python: resource.cr_html_preview.raw"></div>
-                  <a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:here.clean_linkforpdf(resource.absolute_url())" tal:condition="python: not resource.cr_html_preview.raw"></a>
+                  <a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())" tal:condition="python: not resource.cr_html_preview.raw"></a>
                 </span>
                 <span tal:condition="python:resource.portal_type in ('ArticleGratuit', )" tal:omit-tag="">
                   <div class="colophon"> <span style="font-weight:bold;" tal:content="python:resource.cr_author"></span>,
@@ -281,7 +281,7 @@ padding-left:0.5em;
                     <div tal:content="python: view.clean_htmlforpdf(resource.cr_subtitle)" tal:condition="python: resource.cr_subtitle" class="text" />
                     <div tal:content="python: view.clean_htmlforpdf(resource.cr_author)" tal:condition="python: resource.cr_author" class="text" />
                     <div tal:content="python: view.clean_htmlforpdf(resource.cr_reference)" tal:condition="python: resource.cr_reference" class="text" />
-                    <div><a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:here.clean_linkforpdf(resource.absolute_url())"></a></div>
+                    <div><a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())"></a></div>
                 </span>
 
                 <br/><br/>

@@ -29,6 +29,7 @@
   <element value="plone.excludefromnavigation" />
   <element value="collective.dexteritytextindexer.behavior.IDexterityTextIndexer" />
   <element value="cioppino.twothumbs" />
+  <element value="plone.leadimage" />
  </property>
  <property name="model_file"></property>
  <property name="schema"></property>

@@ -18,6 +18,7 @@ class DossierStructurePDF(BrowserView):
         self.context = context
         self.request = request
         self.portal = api.portal.get()
+        self.portal_url = self.portal.absolute_url()
         self.wf_tool = api.portal.get_tool('portal_workflow')
         self.portal_catalog = api.portal.get_tool('portal_catalog')
 

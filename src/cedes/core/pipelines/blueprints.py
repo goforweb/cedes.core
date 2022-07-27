@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core import logger
+from cedes.core.utils import uuidToObject
 from cioppino.twothumbs import rate
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
@@ -40,3 +41,16 @@ class Yays(object):
                         rate.loveIt(obj, user_id)
 
             yield item
+
+
+@provider(ISectionBlueprint)
+@implementer(ISection)
+class SkipIfExists(object):
+    def __init__(self, transmogrifier, name, options, previous):
+        self.previous = previous
+
+    def __iter__(self):
+        for item in self.previous:
+            if not uuidToObject(item['_uid'], unrestricted=True):
+                yield item
+            logger.info("Skipping already existing element at %s" % item['_path'])

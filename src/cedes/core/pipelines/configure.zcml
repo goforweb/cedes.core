@@ -38,4 +38,7 @@
   <utility component=".blueprints.Yays"
       name="cedes.core.blueprints.yays" />
 
+  <utility component=".blueprints.SkipIfExists"
+      name="cedes.core.blueprints.skipifexists" />
+
 </configure>

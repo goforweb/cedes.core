@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from cedes.core import logger
 from cioppino.twothumbs import rate
 from collective.transmogrifier.interfaces import ISection
 from collective.transmogrifier.interfaces import ISectionBlueprint
 from collective.transmogrifier.utils import traverse
+from zope.annotation import IAnnotations
 from zope.interface import implementer
 from zope.interface import provider
 
@@ -27,10 +29,14 @@ class Yays(object):
                 yield item
                 continue
 
-            user_ids = item['__annotations__'].get('cioppino.twothumbs.yays', ())
-            if user_ids and not obj.__annotations__.get('cioppino.twothumbs.yays', ()):
-                rate.setupAnnotations(obj)
-                for user_id in user_ids:
-                    rate.loveIt(obj, user_id)
+            if '__annotations__' not in item:
+                logger.warning("No __annotations__ for %s" % item['_path'])
+            else:
+                user_ids = item['__annotations__'].get('cioppino.twothumbs.yays', ())
+                annotations = IAnnotations(obj)
+                if user_ids and not annotations.get('cioppino.twothumbs.yays', ()):
+                    rate.setupAnnotations(obj)
+                    for user_id in user_ids:
+                        rate.loveIt(obj, user_id)
 
             yield item

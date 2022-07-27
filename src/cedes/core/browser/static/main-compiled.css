@@ -120,6 +120,13 @@ a.link-parent::before {
     content: '\e84d';
     margin-right: 0.5em;
 }
+a.download-file {
+    font-size: 200%;
+}
+a.download-file:hover {
+    text-decoration: none;
+}
+
 span.one::before {
   content: '[1]';
   font-size: 100%;

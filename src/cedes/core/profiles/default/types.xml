@@ -3,6 +3,7 @@
   <object name="Audio" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticleGratuit" meta_type="Dexterity FTI" purge="True" />
   <object name="ArticlePayant" meta_type="Dexterity FTI" purge="True" />
+  <object name="Bibliographie" meta_type="Dexterity FTI" purge="True" />
   <object name="DossierStructure" meta_type="Dexterity FTI" purge="True" />
   <object name="EmailContent" meta_type="Dexterity FTI" purge="True" />
   <object name="Folder" meta_type="Dexterity FTI" purge="True" />

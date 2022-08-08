@@ -41,4 +41,7 @@
   <utility component=".blueprints.SkipIfExists"
       name="cedes.core.blueprints.skipifexists" />
 
+  <utility component=".blueprints.SkipIfNoRelatedItems"
+      name="cedes.core.blueprints.skipifnorelateditems" />
+
 </configure>

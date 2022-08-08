@@ -54,3 +54,16 @@ class SkipIfExists(object):
             if not uuidToObject(item['_uid'], unrestricted=True):
                 yield item
             logger.info("Skipping already existing element at %s" % item['_path'])
+
+
+@provider(ISectionBlueprint)
+@implementer(ISection)
+class SkipIfNoRelatedItems(object):
+    def __init__(self, transmogrifier, name, options, previous):
+        self.previous = previous
+
+    def __iter__(self):
+        for item in self.previous:
+            if item.get('related_items'):
+                logger.info("Treating resource with related_items at %s" % item['_path'])
+                yield item

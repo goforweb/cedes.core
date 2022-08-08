@@ -88,7 +88,9 @@ class Theme(Container):
         """
           Override mutator to be able to manage BiReference.
         """
-        new = [rel.to_object for rel in values]
+        # new = [rel.to_object for rel in values]
+        # use during import of Themes
+        new = [rel.to_object for rel in values if rel]
         stored = self.get_cc_related(True)
         added = [theme for theme in new if theme not in stored]
         removed = [theme for theme in stored if theme not in new]

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from cedes.core import logger
+from cedes.core.cache import invalidate_cachekey_volatile_for
 from cedes.core.interfaces import IThemeFacetedNavigable
 from cedes.core.utils import get_modified_attrs
 from cedes.core.utils import send_mail
 from datetime import date
 from DateTime import DateTime
-from eea.facetednavigation.interfaces import IHidePloneLeftColumn
 from eea.facetednavigation.layout.interfaces import IFacetedLayout
 from persistent.list import PersistentList
 from plone import api
@@ -16,7 +16,6 @@ from zope.component.hooks import setSite
 from zope.globalrequest import getRequest
 from zope.globalrequest import setRequest
 from zope.interface import alsoProvides
-from zope.interface import noLongerProvides
 
 import os
 import transaction
@@ -54,11 +53,8 @@ def onThemeAdded(theme, event):
     alsoProvides(theme, IThemeFacetedNavigable)
     logger.info('Faceted navigation enabled for {0}'.format(
         '/'.join(theme.getPhysicalPath())))
-
-
-def onEmailContentAdded(emailcontent, event):
-    """Called when new EmailContent added."""
-    emailcontent._email_sent_date = None
+    # invalidate Theme related cache
+    invalidate_cachekey_volatile_for('cedes.core.Theme')
 
 
 def onThemeModified(theme, event):
@@ -71,6 +67,13 @@ def onThemeModified(theme, event):
         for item in associated:
             item = item.getObject()
             item.reindexObject(idxs=['SearchableText'])
+    # invalidate Theme related cache
+    invalidate_cachekey_volatile_for('cedes.core.Theme')
+
+
+def onEmailContentAdded(emailcontent, event):
+    """Called when new EmailContent added."""
+    emailcontent._email_sent_date = None
 
 
 def onResourceModified(obj, event):

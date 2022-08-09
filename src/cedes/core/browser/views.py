@@ -2,6 +2,7 @@
 
 from AccessControl import Unauthorized
 from Acquisition import aq_inner
+from cedes.core.cache import get_cachekey_volatile
 from cedes.core.config import CEDES_RESOURCE_TYPES
 from cedes.core.utils import send_mail
 from DateTime import DateTime
@@ -9,6 +10,7 @@ from plone import api
 from plone.app.layout.navigation.interfaces import INavtreeStrategy
 from plone.app.layout.navigation.navtree import buildFolderTree
 from plone.batching import Batch
+from plone.memoize import ram
 from plone.memoize.view import memoize
 from plone.namedfile.browser import DisplayFile
 from plone.namedfile.browser import Download
@@ -118,6 +120,7 @@ class CommonResultListingView(BrowserView):
 
 class ContextCatalogSiteMap(CatalogSiteMap):
     """ """
+
     def siteMap(self):
         context = aq_inner(self.context)
 
@@ -146,6 +149,15 @@ class ContextSitemapView(SitemapView):
         super(ContextSitemapView, self).__init__(context, request)
         self.portal = api.portal.get()
         self.portal_url = self.portal.absolute_url()
+
+    def __call___cachekey(method, self):
+        '''cachekey method for self.__call__.'''
+        return get_cachekey_volatile('cedes.core.Theme')
+
+    @ram.cache(__call___cachekey)
+    def __call__(self):
+        """ """
+        return super(ContextSitemapView, self).__call__()
 
     def createSiteMap(self, context):
         # begin changes by cedes.core

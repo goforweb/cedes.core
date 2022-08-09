@@ -30,6 +30,11 @@
         </span>
       </div>
 
+      <a href="" tal:attributes="href python: view.portal_url + '/@@my-account'"
+         class="link-parent">
+          Retourner à "Mon compte"
+      </a>
+
       <table class="table table-striped"
              width="100%"
              tal:define="transactions python: list(view.member.get_account_transactions());

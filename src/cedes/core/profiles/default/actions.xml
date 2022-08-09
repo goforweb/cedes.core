@@ -34,7 +34,7 @@
   <object name="login" meta_type="CMF Action">
    <property name="modal"></property>
   </object>
-  <object name="print" meta_type="CMF Action" i18n:domain="cedes">
+  <object name="print" meta_type="CMF Action" i18n:domain="plone">
    <property name="title" i18n:translate="">Imprimer</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:javascript:this.print()</property>
@@ -56,28 +56,6 @@
    </property>
    <property name="visible">True</property>
   </object>
-  <object name="contact" meta_type="CMF Action" i18n:domain="plone">
-   <property name="title" i18n:translate="">Contact</property>
-   <property name="description" i18n:translate=""></property>
-   <property name="url_expr">string:${portal_url}/@@contact-info</property>
-   <property name="icon_expr"></property>
-   <property name="available_expr"></property>
-   <property name="permissions">
-    <element value="View"/>
-   </property>
-   <property name="visible">True</property>
-  </object>
-  <object name="aide" meta_type="CMF Action" i18n:domain="cedes">
-   <property name="title" i18n:translate="">Aide</property>
-   <property name="description" i18n:translate=""></property>
-   <property name="url_expr">string:${portal_url}/pages/aide</property>
-   <property name="icon_expr">string:$portal_url/help.png</property>
-   <property name="available_expr">python:member is not None</property>
-   <property name="permissions">
-    <element value="View"/>
-   </property>
-   <property name="visible">True</property>
-  </object>
   <object name="mon_compte" meta_type="CMF Action" i18n:domain="plone">
    <property name="title" i18n:translate="">Mon compte</property>
    <property name="description" i18n:translate=""></property>
@@ -89,7 +67,30 @@
    </property>
    <property name="visible">True</property>
   </object>
-  <!--object name="newsletters" meta_type="CMF Action" i18n:domain="cedes">
+  <object name="aide" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Aide</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/pages/aide</property>
+   <property name="icon_expr">string:$portal_url/help.png</property>
+   <property name="available_expr">python:member is not None</property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+  <object name="contact" meta_type="CMF Action" i18n:domain="plone">
+   <property name="title" i18n:translate="">Contact</property>
+   <property name="description" i18n:translate=""></property>
+   <property name="url_expr">string:${portal_url}/@@contact-info</property>
+   <property name="icon_expr"></property>
+   <property name="available_expr"></property>
+   <property name="permissions">
+    <element value="View"/>
+   </property>
+   <property name="visible">True</property>
+  </object>
+
+  <!--object name="newsletters" meta_type="CMF Action" i18n:domain="plone">
    <property name="title" i18n:translate="">Newsletters</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:${portal_url}/newsletters</property>
@@ -100,7 +101,7 @@
    </property>
    <property name="visible">True</property>
   </object-->
-  <object name="quitter" meta_type="CMF Action" i18n:domain="cedes">
+  <object name="quitter" meta_type="CMF Action" i18n:domain="plone">
    <property name="title" i18n:translate="">Quitter</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:${portal_url}/logout</property>
@@ -113,7 +114,7 @@
   </object>
  </object>
  <object name="object_buttons" meta_type="CMF Action Category">
-  <object name="importgopress" meta_type="CMF Action" i18n:domain="cedes">
+  <object name="importgopress" meta_type="CMF Action" i18n:domain="plone">
    <property name="title" i18n:translate="">Importer depuis Gopress</property>
    <property name="description" i18n:translate=""></property>
    <property name="url_expr">string:$object_url/gopress_import</property>

@@ -18,15 +18,15 @@
     <metal:block define-macro="content-core">
       <tal:comment replace='nothing'>Entoure la page avec l'id 'search-placeholder' car le resultat d'une recherche s'affiche
                                      alors a la place du theme affiche en cours.</tal:comment>
-      <div id="search-placeholder" tal:define="portal_url context/@@plone_portal_state/portal_url">
+      <div id="search-placeholder" tal:define="is_root python: context.is_root()">
 
-        <tal:notRoot condition="python: not context.is_root()">
+        <tal:notRoot condition="not:is_root">
         <tal:defines define="results python: context.restrictedTraverse('@@common-result-listing').searchForThemeView();
-                             sons python:here.objectValues();">
+                             sons python:context.getFolderContents();">
         <div tal:repeat="son sons">
-          <a tal:attributes="href son/absolute_url">
+          <a tal:attributes="href python: son.getURL()">
             <span class="glyphicon glyphicon-triangle-right" />
-            <span tal:replace="son/pretty_title_or_id"/>
+            <span tal:replace="python: son.Title"/>
           </a>
         </div>
         <div tal:define="related_items python: here.get_cc_related(the_objects=True)"
@@ -58,7 +58,7 @@
         </tal:defines>
         </tal:notRoot>
 
-        <tal:root condition="python: context.is_root()" define="provokeUnauthorizedIfNotLoggedIn context/Title;">
+        <tal:root condition="is_root" define="provokeUnauthorizedIfNotLoggedIn context/Title;">
             <div class="documentDescription" tal:content="structure here/pages/arborescence-explications/getText" tal:on-error="string:'arborescence-explications' manquant" />
             <tal:explanation tal:replace="structure here/pages/arborescence/getText" tal:on-error="string:'arborescence' manquant" />
         </tal:root>

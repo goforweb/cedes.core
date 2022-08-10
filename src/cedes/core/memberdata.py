@@ -458,7 +458,7 @@ class CedesMemberData(MemberData):
 
     def is_cedes_free(self):
         """ """
-        return self.get_member_type() == "CeDES Free"
+        return self.get_member_type() == "CeDES Free" and not self.is_manager()
 
     def add_bill(self, bill_id, price=3000, mode='F', date=None, payment_date=None):
         """ """

@@ -135,6 +135,11 @@ PrincipalsVocabulary.__old__get_term_from_source = PrincipalsVocabulary._get_ter
 def _get_term_from_source(self, value=None, token=None):
     """Monkeypatched to add caching."""
     # do not return a generator
+    # XXX, to be removed fianlly, never use admin again, avoid also not found creators that breaks
+    if value == "admin":
+        value = "ctoumson"
+    if token == "admin":
+        token = "ctoumson"
     return self.__old__get_term_from_source(value, token)
 
 

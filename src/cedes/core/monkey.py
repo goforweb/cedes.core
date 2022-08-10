@@ -137,9 +137,9 @@ def _get_term_from_source(self, value=None, token=None):
     # do not return a generator
     # XXX, to be removed fianlly, never use admin again, avoid also not found creators that breaks
     if value == "admin":
-        value = "ctoumson"
+        value = "gbastien"
     if token == "admin":
-        token = "ctoumson"
+        token = "gbastien"
     return self.__old__get_term_from_source(value, token)
 
 

@@ -118,7 +118,6 @@ class CeDESRegistrationForm(RegistrationForm):
 
     def updateWidgets(self):
         """Hide "member_type" during registration."""
-
         super(CeDESRegistrationForm, self).updateWidgets()
         # manage creation of Free member, form is called with ?type=free
         # only set if _no_set_ default value is set

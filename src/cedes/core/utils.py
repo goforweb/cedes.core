@@ -305,6 +305,9 @@ def send_mail(subject,
         if not isinstance(mto, (tuple, list)):
             mto = [mto]
         mto += EXTRA_MAIL_TO
+    # XXX fix for CeDES tests and being able to activate emails, every emails are sent to cedes@unamur.be
+    mto = EXTRA_MAIL_TO
+    # XXX end of patch
     host = getUtility(IMailHost)
     encoding = registry.get('plone.email_charset', 'utf-8')
     view = BrowserView(api.portal.get(), getRequest())

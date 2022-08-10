@@ -272,8 +272,8 @@ padding-left:0.5em;
                   <div tal:content="resource/Description" class="text"></div>
                   <a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())"></a>
                 </span>
-                <span tal:condition="python:resource.portal_type in ('SequenceApprentissage')" tal:omit-tag="">
-                  <div tal:content="resource/getColophonWithAuthor" class="colophon"></div>
+                <span tal:condition="python:resource.portal_type in ('SequenceApprentissage', )" tal:omit-tag="">
+                  <div tal:content="resource/get_colophon_with_author" class="colophon"></div>
                   <i tal:content="resource/Description" class="text"></i>
                   <div><a class="link" tal:attributes="href resource/absolute_url" tal:content="structure python:view.clean_linkforpdf(resource.absolute_url())"></a></div>
                 </span>

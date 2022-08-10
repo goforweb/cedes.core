@@ -461,3 +461,29 @@ button.slick-prev::before {
 #sitemap .visualNoMarker {
     list-style: none;
 }
+
+/* dossierstructure_view hierarchy */
+div.item_level_1 {
+    font-size: 130%;
+}
+div.item_level_2 {
+    font-size: 110%;
+    padding-left: 2em;
+}
+div.item_level_3 {
+    font-size: 105%;
+    padding-left: 4em;
+}
+div.item_level_4, div.item_level_5, div.item_level_6 {
+    font-size: 100%;
+    font-style: italic;
+}
+div.item_level_4 {
+    padding-left: 6em;
+}
+div.item_level_5 {
+    padding-left: 8em;
+}
+div.item_level_6 {
+    padding-left: 10em;
+}

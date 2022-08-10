@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from AccessControl import Unauthorized
 from cedes.core.memberdata import ICeDESUserDataSchema
 from cedes.core.utils import add_page_message
 from plone import api
@@ -108,6 +109,13 @@ class CeDESRegistrationForm(RegistrationForm):
 
     def render(self):
         """Manage different registered page depending on member_type (Free/100%)."""
+        if not api.user.is_anonymous():
+            api.portal.show_message(
+                "Vous ne pouvez pas vous inscrire lorsque vous êtes déjà connecté, "
+                "veuillez vous déconnecter!",
+                request=self.request,
+                type="error")
+            raise ValueError("Une erreur est survenue!")
         if self._finishedRegister:
             portal_url = api.portal.get().absolute_url()
             url = "{0}/@@registered?member_type={1}".format(

@@ -1,55 +1,23 @@
 # -*- coding: UTF-8 -*-
 
-from Acquisition import aq_base
 from Acquisition import aq_inner
 from cedes.core.utils import uuidToObject
-from Products.CMFCore.utils import getToolByName
+from plone.base.defaultpage import check_default_page_via_view
 from Products.CMFPlone import utils
 from Products.CMFPlone.browser.interfaces import INavigationBreadcrumbs
-from Products.CMFPlone.browser.navtree import getNavigationRoot
+from Products.CMFPlone.browser.navigation import get_view_url
+from Products.CMFPlone.browser.navigation import PhysicalNavigationBreadcrumbs
+from Products.CMFPlone.browser.navtree import get_navigation_root
 from Products.CMFPlone.interfaces import IHideFromBreadcrumbs
-from Products.Five import BrowserView
 from zope.component import getMultiAdapter
 from zope.interface import implementer
 
 
-##
 # Calculate breadcrumbs based on classification scheme instead of physical folders
-##
-def get_url(item):
-    if hasattr(aq_base(item), 'getURL'):
-        # Looks like a brain
-        return item.getURL()
-    return item.absolute_url()
-
-
-def get_id(item):
-    getId = getattr(item, 'getId')
-    if not utils.safe_callable(getId):
-        # Looks like a brain
-        return getId
-    return getId()
-
-
-def get_view_url(context):
-    props = getToolByName(context, 'portal_properties')
-    stp = props.site_properties
-    view_action_types = stp.getProperty('typesUseViewActionInListings', ())
-
-    item_url = get_url(context)
-    name = get_id(context)
-
-    if context.portal_type in view_action_types:
-        item_url += '/view'
-        name += '/view'
-
-    return name, item_url
-
-
 # Breadcrumbs showing the first classification associated  with a content type
 # results should be a list of dict
 @implementer(INavigationBreadcrumbs)
-class ClassificationBreadcrumbs(BrowserView):
+class ClassificationBreadcrumbs(PhysicalNavigationBreadcrumbs):
 
     def breadcrumbs(self):
         context = aq_inner(self.context)
@@ -89,12 +57,19 @@ class ClassificationBreadcrumbs(BrowserView):
         if base:
             item_url = '%s/%s' % (base[-1]['absolute_url'], name)
 
-        rootPath = getNavigationRoot(context)
+        rootPath = get_navigation_root(context)
         itemPath = '/'.join(context.getPhysicalPath())
 
-        # don't show default pages in breadcrumbs or pages above the navigation root
-        if not utils.isDefaultPage(context, request) and not rootPath.startswith(itemPath):
-            base += ({'absolute_url': item_url,
-                      'Title': utils.pretty_title_or_id(context, context), },)
+        # don't show default pages in breadcrumbs or pages above the navigation
+        # root
+        if not check_default_page_via_view(
+            context, request
+        ) and not rootPath.startswith(itemPath):
+            entry = {
+                "absolute_url": item_url,
+                "Title": utils.pretty_title_or_id(context, context),
+            }
+            self.customize_entry(entry, context)
+            base += (entry,)
 
         return base

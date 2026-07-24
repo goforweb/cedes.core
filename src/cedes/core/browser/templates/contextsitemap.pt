@@ -9,7 +9,7 @@
     <table style="display: inline-block">
         <tr style="vertical-align: top;"
             tal:define="plan python: view.portal.plan">
-            <td tal:repeat="base_theme python: [t for t in plan.getFolderContents(full_objects=True) if not t.exclude_from_nav]">
+            <td tal:repeat="base_theme python: [t.getObject() for t in plan.restrictedTraverse('@@contentlisting')() if not t.exclude_from_nav]">
                 <ul tal:attributes="id string:portal-sitemap-${base_theme/getId}"
                     class="navTreeLevel0 visualNoMarker">
                     <tal:sitemap replace="structure python: view.createSiteMap(base_theme).replace('state-published ', '').replace('contenttype-theme', '')" />

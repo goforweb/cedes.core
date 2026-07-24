@@ -17,7 +17,7 @@
         <a href="#" tal:attributes="href string:$portal_url/plan">Accès aux thèmes</a>
     </div>
     <div class="card-body">
-      <ul tal:define="themes python: portal.plan.getFolderContents()">
+      <ul tal:define="themes python: portal.plan.listFolderContents()">
          <li class="root_plan">
             <a tal:attributes="class python: isOnPlan and 'selected' or '';
                                href string:${portal_url}/plan">

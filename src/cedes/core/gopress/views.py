@@ -24,7 +24,7 @@ from plone.namedfile import NamedBlobFile
 from Products.Five import BrowserView
 from PyPDF2 import PdfFileReader
 from PyPDF2 import PdfFileWriter
-from PyPDF2 import utils
+from PyPDF2.errors import PdfReadError
 from xml.etree import ElementTree
 
 import codecs
@@ -380,7 +380,7 @@ class GoPressView(BrowserView):
             PdfFileReader(temp)
             temp.close()
             return ''
-        except utils.PdfReadError:
+        except PdfReadError:
             return "pdfreadererror %s" % msg
         except Exception:
             return "other %s" % msg

@@ -19,7 +19,7 @@ from plone.z3cform.layout import wrap_form
 from Products.CMFPlone import PloneMessageFactory as _
 from Products.CMFPlone.utils import safe_unicode
 from Products.Five import BrowserView
-from PyPDF2.pdf import PdfFileReader
+from PyPDF2 import PdfFileReader
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form

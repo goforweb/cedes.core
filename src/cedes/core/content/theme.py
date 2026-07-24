@@ -98,6 +98,10 @@ class Theme(Container):
         # store value and update relations because we need it now
         self.__dict__['cc_related'] = values
 
+        # when creating new Theme, UID is not available
+        if not added and not removed:
+            return
+
         # update references of removed elements
         uid = self.UID()
         for theme in removed:

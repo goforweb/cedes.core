@@ -22,11 +22,11 @@
 
         <tal:notRoot condition="not:is_root">
         <tal:defines define="results python: context.restrictedTraverse('@@common-result-listing').searchForThemeView();
-                             sons python:context.getFolderContents();">
+                             sons python:context.restrictedTraverse('@@contentlisting')();">
         <div tal:repeat="son sons">
           <a tal:attributes="href python: son.getURL()">
             <span class="glyphicon glyphicon-triangle-right" />
-            <span tal:replace="python: son.Title"/>
+            <span tal:replace="python: son.Title()"/>
           </a>
         </div>
         <div tal:define="related_items python: here.get_cc_related(the_objects=True)"

@@ -25,8 +25,6 @@ setup(name='cedes.core',
       install_requires=[
           'setuptools',
           'cioppino.twothumbs',
-          # to be removed when using Plone>6.0.0a4
-          'collective.dexteritytextindexer',
           'eea.facetednavigation',
           'ftw.slider',
           # 'imio.actionspanel',

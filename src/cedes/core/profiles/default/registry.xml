@@ -10,7 +10,7 @@
     <value purge="false">
       <element>News Item</element>
       <element>Collection</element>
-      <element>Discussion Item</element>
+      <!--element>Discussion Item</element-->
       <element>Folder</element>
       <element>File</element>
       <element>Image</element>

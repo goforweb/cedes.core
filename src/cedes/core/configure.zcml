@@ -11,6 +11,9 @@
                 package="collective.dexteritytextindexer" /-->
     <include package="Products.CMFCore" file="permissions.zcml" />
 
+    <!--include package="ftw.referencewidget" /-->
+    <!-- include package="collective.z3cform.datagridfield" /-->
+    <include package="iw.debug" />
     <include package="z3c.form" file="meta.zcml" />
 
     <include package=".browser" />
@@ -66,5 +69,9 @@
     <adapter
         for="cedes.core.content.theme.ITheme"
         factory="plone.app.dexterity.behaviors.exclfromnav.default_exclude_true" />
+
+    <class class="cedes.core.content.theme.Theme">
+        <implements interface="eea.facetednavigation.interfaces.IPossibleFacetedNavigable" />
+    </class>
 
 </configure>

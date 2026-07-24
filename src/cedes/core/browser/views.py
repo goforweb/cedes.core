@@ -40,19 +40,22 @@ class CommonResultListingView(BrowserView):
         result = []
         search_for = self._findSearchFor()
         if search_for == 'dossier_view':
-            result = self.context.getFolderContents({'portal_type': ['ArticleGratuit',
-                                                                     'ArticlePayant',
-                                                                     'SiteInternet',
-                                                                     'Statistiques',
-                                                                     'Audio',
-                                                                     'Video',
-                                                                     'Cederom',
-                                                                     'Bibliographie',
-                                                                     'SequenceApprentissage',
-                                                                     'DossierStructure',
-                                                                     'Folder'],
-                                                     'sort_on': 'getObjPositionInParent'},
-                                                    batch=False)
+            result = api.content.find(
+                self.context,
+                **{
+                    'portal_type': [
+                        'ArticleGratuit',
+                        'ArticlePayant',
+                        'SiteInternet',
+                        'Statistiques',
+                        'Audio',
+                        'Video',
+                        'Cederom',
+                        'Bibliographie',
+                        'SequenceApprentissage',
+                        'DossierStructure',
+                        'Folder'],
+                    'sort_on': 'getObjPositionInParent'})
         elif search_for == 'theme_view':
             result = self.searchForThemeView()
         elif search_for == 'point_view':
@@ -69,19 +72,23 @@ class CommonResultListingView(BrowserView):
         elif search_for == 'recently_modified':
             result = self.context.getLatestEntries(sort_limit=20)
         elif search_for == 'folder_listing':
-            result = self.context.getFolderContents({'portal_type': ['ArticleGratuit',
-                                                                     'ArticlePayant',
-                                                                     'SiteInternet',
-                                                                     'Statistiques',
-                                                                     'Audio',
-                                                                     'Video',
-                                                                     'Cederom',
-                                                                     'Bibliographie',
-                                                                     'SequenceApprentissage',
-                                                                     'DossierStructure',
-                                                                     'Folder',
-                                                                     'EmailContent'], },
-                                                    batch=False)
+            result = api.content.find(
+                self.context,
+                **{
+                    'portal_type': [
+                        'ArticleGratuit',
+                        'ArticlePayant',
+                        'SiteInternet',
+                        'Statistiques',
+                        'Audio',
+                        'Video',
+                        'Cederom',
+                        'Bibliographie',
+                        'SequenceApprentissage',
+                        'DossierStructure',
+                        'Folder',
+                        'EmailContent'],
+                   'sort_on': 'getObjPositionInParent'})
         batch = Batch(result, b_size, b_start, orphan=1)
         return batch
 

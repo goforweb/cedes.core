@@ -197,6 +197,7 @@ class CeDESMemberSearchForm(MemberSearchForm):
         """ """
         super(CeDESMemberSearchForm, self).handleApply(self, action)
         self.b_size = 30
+        import ipdb; ipdb.set_trace()
         if self.results:
             self.now = DateTime()
             ploneview = getMultiAdapter((self.context, self.request), name='plone')
@@ -240,3 +241,4 @@ class CeDESMemberSearchForm(MemberSearchForm):
                         user_info['payment_expiration_warning'] = True
                     if user_info['payment_expiration_date'] <= self.now:
                         user_info['payment_expired_warning'] = True
+        import ipdb; ipdb.set_trace()

@@ -74,9 +74,9 @@ def generate_pdf(self):
 
     pisa.CreatePDF(
           StringIO(content),
-          pdf_file,
-          link_callback=pisa.pisaLinkLoader(content).getFileName
-          )
+          pdf_file)
+    #      link_callback=pisa.pisaLinkLoader(content).getFileName
+    #      )
     pdf_file.close()
     self.plone_utils.addPortalMessage('PDF généré.')
     return self.REQUEST.RESPONSE.redirect(self.absolute_url())
